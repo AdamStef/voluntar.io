@@ -1,4 +1,4 @@
-package pl.sumatywny.voluntario.service;
+package pl.sumatywny.voluntario.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import pl.sumatywny.voluntario.model.CustomUserDetails;
-import pl.sumatywny.voluntario.model.User;
+import pl.sumatywny.voluntario.model.user.CustomUserDetails;
+import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.UserRepository;
 
 import java.util.Optional;

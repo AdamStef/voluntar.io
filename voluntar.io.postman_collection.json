@@ -1,0 +1,493 @@
+{
+	"info": {
+		"_postman_id": "97c9ee21-9158-46d1-8f26-41fa1193f685",
+		"name": "voluntar.io",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31669741"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"item": [
+						{
+							"name": "Admin",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"testadmin\",\r\n    \"email\": \"admin@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"roles\": [\"ROLE_ADMIN\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basic_url}}/auth/register",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Volunteer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"testvolunteer\",\r\n    \"email\": \"volunteer@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"roles\": [\"ROLE_VOLUNTEER\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basic_url}}/auth/register",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Organization",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"testorganization\",\r\n    \"email\": \"organization@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"roles\": [\"ROLE_ORGANIZATION\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basic_url}}/auth/register",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"item": [
+						{
+							"name": "Login admin",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"testadmin\",\r\n    \"password\": \"testpassword\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basic_url}}/auth/login",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login volunteer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"testvolunteer\",\r\n    \"password\": \"testpassword\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basic_url}}/auth/login",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login organization",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"testorganization\",\r\n    \"password\": \"testpassword\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basic_url}}/auth/login",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testuser\",\r\n    \"email\": \"test@test.com\",\r\n    \"password\": \"testpassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basic_url}}/auth/login",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testuser\",\r\n    \"email\": \"test@test.com\",\r\n    \"password\": \"testpassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basic_url}}/auth/register",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basic_url}}/auth/test",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"auth",
+								"test"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Test",
+			"item": [
+				{
+					"name": "Test authorized",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basic_url}}/test/hello",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"test",
+								"hello"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test admin",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testadmin\",\r\n    \"password\": \"testpassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basic_url}}/test/admin",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"test",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test volunteer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basic_url}}/test/volunteer",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"test",
+								"volunteer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test organization",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basic_url}}/test/organization",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"test",
+								"organization"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0b3JnYW5pemF0aW9uIiwiaWF0IjoxNzExNDc5OTg0LCJleHAiOjE3MTE1NjYzODR9.o4mi8H8zGkXMjaHhwIG6_eOnbjUCSMsjDXc7euOPa9A",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "KRS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api-krs.ms.gov.pl/api/krs/OdpisAktualny/0000030897?rejestr=S&format=json",
+					"protocol": "https",
+					"host": [
+						"api-krs",
+						"ms",
+						"gov",
+						"pl"
+					],
+					"path": [
+						"api",
+						"krs",
+						"OdpisAktualny",
+						"0000030897"
+					],
+					"query": [
+						{
+							"key": "rejestr",
+							"value": "S"
+						},
+						{
+							"key": "format",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "basic_url",
+			"value": "localhost:8080/api",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTcxMTQ3NzM3MiwiZXhwIjoxNzExNTYzNzcyfQ.7b2tZg8HktqmmVCvgd9so8ZaI562qDX6gQZbsxo_h8Q",
+			"type": "string"
+		}
+	]
+}

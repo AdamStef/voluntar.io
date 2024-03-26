@@ -1,4 +1,4 @@
-package pl.sumatywny.voluntario.model;
+package pl.sumatywny.voluntario.model.user;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

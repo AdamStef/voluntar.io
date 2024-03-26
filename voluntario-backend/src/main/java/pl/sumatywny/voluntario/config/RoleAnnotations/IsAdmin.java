@@ -1,4 +1,4 @@
-package pl.sumatywny.voluntario.config;
+package pl.sumatywny.voluntario.config.RoleAnnotations;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 

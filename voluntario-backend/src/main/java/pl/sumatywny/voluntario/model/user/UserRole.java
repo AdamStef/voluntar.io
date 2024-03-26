@@ -1,4 +1,4 @@
-package pl.sumatywny.voluntario.model;
+package pl.sumatywny.voluntario.model.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,5 +15,6 @@ public class UserRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Enumerated(EnumType.STRING)
+    @Column(unique = true, nullable = false)
     private Role role;
 }

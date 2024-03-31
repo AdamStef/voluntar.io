@@ -14,7 +14,12 @@ public class UserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
     private Role role;
+
+    public UserRole(Role role) {
+        this.role = role;
+    }
 }

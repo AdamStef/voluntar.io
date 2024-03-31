@@ -1,9 +1,11 @@
-package pl.sumatywny.voluntario.model.user;
+package pl.sumatywny.voluntario.model.user.userdetails;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.sumatywny.voluntario.model.user.User;
+import pl.sumatywny.voluntario.model.user.UserRole;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,12 +13,12 @@ import java.util.List;
 
 @Getter
 public class CustomUserDetails extends User implements UserDetails {
-    private String username;
+    private String email;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
     public CustomUserDetails(User user) {
-        username = user.getUsername();
+        email = user.getEmail();
         password = user.getPassword();
 
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -31,6 +33,11 @@ public class CustomUserDetails extends User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     @Override

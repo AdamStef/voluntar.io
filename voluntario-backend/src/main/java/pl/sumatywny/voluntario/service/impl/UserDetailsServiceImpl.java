@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import pl.sumatywny.voluntario.model.user.CustomUserDetails;
+import pl.sumatywny.voluntario.model.user.userdetails.CustomUserDetails;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.UserRepository;
 
@@ -20,13 +20,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.debug("Loading user by username: " + username);
-        Optional<User> user = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        logger.debug("Loading user by email: " + email);
+        Optional<User> user = userRepository.findByEmail(email);
 
         if (user.isEmpty()) {
-            logger.error("User Not Found with username: " + username);
-            throw new UsernameNotFoundException("User Not Found with username: " + username);
+            logger.error("User Not Found with username: " + email);
+            throw new UsernameNotFoundException("User Not Found with email: " + email);
         }
         return new CustomUserDetails(user.get());
     }

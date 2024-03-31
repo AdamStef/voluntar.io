@@ -1,61 +1,32 @@
 package pl.sumatywny.voluntario.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.sumatywny.voluntario.dtos.RegisterDTO;
 import pl.sumatywny.voluntario.dtos.auth.AuthRequestDTO;
-import pl.sumatywny.voluntario.dtos.auth.JwtResponseDTO;
-import pl.sumatywny.voluntario.dtos.user.UserRequestDTO;
-import pl.sumatywny.voluntario.service.JwtService;
-import pl.sumatywny.voluntario.service.UserService;
+import pl.sumatywny.voluntario.service.impl.AuthService;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JwtService jwtService;
+    private final AuthService authService;
 
-    @Autowired
-    private UserService userService;
 
-    @PostMapping("/login")
-    public JwtResponseDTO authenticate(@RequestBody AuthRequestDTO authRequest, HttpServletRequest request) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(),authRequest.getPassword()));
-
-        if (authentication.isAuthenticated()) {
-            return JwtResponseDTO.builder()
-                    .accessToken(jwtService.generateToken(authRequest.getUsername()))
-                    .build();
-        } else {
-            throw new UsernameNotFoundException("Invalid username or password");
-        }
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody UserRequestDTO userRequest) {
-        try {
-            userService.register(userRequest);
-            return "User registered successfully!";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+    public ResponseEntity<?> register(@RequestBody RegisterDTO registerDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.authService.register(registerDTO));
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "Hello, World!";
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AuthRequestDTO authDTO, HttpServletRequest request, HttpServletResponse response) {
+        return ResponseEntity.ok().body(this.authService.login(authDTO, request, response));
     }
-
-//    @GetMapping("/logout")
-//    public String logout(HttpServletRequest request) {
-//        request.getSession().invalidate();
-//        return "Logged out successfully!";
-//    }
 }

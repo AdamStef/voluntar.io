@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: postgres:12
-    container_name: database
+    container_name: database_postgres
     environment:
       POSTGRES_DB: voluntarioDB
       POSTGRES_USER: postgres
@@ -12,6 +12,48 @@ services:
       - "5432:5432"
     volumes:
       - ./pgdata:/var/lib/postgresql/data
+  
+  # redis:
+  #   image: redis:alpine
+  #   container_name: session_redis
+  #   ports:
+  #     - "6379:6379"
+  #   environment:
+  #     REDIS_HOST: localhost
+  #     REDIS_PASSWORD: session
+  #   volumes:
+  #     - ./session_store:/data
+  
+  redis-stack:
+    image: redis/redis-stack:latest
+    volumes:
+      - redis-stack-data:/bitnami/redis/data
+#    container_name: redis
+#    hostname: redis
+    networks:
+      - redisnet
+    ports:
+      - "8001:8001"
+      - "6379:6379"
+    environment:
+      REDIS_HOST: localhost
+      REDIS_PASSWORD: session
+#    command: redis-server --port 6379 --requirepass "redispassword"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-p", "6379", "ping" ]
+      interval: 30s
+      timeout: 15s
+      retries: 10
 
 volumes:
+  redis-stack-data:
+    driver: local
+
   pgdata:
+    driver: local
+
+  # session_store:
+  #   driver: local
+
+networks:
+  redisnet: { }

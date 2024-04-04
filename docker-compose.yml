@@ -1,6 +1,39 @@
 version: '3.8'
 
 services:
+  # react-frontend:
+  #   build:
+  #     context: voluntario-frontend
+  #     dockerfile: Dockerfile
+  #   container_name: react-frontend
+  #   ports:
+  #     - "5173:5173"
+  #   volumes:
+  #     - ./voluntario-frontend/node_modules:/app/node_modules
+  #     - .:/app
+  #   # depends_on:
+  #   #   - api
+  #   environment:
+  #     - REACT_APP_API_URL=http://localhost:8000
+  
+  api:
+    build:
+      context: voluntario-backend
+      dockerfile: Dockerfile
+    container_name: api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - redis-stack
+    environment:
+      - SPRING_DATASOURCE_URL=postgresql://postgres:postgres@db:5432/voluntarioDB
+      - REDIS_URL=redis://session_redis:6379
+      - REDIS_PASSWORD=session
+      - PORT=8080
+    networks:
+      - redisnet
+  
   db:
     image: postgres:12
     container_name: database_postgres
@@ -13,23 +46,11 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
   
-  # redis:
-  #   image: redis:alpine
-  #   container_name: session_redis
-  #   ports:
-  #     - "6379:6379"
-  #   environment:
-  #     REDIS_HOST: localhost
-  #     REDIS_PASSWORD: session
-  #   volumes:
-  #     - ./session_store:/data
-  
   redis-stack:
     image: redis/redis-stack:latest
     volumes:
       - redis-stack-data:/bitnami/redis/data
-#    container_name: redis
-#    hostname: redis
+    container_name: session_redis
     networks:
       - redisnet
     ports:
@@ -38,7 +59,6 @@ services:
     environment:
       REDIS_HOST: localhost
       REDIS_PASSWORD: session
-#    command: redis-server --port 6379 --requirepass "redispassword"
     healthcheck:
       test: [ "CMD", "redis-cli", "-p", "6379", "ping" ]
       interval: 30s

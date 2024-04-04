@@ -1,9 +1,6 @@
 package pl.sumatywny.voluntario.dtos.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import pl.sumatywny.voluntario.model.user.UserRole;
 
 import java.util.Set;
@@ -12,9 +9,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 public class UserResponseDTO {
     private Long id;
-    private String username;
     private String email;
     private Set<UserRole> roles;
 }

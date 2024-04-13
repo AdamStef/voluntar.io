@@ -13,6 +13,8 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { FaSpinner } from 'react-icons/fa';
 import { useAuth } from '@/hooks/useAuth';
+import { cn } from '@/lib/utils';
+import { HTMLProps } from 'react';
 
 const LoginFormSchema = z.object({
   email: z.string().email(),
@@ -21,7 +23,11 @@ const LoginFormSchema = z.object({
 
 type LoginFormValues = z.infer<typeof LoginFormSchema>;
 
-export const LoginForm = () => {
+type Props = {
+  className?: HTMLProps<HTMLElement>['className'];
+};
+
+export const LoginForm: React.FC<Props> = ({ className }) => {
   const { login } = useAuth();
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(LoginFormSchema),
@@ -55,7 +61,7 @@ export const LoginForm = () => {
   return (
     <Form {...form}>
       <form
-        className="mx-auto mt-10 max-w-sm space-y-3"
+        className={cn('space-y-3', className)}
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
@@ -77,7 +83,7 @@ export const LoginForm = () => {
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Hasło</FormLabel>
               <FormControl>
                 <Input type="password" {...field} />
               </FormControl>
@@ -90,7 +96,7 @@ export const LoginForm = () => {
           Login
         </Button>
         {errors.root?.serverError && (
-          <p className="text-destructive text-center text-sm">
+          <p className="text-center text-sm text-destructive">
             {errors.root.serverError.message}
           </p>
         )}

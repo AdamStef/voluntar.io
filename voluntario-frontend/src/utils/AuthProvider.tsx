@@ -21,7 +21,8 @@ export const AuthProvider = ({ children }: Props) => {
       if (response.status === 200) {
         const user = response.data;
         setUser(user);
-        navigate('/');
+        console.log('Logged in user: ' + JSON.stringify(user));
+        navigate('/home');
       }
     } catch (error) {
       const err = error as AxiosError;
@@ -34,7 +35,8 @@ export const AuthProvider = ({ children }: Props) => {
       await axiosClient.post('/auth/logout');
       setUser(null);
       setIsLoading(false);
-      navigate('/login');
+      console.log('Logged out');
+      navigate('/');
     } catch (error) {
       return error;
     }

@@ -13,10 +13,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { RadioGroup } from '@radix-ui/react-radio-group';
 import { useForm } from 'react-hook-form';
 import { FaSpinner } from 'react-icons/fa';
-// import { GoOrganization } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { RadioGroupItem } from '../ui/radio-group';
+import React, { HTMLProps } from 'react';
+import { cn } from '@/lib/utils';
 
 const validationSchema = z
   .object({
@@ -38,7 +39,11 @@ type RegisterFormReq = {
   roles: string[];
 };
 
-const RegisterPage = () => {
+type Props = {
+  className?: HTMLProps<HTMLElement>['className'];
+};
+
+const RegisterPage: React.FC<Props> = ({ className }) => {
   const form = useForm<RegisterFormSchema>({
     resolver: zodResolver(validationSchema),
   });
@@ -66,7 +71,7 @@ const RegisterPage = () => {
   return (
     <Form {...form}>
       <form
-        className="mx-auto mt-10 max-w-sm space-y-3"
+        className={cn('mx-auto mt-10 max-w-sm space-y-3', className)}
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
@@ -148,7 +153,7 @@ const RegisterPage = () => {
           Register
         </Button>
         {errors.root?.serverError && (
-          <p className="text-destructive text-center text-sm">
+          <p className="text-center text-sm text-destructive">
             {errors.root.serverError.message}
           </p>
         )}

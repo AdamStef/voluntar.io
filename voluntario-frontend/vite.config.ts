@@ -12,9 +12,13 @@ export default defineConfig(({ mode }) => {
     //   __APP_ENV__: JSON.stringify(env.PORT),
     // },
     plugins: [react()],
+    optimizeDeps: {
+      include: ['tailwind-config'],
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
+        'tailwind-config': path.resolve(__dirname, './tailwind.config.js'),
       },
     },
     server: {

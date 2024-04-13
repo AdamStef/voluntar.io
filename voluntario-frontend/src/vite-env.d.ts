@@ -11,3 +11,7 @@ interface ImportMeta {
 // interface UserConfig {
 //     readonly VITE_PORT: number
 // }
+declare module 'tailwind-config' {
+  const config: Config;
+  export default config;
+}

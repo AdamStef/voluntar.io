@@ -18,9 +18,10 @@ public class Event {
     private List<User> participants;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private Location location;
 
 
-    private Boolean addParticipant(User user) {
+    public Boolean addParticipant(User user) {
         if(participants.contains(user)) {
             return false;
         }
@@ -29,7 +30,7 @@ public class Event {
         }
     }
 
-    private Boolean removeParticipant(User user) {
+    public Boolean removeParticipant(User user) {
         if(participants.contains(user)) {
             return participants.remove(user);
         }

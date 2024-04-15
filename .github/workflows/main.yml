@@ -43,7 +43,7 @@ jobs:
       runs-on: ubuntu-latest
       defaults:
         run:
-          working-directory: ./voluntario-frontend
+          working-directory: ./voluntario-frontend/
   
       strategy:
         matrix:

@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import pl.sumatywny.voluntario.model.notification.Notification;
 import pl.sumatywny.voluntario.model.user.Role;
 import pl.sumatywny.voluntario.model.user.UserRole;
 import pl.sumatywny.voluntario.repository.RoleRepository;
@@ -23,6 +24,9 @@ public class VoluntarioApplication {
 //	private PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
+		// test for notifications - uncomment
+//		Notification notification = new Notification("Nowe powiadomienie!", "W dniu dzisiejszym jesteś zapisany na wolontariat!!!");
+//		notification.show();
 		SpringApplication.run(VoluntarioApplication.class, args);
 	}
 

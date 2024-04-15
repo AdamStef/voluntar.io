@@ -33,12 +33,14 @@ export const AuthProvider = ({ children }: Props) => {
   const logout = async () => {
     try {
       await axiosClient.post('/auth/logout');
-      setUser(null);
+    } catch (error) {
+      const err = error as AxiosError;
+      return err;
+    } finally {
       setIsLoading(false);
+      setUser(null);
       console.log('Logged out');
       navigate('/');
-    } catch (error) {
-      return error;
     }
   };
 

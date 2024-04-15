@@ -9,7 +9,9 @@
     "build": "tsc && vite build",
     "build-watch": "tsc && vite build --watch",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "test": "echo \"No tests\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",

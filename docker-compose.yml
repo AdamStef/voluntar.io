@@ -16,23 +16,23 @@ services:
   #   environment:
   #     - REACT_APP_API_URL=http://localhost:8000
   
-  api:
-    build:
-      context: voluntario-backend
-      dockerfile: Dockerfile
-    container_name: api
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-      - redis-stack
-    environment:
-      - SPRING_DATASOURCE_URL=postgresql://postgres:postgres@db:5432/voluntarioDB
-      - REDIS_URL=redis://session_redis:6379
-      - REDIS_PASSWORD=session
-      - PORT=8080
-    networks:
-      - redisnet
+  # api:
+  #   build:
+  #     context: voluntario-backend
+  #     dockerfile: Dockerfile
+  #   container_name: api
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - db
+  #     - redis-stack
+  #   environment:
+  #     - SPRING_DATASOURCE_URL=postgresql://postgres:postgres@db:5432/voluntarioDB
+  #     - REDIS_URL=redis://session_redis:6379
+  #     - REDIS_PASSWORD=session
+  #     - PORT=8080
+  #   networks:
+  #     - redisnet
   
   db:
     image: postgres:12

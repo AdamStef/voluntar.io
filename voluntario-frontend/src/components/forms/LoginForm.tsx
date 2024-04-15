@@ -14,7 +14,7 @@ import { Button } from '../ui/button';
 import { FaSpinner } from 'react-icons/fa';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
-import { HTMLProps } from 'react';
+import { HTMLProps, useEffect, useRef } from 'react';
 
 const LoginFormSchema = z.object({
   email: z.string().email(),
@@ -32,6 +32,11 @@ export const LoginForm: React.FC<Props> = ({ className }) => {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(LoginFormSchema),
   });
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const onSubmit = async (data: LoginFormValues) => {
     console.log('Login user: ' + JSON.stringify(data));
@@ -70,7 +75,7 @@ export const LoginForm: React.FC<Props> = ({ className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
-              <FormControl>
+              <FormControl ref={inputRef}>
                 <Input type="email" {...field} />
               </FormControl>
               <FormMessage />

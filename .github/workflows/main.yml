@@ -41,9 +41,9 @@ jobs:
   frontend-build:
   
       runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./voluntario-frontend/
+      # defaults:
+      #   run:
+      #     working-directory: ./voluntario-frontend/
   
       strategy:
         matrix:

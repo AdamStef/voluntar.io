@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: Build Voluntar.io
 
 on:
   push:
@@ -29,9 +29,6 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
-
-    - name: Run Docker Compose
-      run: docker compose up
       
     - name: Build with Maven
       run: mvn -B package --file pom.xml
@@ -46,11 +43,11 @@ jobs:
       runs-on: ubuntu-latest
       defaults:
         run:
-          working-directory: ./voluntario-backend
+          working-directory: ./voluntario-frontend
   
       strategy:
         matrix:
-          node-version: [14.x, 16.x, 18.x]
+          node-version: [20.x]
           # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
   
       steps:
@@ -60,6 +57,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
       - run: npm run build --if-present
       - run: npm test

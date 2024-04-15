@@ -1,23 +1,18 @@
-import { Outlet } from "react-router-dom";
+import { Navbar } from '@/components/ui/Navbar';
+import { Outlet } from 'react-router-dom';
 
 export const Layout = () => {
   return (
     <>
       <header>
-        <nav>
-          <ul>
-            <li>Home</li>
-            <li>About</li>
-            <li>Contact</li>
-          </ul>
-        </nav>
+        <Navbar />
       </header>
       <main>
         <Outlet />
       </main>
-      <footer>
+      {/* <footer>
         <p>Footer</p>
-      </footer>
+      </footer> */}
     </>
   );
 };

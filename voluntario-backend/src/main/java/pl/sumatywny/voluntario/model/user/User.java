@@ -7,8 +7,6 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import static jakarta.persistence.CascadeType.*;
-
 @Entity
 @Data
 @ToString
@@ -21,9 +19,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-//    @Column(unique = true, nullable = false)
-//    private String username;
 
     @Column(unique = true, nullable = false)
     private String email;

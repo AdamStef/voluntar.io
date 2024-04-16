@@ -90,7 +90,7 @@ public class AuthService {
         return "User registered.";
     }
 
-    public String login(AuthRequestDTO authRequestDTO, HttpServletRequest request, HttpServletResponse response) {
+    public Authentication login(AuthRequestDTO authRequestDTO, HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = authManager.authenticate(
                 UsernamePasswordAuthenticationToken.unauthenticated(authRequestDTO.getEmail(), authRequestDTO.getPassword())
         );
@@ -103,7 +103,7 @@ public class AuthService {
         securityContextHolderStrategy.setContext(context);
         securityContextRepository.saveContext(context, request, response);
 
-        return "User logged in.";
+        return context.getAuthentication();
     }
 
     private void validateMaxSession(Authentication authentication) {

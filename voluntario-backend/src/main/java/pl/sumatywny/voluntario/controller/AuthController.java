@@ -10,6 +10,7 @@ import pl.sumatywny.voluntario.dtos.RegisterDTO;
 import pl.sumatywny.voluntario.dtos.auth.AuthRequestDTO;
 import pl.sumatywny.voluntario.dtos.user.UserResponseDTO;
 import pl.sumatywny.voluntario.model.user.userdetails.CustomUserDetails;
+import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 
 @RestController
@@ -17,20 +18,30 @@ import pl.sumatywny.voluntario.service.impl.AuthService;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserService userService;
 
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, UserService userService) {
         this.authService = authService;
+        this.userService = userService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDTO registerDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.authService.register(registerDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(registerDTO));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequestDTO authDTO, HttpServletRequest request, HttpServletResponse response) {
-        return ResponseEntity.ok().body(this.authService.login(authDTO, request, response));
+        var authentication = authService.login(authDTO, request, response);
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        var principal = (CustomUserDetails) authentication.getPrincipal();
+        var user = userService.getUserByEmail(principal.getUsername());
+
+        return ResponseEntity.ok().body(UserResponseDTO.mapFromUser(user));
     }
 
     @GetMapping("/me")
@@ -38,13 +49,10 @@ public class AuthController {
         if (authentication == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        var user = (CustomUserDetails) authentication.getPrincipal();
 
-        UserResponseDTO responseDTO = UserResponseDTO.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .build();
+        var principal = (CustomUserDetails) authentication.getPrincipal();
+        var user = userService.getUserByEmail(principal.getUsername());
 
-        return ResponseEntity.ok().body(responseDTO);
+        return ResponseEntity.ok().body(UserResponseDTO.mapFromUser(user));
     }
 }

@@ -5,7 +5,7 @@ import pl.sumatywny.voluntario.model.notification.Notification;
 
 import java.util.List;
 
-public interface NotificationRepository extends JpaRepository<Notification, Integer> {
+public interface NotificationRepository {
 
     List<Notification> getNotifications();
     void saveNotification(Notification notification);

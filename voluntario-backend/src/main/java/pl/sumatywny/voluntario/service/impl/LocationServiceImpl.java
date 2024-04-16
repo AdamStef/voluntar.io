@@ -12,108 +12,108 @@ public class LocationServiceImpl implements LocationService {
     private LocationRepository locationRepository;
 
     @Override
-    public Boolean CreateLocation(Location Location) {
-        if(!locationRepository.findById(Location.getId()).isPresent()) {
-            locationRepository.save(Location);
+    public Boolean CreateLocation(Location location) {
+        if(locationRepository.findFirstById(location.getId()) != null) {
+            locationRepository.save(location);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean DeleteLocation(Location Location) {
-        if(locationRepository.findById(Location.getId()).isPresent()) {
-            locationRepository.delete(Location);
+    public Boolean DeleteLocation(Location location) {
+        if(locationRepository.findFirstById(location.getId()) != null) {
+            locationRepository.delete(location);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean changeLocationName(Location Location, String newName) {
-        if(locationRepository.findById(Location.getId()).isPresent()) {
-            Location.setName(newName);
-            locationRepository.save(Location);
+    public Boolean changeLocationName(Location location, String newName) {
+        if(locationRepository.findFirstById(location.getId()) != null) {
+            location.setName(newName);
+            locationRepository.save(location);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean changeLocationAdditionalInfo(Location Location, String newAdditionalInformation) {
-        if(locationRepository.findById(Location.getId()).isPresent()) {
-            Location.setAdditionalInformation(newAdditionalInformation);
-            locationRepository.save(Location);
+    public Boolean changeLocationAdditionalInfo(Location location, String newAdditionalInformation) {
+        if(locationRepository.findFirstById(location.getId()) != null) {
+            location.setAdditionalInformation(newAdditionalInformation);
+            locationRepository.save(location);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean changeLocationCity(Location Location, String newCity) {
-        if(locationRepository.findById(Location.getId()).isPresent()) {
-            Location.setCity(newCity);
-            locationRepository.save(Location);
+    public Boolean changeLocationCity(Location location, String newCity) {
+        if(locationRepository.findFirstById(location.getId()) != null) {
+            location.setCity(newCity);
+            locationRepository.save(location);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean changeLocationPostalCode(Location Location, String newPostalCode) {
-        if(locationRepository.findById(Location.getId()).isPresent()) {
-            Location.setPostalCode(newPostalCode);
-            locationRepository.save(Location);
+    public Boolean changeLocationPostalCode(Location location, String newPostalCode) {
+        if(locationRepository.findFirstById(location.getId()) != null) {
+            location.setPostalCode(newPostalCode);
+            locationRepository.save(location);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean changeLocationStreet(Location Location, String newStreet) {
-        if(locationRepository.findById(Location.getId()).isPresent()) {
-            Location.setStreet(newStreet);
-            locationRepository.save(Location);
+    public Boolean changeLocationStreet(Location location, String newStreet) {
+        if(locationRepository.findFirstById(location.getId()) != null) {
+            location.setStreet(newStreet);
+            locationRepository.save(location);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean changeLocationStreetNumber(Location Location, String newStreetNumber) {
-        if(locationRepository.findById(Location.getId()).isPresent()) {
-            Location.setNumber(newStreetNumber);
-            locationRepository.save(Location);
+    public Boolean changeLocationStreetNumber(Location location, String newStreetNumber) {
+        if(locationRepository.findFirstById(location.getId()) != null) {
+            location.setNumber(newStreetNumber);
+            locationRepository.save(location);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean changeLocationFlatNumber(Location Location, String newFlatNumber) {
-        if(locationRepository.findById(Location.getId()).isPresent()) {
-            Location.setFlatNumber(newFlatNumber);
-            locationRepository.save(Location);
+    public Boolean changeLocationFlatNumber(Location location, String newFlatNumber) {
+        if(locationRepository.findFirstById(location.getId()) != null) {
+            location.setFlatNumber(newFlatNumber);
+            locationRepository.save(location);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean changeLocationLatitude(Location Location, String newLatitude) {
-        if(locationRepository.findById(Location.getId()).isPresent()) {
-            Location.setLatitude(newLatitude);
-            locationRepository.save(Location);
+    public Boolean changeLocationLatitude(Location location, String newLatitude) {
+        if(locationRepository.findFirstById(location.getId()) != null) {
+            location.setLatitude(newLatitude);
+            locationRepository.save(location);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean changeLocationLongitude(Location Location, String newLongitude) {
-        if(locationRepository.findById(Location.getId()).isPresent()) {
-            Location.setLongitude(newLongitude);
-            locationRepository.save(Location);
+    public Boolean changeLocationLongitude(Location location, String newLongitude) {
+        if(locationRepository.findFirstById(location.getId()) != null) {
+            location.setLongitude(newLongitude);
+            locationRepository.save(location);
             return true;
         }
         return false;

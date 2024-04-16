@@ -1,6 +1,5 @@
 package pl.sumatywny.voluntario.service.impl;
 
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.model.event.Event;
@@ -20,83 +19,87 @@ public class EventServiceImpl implements EventService {
     private UserRepository userRepository;
 
     @Override
-    public Boolean CreateEvent(Event Event) {
-        if(Event.getOrganizer() != null && userRepository.findById(Event.getOrganizer().getId()).isPresent()) {
-            eventRepository.save(Event);
+    public Boolean CreateEvent(Event event) {
+        if(event.getOrganizer() != null && userRepository.findById(event.getOrganizer().getId()).isPresent()) {
+            eventRepository.save(event);
             return true;
         }
         return false;
     }
     @Override
-    public Boolean DeleteEvent(Event Event) {
-        if(eventRepository.findById(Event.getId()).isPresent()) {
-            eventRepository.delete(Event);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public Boolean assignUserToEvent(Event Event, User User) {
-        if(eventRepository.findById(Event.getId()).isPresent() && userRepository.findById(User.getId()).isPresent()) {
-            return Event.addParticipant(User);
-        }
-        return false;
-    }
-
-    @Override
-    public Boolean removeUserFromEvent(Event Event, User User) {
-        if(eventRepository.findById(Event.getId()).isPresent() && userRepository.findById(User.getId()).isPresent()) {
-            return Event.removeParticipant(User);
-        }
-        return false;
-    }
-
-    @Override
-    public Boolean changeEventName(Event Event, String newName) {
-        if(eventRepository.findById(Event.getId()).isPresent()) {
-            Event.setName(newName);
-            eventRepository.save(Event);
+    public Boolean DeleteEvent(Event event) {
+        if (eventRepository.findFirstById(event.getId()) != null) {
+            eventRepository.delete(event);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean changeEventDescription(Event Event, String newDescription) {
-        if(eventRepository.findById(Event.getId()).isPresent()) {
-            Event.setDescription(newDescription);
-            eventRepository.save(Event);
+    public Boolean assignUserToEvent(Event event, User user) {
+        if (eventRepository.findFirstById(event.getId()) != null && userRepository.findFirstById(user.getId()) != null) {
+            event.addParticipant(user);
+            eventRepository.save(event);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean changeEventStartDate(Event Event, LocalDateTime newStartDate) {
-        if(eventRepository.findById(Event.getId()).isPresent()) {
-            Event.setStartDate(newStartDate);
-            eventRepository.save(Event);
+    public Boolean removeUserFromEvent(Event event, User user) {
+        if (eventRepository.findFirstById(event.getId()) != null && userRepository.findFirstById(user.getId()) != null) {
+            event.removeParticipant(user);
+            eventRepository.save(event);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean changeEventEndDate(Event Event, LocalDateTime newEndDate) {
-        if(eventRepository.findById(Event.getId()).isPresent()) {
-            Event.setEndDate(newEndDate);
-            eventRepository.save(Event);
+    public Boolean changeEventName(Event event, String newName) {
+        if (eventRepository.findFirstById(event.getId()) != null) {
+            event.setName(newName);
+            eventRepository.save(event);
             return true;
         }
         return false;
     }
 
     @Override
-    public Boolean changeEventLocation(Event Event, Location newLocation) {
-        if(eventRepository.findById(Event.getId()).isPresent()) {
-            Event.setLocation(newLocation);
-            eventRepository.save(Event);
+    public Boolean changeEventDescription(Event event, String newDescription) {
+        if (eventRepository.findFirstById(event.getId()) != null) {
+            event.setDescription(newDescription);
+            eventRepository.save(event);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean changeEventStartDate(Event event, LocalDateTime newStartDate) {
+        if (eventRepository.findFirstById(event.getId()) != null) {
+            event.setStartDate(newStartDate);
+            eventRepository.save(event);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean changeEventEndDate(Event event, LocalDateTime newEndDate) {
+        if (eventRepository.findFirstById(event.getId()) != null) {
+            event.setEndDate(newEndDate);
+            eventRepository.save(event);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean changeEventLocation(Event event, Location newLocation) {
+        if (eventRepository.findFirstById(event.getId()) != null) {
+            event.setLocation(newLocation);
+            eventRepository.save(event);
             return true;
         }
         return false;

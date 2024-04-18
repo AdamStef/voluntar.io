@@ -3,6 +3,7 @@ package pl.sumatywny.voluntario.model.user;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "roles")
+@Getter
 public class UserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

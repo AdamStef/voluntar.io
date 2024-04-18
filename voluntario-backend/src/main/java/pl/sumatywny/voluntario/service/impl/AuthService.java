@@ -120,4 +120,8 @@ public class AuthService {
                     .ifPresent(sessionInformation -> redisIndexedSessionRepository.deleteById(sessionInformation.getSessionId()));
         }
     }
+
+    public Optional<User> getUserFromSession() {
+        return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+    }
 }

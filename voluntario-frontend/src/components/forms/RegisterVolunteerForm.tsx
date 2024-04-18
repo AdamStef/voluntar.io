@@ -71,7 +71,7 @@ const RegisterPage: React.FC<Props> = ({ className }) => {
   return (
     <Form {...form}>
       <form
-        className={cn('mx-auto mt-10 max-w-sm space-y-3', className)}
+        className={cn('mx-auto max-w-sm space-y-3', className)}
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField

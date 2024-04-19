@@ -25,7 +25,7 @@ public class Event {
     @ManyToOne
     private User organizer;
     private int numberOfVolunteersNeeded;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "events_participants",
             joinColumns = @JoinColumn(name = "events_id"),

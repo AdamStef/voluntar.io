@@ -30,9 +30,6 @@ public class EventService {
     }
 
     public String createEvent(EventDTO eventDTO, Optional<User> user) throws Exception {
-        System.out.println(user.get());
-        System.out.println("\n\n" + user.get().getRoles() + "\n\n");
-//        System.out.println(user.get().getRole().contains(Role.ROLE_VOLUNTEER));
         Set<UserRole> roles = user.get().getRoles();
         for (UserRole r : roles) {
             if (r.getRole() == Role.ROLE_VOLUNTEER) {
@@ -53,20 +50,22 @@ public class EventService {
     }
 
     @Transactional
-    public String addVolunteer(Long eventID, Optional<User> user) throws Exception {
+    public String addParticipant(Long eventID, Optional<User> user) throws Exception {
         Event event = eventRepository.findFirstById(eventID);
         if (event == null) {
             throw new Exception("Event not found");
         }
         event.addParticipant(user.get());
         eventRepository.save(event);
-//        System.out.println("Zapisani czonkowie" + event.getParticipants());
         return "The volunteer was added to the participants list";
     }
 
     @Transactional
-    public String removeVolunteer(Long eventID, Long userID) throws Exception {
+    public String removeParticipant(Long eventID, Long userID) throws Exception {
         Event event = eventRepository.findFirstById(eventID);
+        if (event == null) {
+            throw new Exception("Event not found");
+        }
         User user = userRepository.findFirstById(userID);
         if (user == null) {
             throw new Exception("Volunteer with this ID does not exist");
@@ -79,23 +78,34 @@ public class EventService {
         }
     }
 
-//    @Transactional
-    public List<User> getAllParticipants(Long eventID) {
+    public List<User> getAllParticipants(Long eventID) throws Exception {
         Event event = eventRepository.findFirstById(eventID);
+        if (event == null) {
+            throw new Exception("Event not found");
+        }
         return event.getParticipants();
     }
 
-//    @Transactional
     public List<Event> getAllEvents() {
         List<Event> events = eventRepository.findAll();
         return events;
     }
 
-//    @Transactional
-    public Event getEvent(Long eventID) {
+    public Event getEvent(Long eventID) throws Exception {
         Event event = eventRepository.findFirstById(eventID);
-//        System.out.println("test" + event);
+        if (event == null) {
+            throw new Exception("Event not found");
+        }
         return event;
+    }
+
+    public String removeEvent(Long eventID) throws Exception {
+        Event event = eventRepository.findFirstById(eventID);
+        if (event == null) {
+            throw new Exception("Event not found");
+        }
+        eventRepository.delete(event);
+        return "Event removed";
     }
 }
 

@@ -14,7 +14,6 @@ import java.time.ZonedDateTime;
 
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
 @Order(HIGHEST_PRECEDENCE)

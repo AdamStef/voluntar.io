@@ -52,7 +52,7 @@ public class AuthService {
         this.securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
     }
 
-    public String register(RegisterDTO registerDTO) {
+    public User register(RegisterDTO registerDTO) {
         String email = registerDTO.getEmail(); // TODO: .trim();
 
         if (userRepository.existsByEmail(email)) {
@@ -86,8 +86,7 @@ public class AuthService {
                 .roles(roles)
                 .build();
 
-        userRepository.save(user);
-        return "User registered.";
+        return userRepository.save(user);
     }
 
     public Authentication login(AuthRequestDTO authRequestDTO, HttpServletRequest request, HttpServletResponse response) {

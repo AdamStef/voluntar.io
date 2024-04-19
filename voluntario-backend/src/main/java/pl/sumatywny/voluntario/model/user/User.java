@@ -42,8 +42,8 @@ public class User {
     @Column(nullable = false)
     private String phoneNumber;
 
-//    @Column(nullable = false)
-//    private Boolean isVerified;
+    @Column(nullable = false)
+    private Boolean isVerified;
 
     @Column(nullable = false)
     private Boolean isDeleted;
@@ -56,6 +56,6 @@ public class User {
     private Instant createdAt;
 
     @LastModifiedDate
-    @Column(nullable = false/*, insertable = false*/)
+    @Column(nullable = false)
     private Instant updatedAt;
 }

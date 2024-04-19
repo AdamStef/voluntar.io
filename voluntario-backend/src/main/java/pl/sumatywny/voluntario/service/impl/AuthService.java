@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 public class AuthService {
     @Value(value = "${custom.max.session}")
     private int maxSession;
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
@@ -53,7 +54,7 @@ public class AuthService {
     }
 
     public User register(RegisterDTO registerDTO) {
-        String email = registerDTO.getEmail(); // TODO: .trim();
+        String email = registerDTO.getEmail().trim();
 
         if (userRepository.existsByEmail(email)) {
             throw new IllegalStateException(String.format("User with email %s already exists.", email));
@@ -79,10 +80,10 @@ public class AuthService {
                 .phoneNumber(registerDTO.getPhoneNumber())
                 .isDeleted(false)
                 .isBanned(false)
+                .isVerified(false)
                 .build();
 
-        var savedUser = userRepository.save(user);
-        return savedUser;
+        return userRepository.save(user);
     }
 
     public Authentication login(AuthRequestDTO authRequestDTO, HttpServletRequest request, HttpServletResponse response) {

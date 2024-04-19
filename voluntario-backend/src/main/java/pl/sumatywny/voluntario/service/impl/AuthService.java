@@ -59,31 +59,21 @@ public class AuthService {
             throw new IllegalStateException(String.format("User with email %s already exists.", email));
         }
 
-        Set<Role> rolesReq;
+        Role roleEnum;
+
         try {
-            rolesReq = registerDTO.getRoles().stream()
-                .map(role -> Role.valueOf("ROLE_" + role.toUpperCase()))
-                .collect(Collectors.toSet());
+            roleEnum = Role.valueOf("ROLE_" + registerDTO.getRole().toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid role name.");
+            throw new IllegalArgumentException("Role not found.");
         }
 
-        Set<UserRole> roles = rolesReq.stream().map(role -> roleRepository.findByRole(role)
-            .orElseThrow(() -> new IllegalStateException("Role not found.")))
-            .collect(Collectors.toSet());
-
-//        Role roleEnum = Role.valueOf("ROLE_" + registerDTO.getRole().toUpperCase());
-
-//        UserRole role = roleRepository.findByRole(roleEnum)
-//                .orElseThrow(() -> new IllegalStateException("Role not found."));
-//
-//        Set<UserRole> roles = new HashSet<>();
-//        roles.add(role);
+        UserRole role = roleRepository.findByRole(roleEnum)
+                .orElseThrow(() -> new IllegalArgumentException("Role not found."));
 
         User user = User.builder()
                 .email(email)
                 .password(passwordEncoder.encode(registerDTO.getPassword()))
-                .roles(roles)
+                .role(role)
                 .build();
 
         return userRepository.save(user);

@@ -25,6 +25,7 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.session.Session;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
+import pl.sumatywny.voluntario.repository.UserRepository;
 import pl.sumatywny.voluntario.service.impl.UserDetailsServiceImpl;
 
 @Configuration
@@ -35,17 +36,19 @@ public class SecurityConfig {
     private int maxSession;
     private final RedisIndexedSessionRepository redisIndexedSessionRepository;
     private final AuthenticationEntryPoint authEntryPoint;
+    private final UserRepository userRepository;
 
     public SecurityConfig(
             RedisIndexedSessionRepository redisIndexedSessionRepository,
-            @Qualifier("authEntryPoint") AuthenticationEntryPoint authEntryPoint) {
+            @Qualifier("authEntryPoint") AuthenticationEntryPoint authEntryPoint, UserRepository userRepository) {
         this.redisIndexedSessionRepository = redisIndexedSessionRepository;
         this.authEntryPoint = authEntryPoint;
+        this.userRepository = userRepository;
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new UserDetailsServiceImpl();
+        return new UserDetailsServiceImpl(userRepository);
     }
 
     @Bean

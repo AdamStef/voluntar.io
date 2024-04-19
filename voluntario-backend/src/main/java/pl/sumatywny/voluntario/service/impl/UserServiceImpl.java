@@ -5,7 +5,7 @@ import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.repository.UserRepository;
 
-@Service()
+@Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 

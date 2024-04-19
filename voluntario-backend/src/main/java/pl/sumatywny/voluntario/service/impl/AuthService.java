@@ -74,9 +74,15 @@ public class AuthService {
                 .email(email)
                 .password(passwordEncoder.encode(registerDTO.getPassword()))
                 .role(role)
+                .firstName(registerDTO.getFirstName())
+                .lastName(registerDTO.getLastName())
+                .phoneNumber(registerDTO.getPhoneNumber())
+                .isDeleted(false)
+                .isBanned(false)
                 .build();
 
-        return userRepository.save(user);
+        var savedUser = userRepository.save(user);
+        return savedUser;
     }
 
     public Authentication login(AuthRequestDTO authRequestDTO, HttpServletRequest request, HttpServletResponse response) {

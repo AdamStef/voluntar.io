@@ -18,14 +18,13 @@ import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.dtos.RegisterDTO;
 import pl.sumatywny.voluntario.dtos.auth.AuthRequestDTO;
-import pl.sumatywny.voluntario.model.user.Role;
+import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.model.user.UserRole;
 import pl.sumatywny.voluntario.repository.RoleRepository;
 import pl.sumatywny.voluntario.repository.UserRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -54,7 +53,7 @@ public class AuthService {
     }
 
     public User register(RegisterDTO registerDTO) {
-        String email = registerDTO.getEmail().trim();
+        String email = registerDTO.email().trim();
 
         if (userRepository.existsByEmail(email)) {
             throw new IllegalStateException(String.format("User with email %s already exists.", email));
@@ -63,7 +62,7 @@ public class AuthService {
         Role roleEnum;
 
         try {
-            roleEnum = Role.valueOf("ROLE_" + registerDTO.getRole().toUpperCase());
+            roleEnum = Role.valueOf("ROLE_" + registerDTO.role().toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Role not found.");
         }
@@ -73,11 +72,11 @@ public class AuthService {
 
         User user = User.builder()
                 .email(email)
-                .password(passwordEncoder.encode(registerDTO.getPassword()))
+                .password(passwordEncoder.encode(registerDTO.password()))
                 .role(role)
-                .firstName(registerDTO.getFirstName())
-                .lastName(registerDTO.getLastName())
-                .phoneNumber(registerDTO.getPhoneNumber())
+                .firstName(registerDTO.firstName())
+                .lastName(registerDTO.lastName())
+                .phoneNumber(registerDTO.phoneNumber())
                 .isDeleted(false)
                 .isBanned(false)
                 .isVerified(false)

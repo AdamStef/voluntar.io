@@ -23,6 +23,6 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 
         var user = (CustomUserDetails) authentication.getPrincipal();
 
-        return Optional.of(user.getEmail());
+        return Optional.of(user.getUsername());
     }
 }

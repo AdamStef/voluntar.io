@@ -6,34 +6,39 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.sumatywny.voluntario.model.user.User;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 @Getter
-public class CustomUserDetails extends User implements UserDetails {
+public class CustomUserDetails implements UserDetails {
+//    private final User user;
     private final String email;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public CustomUserDetails(User user) {
-        email = user.getEmail();
-        password = user.getPassword();
-
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().getRole().name()));
-
-        this.authorities = authorities;
+//        this.user = user;
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.authorities = Collections.singleton(new SimpleGrantedAuthority(user.getRole().getRole().name()));
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return Collections.singleton(new SimpleGrantedAuthority(user.getRole().getRole().name()));
         return authorities;
     }
 
     @Override
     public String getUsername() {
+//        return user.getEmail();
         return email;
+    }
+
+    @Override
+    public String getPassword() {
+//        return user.getPassword();
+        return password;
     }
 
     @Override

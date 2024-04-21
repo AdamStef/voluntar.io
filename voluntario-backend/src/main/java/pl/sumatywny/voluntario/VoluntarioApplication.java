@@ -5,7 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import pl.sumatywny.voluntario.model.user.Role;
+import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.model.user.UserRole;
 import pl.sumatywny.voluntario.repository.RoleRepository;
 

@@ -17,6 +17,7 @@ public class RedisConfig {
         this.redisProperties = redisProperties;
     }
 
+    @Bean
     public LettuceConnectionFactory connectionFactory() {
         RedisStandaloneConfiguration configuration =
                 new RedisStandaloneConfiguration(this.redisProperties.getHost(), this.redisProperties.getPort());
@@ -30,5 +31,5 @@ public class RedisConfig {
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
     }
-
+    
 }

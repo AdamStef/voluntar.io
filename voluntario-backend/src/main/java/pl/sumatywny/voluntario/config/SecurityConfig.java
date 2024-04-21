@@ -40,7 +40,8 @@ public class SecurityConfig {
 
     public SecurityConfig(
             RedisIndexedSessionRepository redisIndexedSessionRepository,
-            @Qualifier("authEntryPoint") AuthenticationEntryPoint authEntryPoint, UserRepository userRepository) {
+            @Qualifier("authEntryPoint") AuthenticationEntryPoint authEntryPoint,
+            UserRepository userRepository) {
         this.redisIndexedSessionRepository = redisIndexedSessionRepository;
         this.authEntryPoint = authEntryPoint;
         this.userRepository = userRepository;
@@ -82,7 +83,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register", "api/auth/login").permitAll()
                         .anyRequest().authenticated()
-//                        .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)

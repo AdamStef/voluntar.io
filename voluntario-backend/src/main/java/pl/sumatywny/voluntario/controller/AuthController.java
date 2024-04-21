@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.sumatywny.voluntario.dtos.RegisterDTO;
 import pl.sumatywny.voluntario.dtos.auth.AuthRequestDTO;
 import pl.sumatywny.voluntario.dtos.user.UserResponseDTO;
+import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.model.user.userdetails.CustomUserDetails;
 import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
@@ -28,7 +29,8 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDTO registerDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(registerDTO));
+        User user = authService.register(registerDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponseDTO.mapFromUser(user));
     }
 
     @PostMapping("/login")

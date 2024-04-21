@@ -15,16 +15,13 @@ import java.util.stream.Collectors;
 public class UserResponseDTO {
     private Long id;
     private String email;
-    private Set<String> roles;
+    private String role;
 
     public static UserResponseDTO mapFromUser(User user) {
         return UserResponseDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .roles(user.getRoles().stream()
-                        .map(UserRole::getRole)
-                        .map(role -> role.name().split("ROLE_")[1])
-                        .collect(Collectors.toSet()))
+                .role(user.getRole().getRole().name().split("ROLE_")[1])
                 .build();
     }
 }

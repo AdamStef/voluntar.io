@@ -18,19 +18,19 @@ import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.dtos.RegisterDTO;
 import pl.sumatywny.voluntario.dtos.auth.AuthRequestDTO;
-import pl.sumatywny.voluntario.model.user.Role;
+import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.model.user.UserRole;
 import pl.sumatywny.voluntario.repository.RoleRepository;
 import pl.sumatywny.voluntario.repository.UserRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
     @Value(value = "${custom.max.session}")
     private int maxSession;
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
@@ -52,42 +52,37 @@ public class AuthService {
         this.securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
     }
 
-    public String register(RegisterDTO registerDTO) {
-        String email = registerDTO.getEmail(); // TODO: .trim();
+    public User register(RegisterDTO registerDTO) {
+        String email = registerDTO.email().trim();
 
         if (userRepository.existsByEmail(email)) {
             throw new IllegalStateException(String.format("User with email %s already exists.", email));
         }
 
-        Set<Role> rolesReq;
+        Role roleEnum;
+
         try {
-            rolesReq = registerDTO.getRoles().stream()
-                .map(role -> Role.valueOf("ROLE_" + role.toUpperCase()))
-                .collect(Collectors.toSet());
+            roleEnum = Role.valueOf("ROLE_" + registerDTO.role().toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid role name.");
+            throw new IllegalArgumentException("Role not found.");
         }
 
-        Set<UserRole> roles = rolesReq.stream().map(role -> roleRepository.findByRole(role)
-            .orElseThrow(() -> new IllegalStateException("Role not found.")))
-            .collect(Collectors.toSet());
-
-//        Role roleEnum = Role.valueOf("ROLE_" + registerDTO.getRole().toUpperCase());
-
-//        UserRole role = roleRepository.findByRole(roleEnum)
-//                .orElseThrow(() -> new IllegalStateException("Role not found."));
-//
-//        Set<UserRole> roles = new HashSet<>();
-//        roles.add(role);
+        UserRole role = roleRepository.findByRole(roleEnum)
+                .orElseThrow(() -> new IllegalArgumentException("Role not found."));
 
         User user = User.builder()
                 .email(email)
-                .password(passwordEncoder.encode(registerDTO.getPassword()))
-                .roles(roles)
+                .password(passwordEncoder.encode(registerDTO.password()))
+                .role(role)
+                .firstName(registerDTO.firstName())
+                .lastName(registerDTO.lastName())
+                .phoneNumber(registerDTO.phoneNumber())
+                .isDeleted(false)
+                .isBanned(false)
+                .isVerified(false)
                 .build();
 
-        userRepository.save(user);
-        return "User registered.";
+        return userRepository.save(user);
     }
 
     public Authentication login(AuthRequestDTO authRequestDTO, HttpServletRequest request, HttpServletResponse response) {

@@ -1,4 +1,5 @@
-package pl.sumatywny.voluntario.config.RoleAnnotations;
+package pl.sumatywny.voluntario.config.roleAnnotations;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.lang.annotation.ElementType;
@@ -8,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasRole('ORGANIZATION')")
-public @interface IsOrganization {
+@PreAuthorize("hasRole('ADMIN')")
+public @interface IsAdmin {
 }

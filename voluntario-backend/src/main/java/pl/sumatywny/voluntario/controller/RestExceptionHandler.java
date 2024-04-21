@@ -1,4 +1,4 @@
-package pl.sumatywny.voluntario.config;
+package pl.sumatywny.voluntario.controller;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -14,22 +14,21 @@ import java.time.ZonedDateTime;
 
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
 @Order(HIGHEST_PRECEDENCE)
-public class ControllerAdvices extends ResponseEntityExceptionHandler {
+public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private record ExceptionDetails(String message, HttpStatus httpStatus, ZonedDateTime timestamp) { }
 
-    @ExceptionHandler(value = {RuntimeException.class, UnsupportedOperationException.class, IllegalStateException.class})
-    public ResponseEntity<?> runTimeException(Exception ex) {
-        var exceptionDetails = new ExceptionDetails(
-                ex.getMessage(),
-                INTERNAL_SERVER_ERROR,
-                ZonedDateTime.now(ZoneId.of("UTC"))
-        );
-        return new ResponseEntity<>(exceptionDetails, INTERNAL_SERVER_ERROR);
-    }
+   @ExceptionHandler(value = {RuntimeException.class, UnsupportedOperationException.class, IllegalStateException.class})
+   public ResponseEntity<?> runTimeException(Exception ex) {
+       var exceptionDetails = new ExceptionDetails(
+               ex.getMessage(),
+               INTERNAL_SERVER_ERROR,
+               ZonedDateTime.now(ZoneId.of("UTC"))
+       );
+       return new ResponseEntity<>(exceptionDetails, INTERNAL_SERVER_ERROR);
+   }
 
     @ExceptionHandler(value = {AuthenticationException.class})
     public ResponseEntity<?> authenticationException(Exception e) {

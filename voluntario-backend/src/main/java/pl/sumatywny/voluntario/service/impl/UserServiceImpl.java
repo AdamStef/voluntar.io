@@ -1,11 +1,12 @@
 package pl.sumatywny.voluntario.service.impl;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.repository.UserRepository;
 
-@Service()
+@Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
@@ -15,6 +16,6 @@ public class UserServiceImpl implements UserService {
 
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User with email %s not found".formatted(email)));
     }
 }

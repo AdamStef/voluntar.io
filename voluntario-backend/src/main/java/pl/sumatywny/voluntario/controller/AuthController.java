@@ -3,6 +3,7 @@ package pl.sumatywny.voluntario.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,18 +17,12 @@ import pl.sumatywny.voluntario.model.user.userdetails.CustomUserDetails;
 import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
     private final AuthService authService;
     private final UserService userService;
-
-
-    public AuthController(AuthService authService, UserService userService) {
-        this.authService = authService;
-        this.userService = userService;
-    }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO registerDTO) {

@@ -13,12 +13,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 @RequiredArgsConstructor
 @Configuration
@@ -27,10 +28,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtFilter jwtTokenFilter;
     private final UserDetailsService userDetailsService;
+    private final LogoutHandler logoutHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
@@ -41,8 +43,15 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout -> logout
+                        .addLogoutHandler(logoutHandler)
+                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+                        .logoutUrl("/api/auth/logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                )
+                .build();
     }
 
     @Bean

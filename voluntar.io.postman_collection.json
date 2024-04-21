@@ -19,7 +19,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"testadmin\",\r\n    \"email\": \"admin@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"roles\": [\"ROLE_ADMIN\"]\r\n}",
+									"raw": "{\r\n    \"email\": \"admin@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"role\": \"ADMIN\",\r\n    \"firstName\": \"Admin\",\r\n    \"lastName\": \"Tester\",\r\n    \"phoneNumber\": \"+48123456789\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -46,7 +46,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"testvolunteer\",\r\n    \"email\": \"volunteer@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"roles\": [\"ROLE_VOLUNTEER\"]\r\n}",
+									"raw": "{\r\n    \"email\": \"volunteer@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"role\": \"VOLUNTEER\",\r\n    \"firstName\": \"volunteer\",\r\n    \"lastName\": \"Tester\",\r\n    \"phoneNumber\": \"+48123456789\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -73,7 +73,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"testorganization\",\r\n    \"email\": \"organization@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"roles\": [\"ROLE_ORGANIZATION\"]\r\n}",
+									"raw": "{\r\n    \"email\": \"organization@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"role\": \"ORGANIZATION\",\r\n    \"firstName\": \"organization\",\r\n    \"lastName\": \"Tester\",\r\n    \"phoneNumber\": \"+48123456789\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -100,12 +100,37 @@
 					"item": [
 						{
 							"name": "Login admin",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followAuthorizationHeader": false
+							},
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"testadmin\",\r\n    \"password\": \"testpassword\"\r\n}",
+									"raw": "{\r\n    \"email\": \"admin@test.com\",\r\n    \"password\": \"testpassword\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -132,7 +157,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"testvolunteer\",\r\n    \"password\": \"testpassword\"\r\n}",
+									"raw": "{\r\n    \"email\": \"volunteer@test.com\",\r\n    \"password\": \"testpassword\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -159,7 +184,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"testorganization\",\r\n    \"password\": \"testpassword\"\r\n}",
+									"raw": "{\r\n    \"email\": \"organization@test.com\",\r\n    \"password\": \"testpassword\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -179,64 +204,34 @@
 							},
 							"response": []
 						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"// Set access_token variable to accessToken from response body\r",
+									"var responseBody = pm.response.json();\r",
+									"pm.collectionVariables.set('access_token', responseBody.accessToken);"
+								]
+							}
+						}
 					]
 				},
 				{
-					"name": "Login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"testuser\",\r\n    \"email\": \"test@test.com\",\r\n    \"password\": \"testpassword\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{basic_url}}/auth/login",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"auth",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Register",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"testuser\",\r\n    \"email\": \"test@test.com\",\r\n    \"password\": \"testpassword\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{basic_url}}/auth/register",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"auth",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Test",
+					"name": "Logout",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -248,25 +243,22 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{basic_url}}/auth/test",
+							"raw": "{{basic_url}}/auth/logout",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
 								"auth",
-								"test"
+								"logout"
 							]
 						}
 					},
 					"response": []
 				}
 			],
-			"auth": {
-				"type": "noauth"
-			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -383,7 +375,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0b3JnYW5pemF0aW9uIiwiaWF0IjoxNzExNDc5OTg0LCJleHAiOjE3MTE1NjYzODR9.o4mi8H8zGkXMjaHhwIG6_eOnbjUCSMsjDXc7euOPa9A",
+						"value": "{{access_token}}",
 						"type": "string"
 					}
 				]
@@ -447,14 +439,7 @@
 		}
 	],
 	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{access_token}}",
-				"type": "string"
-			}
-		]
+		"type": "inherit"
 	},
 	"event": [
 		{

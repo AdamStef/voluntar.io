@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
+import pl.sumatywny.voluntario.model.user.Token;
+import pl.sumatywny.voluntario.repository.TokenRepository;
 
 import java.io.IOException;
 
@@ -22,6 +24,7 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final TokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(
@@ -37,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String jwt;
         final String userEmail;
-        if (authHeader == null && !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -46,7 +49,10 @@ public class JwtFilter extends OncePerRequestFilter {
         userEmail = jwtService.extractUsername(jwt);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-            if (jwtService.isTokenValid(jwt, userDetails)) {
+            var isTokenValid = tokenRepository.findByToken(jwt)
+                    .map(t -> !t.isExpired() && !t.isRevoked())
+                    .orElse(false);
+            if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

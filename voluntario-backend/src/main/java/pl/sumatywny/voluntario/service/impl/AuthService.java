@@ -1,22 +1,13 @@
 package pl.sumatywny.voluntario.service.impl;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextHolderStrategy;
-import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.dtos.RegisterDTO;
 import pl.sumatywny.voluntario.dtos.auth.AuthRequestDTO;
 import pl.sumatywny.voluntario.dtos.auth.JwtResponseDTO;
@@ -25,6 +16,7 @@ import pl.sumatywny.voluntario.model.user.Token;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.model.user.UserRole;
 import pl.sumatywny.voluntario.repository.RoleRepository;
+import pl.sumatywny.voluntario.repository.TokenRepository;
 import pl.sumatywny.voluntario.repository.UserRepository;
 import pl.sumatywny.voluntario.security.JwtService;
 
@@ -34,9 +26,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class AuthService {
     private final JwtService jwtService;
-    @Value(value = "${custom.max.session}")
-    private int maxSession;
-
+    private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -60,9 +50,6 @@ public class AuthService {
         UserRole role = roleRepository.findByRole(roleEnum)
                 .orElseThrow(() -> new IllegalArgumentException("Role not found."));
 
-//        UserRole role = roleRepository.findByRoleName("ROLE_" + registerDTO.role().toUpperCase())
-//                .orElseThrow(() -> new IllegalArgumentException("Role not found."));
-
         User user = User.builder()
                 .email(email)
                 .password(passwordEncoder.encode(registerDTO.password()))
@@ -78,6 +65,7 @@ public class AuthService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public JwtResponseDTO login(AuthRequestDTO authRequestDTO) {
         Authentication authentication = authManager.authenticate(
                 UsernamePasswordAuthenticationToken.unauthenticated(
@@ -86,18 +74,35 @@ public class AuthService {
         );
 
         var claims = new HashMap<String, Object>();
-        var user = ((UserDetails) authentication.getPrincipal());
-        var jwtToken = jwtService.generateToken(claims, user);
-        return JwtResponseDTO.builder().accessToken(jwtToken).build();
-//        validateMaxSession(authentication);
+        var userDetails = ((UserDetails) authentication.getPrincipal());
+        var jwtToken = jwtService.generateToken(claims, userDetails);
+        var user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found."));
 
-//        SecurityContext context = SecurityContextHolder.createEmptyContext();
-//        context.setAuthentication(authentication);
-//
-//        securityContextHolderStrategy.setContext(context);
-//        securityContextRepository.saveContext(context, request, response);
-//
-//        return context.getAuthentication();
+        revokeAllUserTokens(user);
+        saveUserToken(jwtToken, userDetails, user);
+        return JwtResponseDTO.builder().accessToken(jwtToken).build();
     }
 
+    private void saveUserToken(String jwtToken, UserDetails userDetails, User user) {
+        var token = Token.builder()
+                .token(jwtToken)
+                .expired(false)
+                .revoked(false)
+                .user(user)
+                .build();
+        tokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(User user) {
+        List<Token> validUserTokens = tokenRepository.findAllValidTokensByUser(user.getId());
+        if (validUserTokens.isEmpty()) {
+            return;
+        }
+        validUserTokens.forEach(token -> {
+            token.setRevoked(true);
+            token.setExpired(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
+    }
 }

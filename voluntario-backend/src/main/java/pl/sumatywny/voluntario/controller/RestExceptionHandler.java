@@ -5,23 +5,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import pl.sumatywny.voluntario.dtos.ExceptionResponse;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static org.springframework.http.HttpStatus.*;
 
-@ControllerAdvice
+@RestControllerAdvice
 @Order(HIGHEST_PRECEDENCE)
-public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+public class RestExceptionHandler {
     private record ExceptionDetails(String message, HttpStatus httpStatus, ZonedDateTime timestamp) { }
 
-   @ExceptionHandler(value = {RuntimeException.class, UnsupportedOperationException.class, IllegalStateException.class})
+   @ExceptionHandler(value = {RuntimeException.class, UnsupportedOperationException.class})
    public ResponseEntity<?> runTimeException(Exception ex) {
+        ex.printStackTrace();
        var exceptionDetails = new ExceptionDetails(
                ex.getMessage(),
                INTERNAL_SERVER_ERROR,
@@ -29,6 +33,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
        );
        return new ResponseEntity<>(exceptionDetails, INTERNAL_SERVER_ERROR);
    }
+
+   @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<?> illegalStateException(Exception e) {
+         var exceptionDetails = new ExceptionDetails(
+                e.getMessage(),
+                CONFLICT,
+                ZonedDateTime.now(ZoneId.of("UTC"))
+         );
+         return new ResponseEntity<>(exceptionDetails, BAD_REQUEST);
+    }
 
     @ExceptionHandler(value = {AuthenticationException.class})
     public ResponseEntity<?> authenticationException(Exception e) {
@@ -48,5 +62,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 ZonedDateTime.now(ZoneId.of("UTC"))
         );
         return new ResponseEntity<>(exceptionDetails, FORBIDDEN);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionResponse> handleException(MethodArgumentNotValidException ex) {
+        Set<String> errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.toSet());
+
+        var exceptionResponse = ExceptionResponse.builder()
+                .errorCode(BAD_REQUEST.value())
+                .validationErrors(errors)
+                .build();
+        return ResponseEntity.status(BAD_REQUEST).body(exceptionResponse);
     }
 }

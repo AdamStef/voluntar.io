@@ -2,6 +2,7 @@ package pl.sumatywny.voluntario.service.impl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,39 +19,28 @@ import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.dtos.RegisterDTO;
 import pl.sumatywny.voluntario.dtos.auth.AuthRequestDTO;
+import pl.sumatywny.voluntario.dtos.auth.JwtResponseDTO;
 import pl.sumatywny.voluntario.enums.Role;
+import pl.sumatywny.voluntario.model.user.Token;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.model.user.UserRole;
 import pl.sumatywny.voluntario.repository.RoleRepository;
 import pl.sumatywny.voluntario.repository.UserRepository;
+import pl.sumatywny.voluntario.security.JwtService;
 
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
+    private final JwtService jwtService;
     @Value(value = "${custom.max.session}")
     private int maxSession;
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authManager;
-    private final SessionRegistry sessionRegistry;
-    private final RedisIndexedSessionRepository redisIndexedSessionRepository;
-    private final SecurityContextRepository securityContextRepository;
-    private final SecurityContextHolderStrategy securityContextHolderStrategy;
-
-    public AuthService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthenticationManager authManager, SessionRegistry sessionRegistry, RedisIndexedSessionRepository redisIndexedSessionRepository, SecurityContextRepository securityContextRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authManager = authManager;
-        this.sessionRegistry = sessionRegistry;
-        this.redisIndexedSessionRepository = redisIndexedSessionRepository;
-        this.securityContextRepository = securityContextRepository;
-        this.securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
-    }
 
     public User register(RegisterDTO registerDTO) {
         String email = registerDTO.email().trim();
@@ -70,6 +60,9 @@ public class AuthService {
         UserRole role = roleRepository.findByRole(roleEnum)
                 .orElseThrow(() -> new IllegalArgumentException("Role not found."));
 
+//        UserRole role = roleRepository.findByRoleName("ROLE_" + registerDTO.role().toUpperCase())
+//                .orElseThrow(() -> new IllegalArgumentException("Role not found."));
+
         User user = User.builder()
                 .email(email)
                 .password(passwordEncoder.encode(registerDTO.password()))
@@ -85,34 +78,26 @@ public class AuthService {
         return userRepository.save(user);
     }
 
-    public Authentication login(AuthRequestDTO authRequestDTO, HttpServletRequest request, HttpServletResponse response) {
+    public JwtResponseDTO login(AuthRequestDTO authRequestDTO) {
         Authentication authentication = authManager.authenticate(
-                UsernamePasswordAuthenticationToken.unauthenticated(authRequestDTO.getEmail(), authRequestDTO.getPassword())
+                UsernamePasswordAuthenticationToken.unauthenticated(
+                        authRequestDTO.getEmail(),
+                        authRequestDTO.getPassword())
         );
 
-        validateMaxSession(authentication);
+        var claims = new HashMap<String, Object>();
+        var user = ((UserDetails) authentication.getPrincipal());
+        var jwtToken = jwtService.generateToken(claims, user);
+        return JwtResponseDTO.builder().accessToken(jwtToken).build();
+//        validateMaxSession(authentication);
 
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authentication);
-
-        securityContextHolderStrategy.setContext(context);
-        securityContextRepository.saveContext(context, request, response);
-
-        return context.getAuthentication();
+//        SecurityContext context = SecurityContextHolder.createEmptyContext();
+//        context.setAuthentication(authentication);
+//
+//        securityContextHolderStrategy.setContext(context);
+//        securityContextRepository.saveContext(context, request, response);
+//
+//        return context.getAuthentication();
     }
 
-    private void validateMaxSession(Authentication authentication) {
-        if (maxSession <= 0) {
-            return;
-        }
-
-        var user = (UserDetails) authentication.getPrincipal();
-        List<SessionInformation> session = sessionRegistry.getAllSessions(user, false);
-        if (session.size() >= maxSession) {
-            sessionRegistry.getAllSessions(user, true).forEach(SessionInformation::expireNow);
-            session.stream()
-                    .min(Comparator.comparing(SessionInformation::getLastRequest))
-                    .ifPresent(sessionInformation -> redisIndexedSessionRepository.deleteById(sessionInformation.getSessionId()));
-        }
-    }
 }

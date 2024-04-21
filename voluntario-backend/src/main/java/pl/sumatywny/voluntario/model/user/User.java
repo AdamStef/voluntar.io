@@ -36,7 +36,7 @@ public class User {
     @NotBlank(message = "Password cannot be empty")
     private String password;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(message = "User has to have a role")
     private UserRole role;
     

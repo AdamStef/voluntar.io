@@ -2,6 +2,8 @@ package pl.sumatywny.voluntario.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -28,22 +30,19 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDTO registerDTO) {
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO registerDTO) {
         User user = authService.register(registerDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponseDTO.mapFromUser(user));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequestDTO authDTO, HttpServletRequest request, HttpServletResponse response) {
-        var authentication = authService.login(authDTO, request, response);
-        if (authentication == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        var principal = (CustomUserDetails) authentication.getPrincipal();
-        var user = userService.getUserByEmail(principal.getUsername());
-
-        return ResponseEntity.ok().body(UserResponseDTO.mapFromUser(user));
+    public ResponseEntity<?> login(@RequestBody @Valid AuthRequestDTO authDTO) {
+//        return ResponseEntity.ok()
+//                .header(
+//                        HttpHeaders.AUTHORIZATION,
+//                        authService.login(authDTO).getAccessToken()
+//                ).build();
+        return ResponseEntity.ok().body(authService.login(authDTO));
     }
 
     @GetMapping("/me")

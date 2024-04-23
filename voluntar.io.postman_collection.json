@@ -19,7 +19,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"admin@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"role\": \"ADMIN\",\r\n    \"firstName\": \"Admin\",\r\n    \"lastName\": \"Tester\",\r\n    \"phoneNumber\": \"+48123456789\"\r\n}",
+									"raw": "{\r\n    \"email\": \"admin@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"role\": \"ADMIN\",\r\n    \"firstName\": \"Admin\",\r\n    \"lastName\": \"Tester\",\r\n    \"phoneNumber\": \"+48123456789\",\r\n    \"gender\": \"MALE\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -46,7 +46,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"volunteer@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"role\": \"VOLUNTEER\",\r\n    \"firstName\": \"volunteer\",\r\n    \"lastName\": \"Tester\",\r\n    \"phoneNumber\": \"+48123456789\"\r\n}",
+									"raw": "{\r\n    \"email\": \"volunteer@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"role\": \"VOLUNTEER\",\r\n    \"firstName\": \"volunteer\",\r\n    \"lastName\": \"Tester\",\r\n    \"phoneNumber\": \"+48123456789\",\r\n    \"gender\": \"MALE\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -73,7 +73,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"organization@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"role\": \"ORGANIZATION\",\r\n    \"firstName\": \"organization\",\r\n    \"lastName\": \"Tester\",\r\n    \"phoneNumber\": \"+48123456789\"\r\n}",
+									"raw": "{\r\n    \"email\": \"organization@test.com\",\r\n    \"password\": \"testpassword\",\r\n    \"role\": \"ORGANIZATION\",\r\n    \"firstName\": \"organization\",\r\n    \"lastName\": \"Tester\",\r\n    \"phoneNumber\": \"+48123456789\",\r\n    \"gender\": \"MALE\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -122,9 +122,6 @@
 									}
 								}
 							],
-							"protocolProfileBehavior": {
-								"followAuthorizationHeader": false
-							},
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -222,9 +219,9 @@
 								"type": "text/javascript",
 								"packages": {},
 								"exec": [
-									"// Set access_token variable to accessToken from response body\r",
-									"var responseBody = pm.response.json();\r",
-									"pm.collectionVariables.set('access_token', responseBody.accessToken);"
+									"// // Set access_token variable to accessToken from response body\r",
+									"// var responseBody = pm.response.json();\r",
+									"// pm.collectionVariables.set('access_token', responseBody.accessToken);"
 								]
 							}
 						}
@@ -233,16 +230,6 @@
 				{
 					"name": "Logout",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"url": {
@@ -291,13 +278,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{basic_url}}/test/hello",
+							"raw": "{{basic_url}}/test",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
-								"test",
-								"hello"
+								"test"
 							]
 						}
 					},
@@ -370,16 +356,6 @@
 					"response": []
 				}
 			],
-			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "{{access_token}}",
-						"type": "string"
-					}
-				]
-			},
 			"event": [
 				{
 					"listen": "prerequest",

@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
-import pl.sumatywny.voluntario.dtos.RegisterDTO;
+import pl.sumatywny.voluntario.dtos.user.RegisterDTO;
 import pl.sumatywny.voluntario.dtos.auth.AuthRequestDTO;
 import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.model.user.User;
@@ -68,6 +68,7 @@ public class AuthService {
                 .firstName(registerDTO.firstName())
                 .lastName(registerDTO.lastName())
                 .phoneNumber(registerDTO.phoneNumber())
+                .gender(registerDTO.gender())
                 .isDeleted(false)
                 .isBanned(false)
                 .isVerified(false)

@@ -1,8 +1,10 @@
-package pl.sumatywny.voluntario.dtos;
+package pl.sumatywny.voluntario.dtos.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import pl.sumatywny.voluntario.enums.Gender;
 
 public record RegisterDTO(
         @NotBlank(message = "Email cannot be empty")
@@ -23,5 +25,8 @@ public record RegisterDTO(
         String lastName,
 
         @NotBlank(message = "Phone number cannot be empty")
-        String phoneNumber
+        String phoneNumber,
+
+        @NotNull(message = "Gender has to be provided")
+        Gender gender
 ) {}

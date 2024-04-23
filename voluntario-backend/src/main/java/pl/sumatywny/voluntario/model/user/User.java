@@ -9,6 +9,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pl.sumatywny.voluntario.enums.Gender;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -52,6 +53,10 @@ public class User implements Serializable {
     @Column(nullable = false)
     @NotBlank(message = "Phone number cannot be empty")
     private String phoneNumber;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column(nullable = false)
     private Boolean isVerified;

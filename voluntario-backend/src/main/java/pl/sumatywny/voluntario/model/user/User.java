@@ -9,7 +9,9 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pl.sumatywny.voluntario.enums.Gender;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,7 +22,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +38,7 @@ public class User {
     @NotBlank(message = "Password cannot be empty")
     private String password;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(message = "User has to have a role")
     private UserRole role;
     
@@ -51,6 +53,10 @@ public class User {
     @Column(nullable = false)
     @NotBlank(message = "Phone number cannot be empty")
     private String phoneNumber;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column(nullable = false)
     private Boolean isVerified;

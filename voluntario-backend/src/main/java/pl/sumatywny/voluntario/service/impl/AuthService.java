@@ -2,6 +2,7 @@ package pl.sumatywny.voluntario.service.impl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
-import pl.sumatywny.voluntario.dtos.RegisterDTO;
+import pl.sumatywny.voluntario.dtos.user.RegisterDTO;
 import pl.sumatywny.voluntario.dtos.auth.AuthRequestDTO;
 import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.model.user.User;
@@ -24,33 +25,23 @@ import pl.sumatywny.voluntario.model.user.UserRole;
 import pl.sumatywny.voluntario.repository.RoleRepository;
 import pl.sumatywny.voluntario.repository.UserRepository;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
-    @Value(value = "${custom.max.session}")
+    @Value(value = "${app.security.max-sessions}")
     private int maxSession;
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authManager;
     private final SessionRegistry sessionRegistry;
     private final RedisIndexedSessionRepository redisIndexedSessionRepository;
     private final SecurityContextRepository securityContextRepository;
-    private final SecurityContextHolderStrategy securityContextHolderStrategy;
-
-    public AuthService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthenticationManager authManager, SessionRegistry sessionRegistry, RedisIndexedSessionRepository redisIndexedSessionRepository, SecurityContextRepository securityContextRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authManager = authManager;
-        this.sessionRegistry = sessionRegistry;
-        this.redisIndexedSessionRepository = redisIndexedSessionRepository;
-        this.securityContextRepository = securityContextRepository;
-        this.securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
-    }
+    private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
 
     public User register(RegisterDTO registerDTO) {
         String email = registerDTO.email().trim();
@@ -77,6 +68,7 @@ public class AuthService {
                 .firstName(registerDTO.firstName())
                 .lastName(registerDTO.lastName())
                 .phoneNumber(registerDTO.phoneNumber())
+                .gender(registerDTO.gender())
                 .isDeleted(false)
                 .isBanned(false)
                 .isVerified(false)
@@ -85,7 +77,10 @@ public class AuthService {
         return userRepository.save(user);
     }
 
-    public Authentication login(AuthRequestDTO authRequestDTO, HttpServletRequest request, HttpServletResponse response) {
+    public Authentication login(
+            AuthRequestDTO authRequestDTO,
+            HttpServletRequest request,
+            HttpServletResponse response) {
         Authentication authentication = authManager.authenticate(
                 UsernamePasswordAuthenticationToken.unauthenticated(authRequestDTO.getEmail(), authRequestDTO.getPassword())
         );

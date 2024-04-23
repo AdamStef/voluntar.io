@@ -11,6 +11,11 @@ import pl.sumatywny.voluntario.config.roleAnnotations.IsVolunteer;
 @RequestMapping("/api/test")
 public class TestController {
 
+    @GetMapping
+    public String test() {
+        return "Hello World!";
+    }
+
     @IsAdmin
     @GetMapping("/admin")
     public String admin() {

@@ -15,6 +15,8 @@ public class CustomUserDetails implements UserDetails {
     private final String email;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
+//    @JsonIgnore
+//    private final User user;
 
     public CustomUserDetails(User user) {
 //        this.user = user;

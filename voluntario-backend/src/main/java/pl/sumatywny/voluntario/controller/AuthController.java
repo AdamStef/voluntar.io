@@ -31,13 +31,19 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid AuthRequestDTO authDTO) {
-//        return ResponseEntity.ok()
-//                .header(
-//                        HttpHeaders.AUTHORIZATION,
-//                        authService.login(authDTO).getAccessToken()
-//                ).build();
-        return ResponseEntity.ok().body(authService.login(authDTO));
+    public ResponseEntity<?> login(
+            @RequestBody @Valid AuthRequestDTO authDTO,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        var authentication = authService.login(authDTO, request, response);
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        var principal = (CustomUserDetails) authentication.getPrincipal();
+        var user = userService.getUserByEmail(principal.getUsername());
+
+        return ResponseEntity.ok().body(UserResponseDTO.mapFromUser(user));
     }
 
     @GetMapping("/me")

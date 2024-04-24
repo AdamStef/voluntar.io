@@ -3,7 +3,6 @@ package pl.sumatywny.voluntario.service.impl;
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.dtos.LocationDTO;
 import pl.sumatywny.voluntario.model.event.Location;
-import pl.sumatywny.voluntario.model.user.Role;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.model.user.UserRole;
 import pl.sumatywny.voluntario.repository.LocationRepository;

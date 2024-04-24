@@ -21,7 +21,7 @@ public class LocationService {
         this.locationRepository = locationRepository;
     }
 
-    public String createLocation(LocationDTO locationDTO, Optional<User> user) throws Exception {
+    public String createLocation(LocationDTO locationDTO, User user) throws Exception {
         if(user.isEmpty()) {
             throw new Exception("User not found");
         }
@@ -70,7 +70,7 @@ public class LocationService {
         return locationRepository.findAll();
     }
 
-    public String removeLocation(Long locationID, Optional<User> user) throws Exception {
+    public String removeLocation(Long locationID, User user) throws Exception {
         if(user.isEmpty()) {
             throw new Exception("User not found");
         }
@@ -86,7 +86,7 @@ public class LocationService {
         return "Location removed.";
     }
 
-    public String editLocation(Long locationID, LocationDTO locationDTO, Optional<User> user) throws Exception {
+    public String editLocation(Long locationID, LocationDTO locationDTO, User user) throws Exception {
         if(user.isEmpty()) {
             throw new Exception("User not found");
         }

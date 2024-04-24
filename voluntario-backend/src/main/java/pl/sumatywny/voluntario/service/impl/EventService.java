@@ -6,7 +6,6 @@ import pl.sumatywny.voluntario.dtos.EventDTO;
 import pl.sumatywny.voluntario.model.event.Event;
 import pl.sumatywny.voluntario.model.user.Role;
 import pl.sumatywny.voluntario.model.user.User;
-import pl.sumatywny.voluntario.model.user.UserRole;
 import pl.sumatywny.voluntario.repository.EventRepository;
 import pl.sumatywny.voluntario.repository.UserRepository;
 //import pl.sumatywny.voluntario.repository.LocationRepository;

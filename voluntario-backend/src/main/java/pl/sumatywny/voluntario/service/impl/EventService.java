@@ -1,111 +1,103 @@
 package pl.sumatywny.voluntario.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.dtos.EventDTO;
+import pl.sumatywny.voluntario.exception.NotFoundException;
+import pl.sumatywny.voluntario.mapper.EventMapper;
 import pl.sumatywny.voluntario.model.event.Event;
-import pl.sumatywny.voluntario.model.user.Role;
 import pl.sumatywny.voluntario.model.user.User;
-import pl.sumatywny.voluntario.model.user.UserRole;
 import pl.sumatywny.voluntario.repository.EventRepository;
 import pl.sumatywny.voluntario.repository.UserRepository;
-//import pl.sumatywny.voluntario.repository.LocationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class EventService {
+    private final EventMapper eventMapper;
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
 //    private LocationRepository locationRepository;
 
-    public EventService(EventRepository eventRepository, UserRepository userRepository) {
-        this.eventRepository = eventRepository;
-        this.userRepository = userRepository;
-//        this.locationRepository = locationRepository;
-    }
-
-    public String createEvent(EventDTO eventDTO, Optional<User> user) throws Exception {
-        Set<UserRole> roles = user.get().getRoles();
-        for (UserRole r : roles) {
-            if (r.getRole() == Role.ROLE_VOLUNTEER) {
-                throw new Exception("Volunteers cannot create events.");
-            }
-        }
+    public EventDTO createEvent(EventDTO eventDTO, User user) {
         Event event = Event.builder()
                 .name(eventDTO.getName())
                 .description(eventDTO.getDescription())
-                .organizer(user.get())
+                .organizer(user)
                 .numberOfVolunteersNeeded(eventDTO.getNumberOfVolunteersNeeded())
-                .participants(new ArrayList<User>())
+                .participants(new ArrayList<>())
                 .startDate(eventDTO.getStartDate())
                 .endDate(eventDTO.getEndDate())
                 .build();
-        eventRepository.save(event);
-        return "Event created.";
+
+        return eventMapper.toEventDTO(eventRepository.save(event));
     }
 
     @Transactional
-    public String addParticipant(Long eventID, Optional<User> user) throws Exception {
+    public EventDTO addParticipant(Long eventID, User user){
         Event event = eventRepository.findFirstById(eventID);
         if (event == null) {
-            throw new Exception("Event not found");
+            throw new NotFoundException(String.format("Event %d not found.", eventID));
         }
-        event.addParticipant(user.get());
-        eventRepository.save(event);
-        return "The volunteer was added to the participants list";
+
+        event.addParticipant(user);
+        return eventMapper.toEventDTO(eventRepository.save(event));
     }
 
     @Transactional
-    public String removeParticipant(Long eventID, Long userID) throws Exception {
+    public EventDTO removeParticipant(Long eventID, Long userID) {
         Event event = eventRepository.findFirstById(eventID);
         if (event == null) {
-            throw new Exception("Event not found");
+            throw new NotFoundException(String.format("Event %d not found.", eventID));
         }
+
         User user = userRepository.findFirstById(userID);
         if (user == null) {
-            throw new Exception("Volunteer with this ID does not exist");
+            throw new NotFoundException(String.format("User %d not found.", userID));
         }
-        if (event.removeParticipant(user)) {
-            eventRepository.save(event);
-            return "The volunteer was removed from the participants list";
-        } else {
-            throw new Exception("The volunteer was not on the participants list");
-        }
+
+        event.getParticipants().remove(user);
+        return eventMapper.toEventDTO(eventRepository.save(event));
+
+//        if (event.removeParticipant(user)) {
+//            eventRepository.save(event);
+//            return "The volunteer was removed from the participants list";
+//        } else {
+//            throw new Exception("The volunteer was not on the participants list");
+//        }
     }
 
-    public List<User> getAllParticipants(Long eventID) throws Exception {
+    public List<User> getAllParticipants(Long eventID) {
         Event event = eventRepository.findFirstById(eventID);
         if (event == null) {
-            throw new Exception("Event not found");
+            throw new NotFoundException(String.format("Event %d not found.", eventID));
         }
         return event.getParticipants();
     }
 
-    public List<Event> getAllEvents() {
+    public List<EventDTO> getAllEvents() {
         List<Event> events = eventRepository.findAll();
-        return events;
+        return events.stream().map(eventMapper::toEventDTO).toList();
     }
 
-    public Event getEvent(Long eventID) throws Exception {
+    public EventDTO getEvent(Long eventID) {
         Event event = eventRepository.findFirstById(eventID);
         if (event == null) {
-            throw new Exception("Event not found");
+            throw new NotFoundException(String.format("Event %d not found.", eventID));
         }
-        return event;
+        return eventMapper.toEventDTO(event);
     }
 
-    public String removeEvent(Long eventID) throws Exception {
+    public void removeEvent(Long eventID) {
         Event event = eventRepository.findFirstById(eventID);
         if (event == null) {
-            throw new Exception("Event not found");
+            throw new NotFoundException(String.format("Event %d not found.", eventID));
         }
         eventRepository.delete(event);
-        return "Event removed";
     }
 }
 

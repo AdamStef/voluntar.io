@@ -35,9 +35,12 @@ public class Event {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
+    @Version
+    private Long version;
+
 
     public Boolean addParticipant(User user) {
-        if(participants.contains(user)) {
+        if (participants.contains(user)) {
             return false;
         }
         else {
@@ -46,7 +49,7 @@ public class Event {
     }
 
     public Boolean removeParticipant(User user) {
-        if(participants.contains(user)) {
+        if (participants.contains(user)) {
             return participants.remove(user);
         }
         else {

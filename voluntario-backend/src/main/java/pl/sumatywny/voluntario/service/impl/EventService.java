@@ -3,6 +3,7 @@ package pl.sumatywny.voluntario.service.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.dtos.EventDTO;
+import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.model.event.Event;
 import pl.sumatywny.voluntario.model.user.UserRole;
 import pl.sumatywny.voluntario.model.user.User;
@@ -29,11 +30,12 @@ public class EventService {
     }
 
     public String createEvent(EventDTO eventDTO, Optional<User> user) throws Exception {
-        Set<UserRole> roles = user.get().getRoles();
-        for (UserRole r : roles) {
-            if (r.getRole() == Role.ROLE_VOLUNTEER) {
-                throw new Exception("Volunteers cannot create events.");
-            }
+        if(user.isEmpty()) {
+            throw new Exception("User not found");
+        }
+        UserRole role = user.get().getRole();
+        if (role.getRole() == Role.ROLE_VOLUNTEER) {
+            throw new Exception("Volunteers cannot create events.");
         }
         Event event = Event.builder()
                 .name(eventDTO.getName())

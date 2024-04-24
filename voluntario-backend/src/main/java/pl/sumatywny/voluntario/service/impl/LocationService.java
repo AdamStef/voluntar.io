@@ -25,7 +25,7 @@ public class LocationService {
         if(user == null) {
             throw new Exception("User not found");
         }
-        UserRole role = user.get().getRole();
+        UserRole role = user.getRole();
         if (role.getRole() == Role.ROLE_VOLUNTEER) {
             throw new Exception("Volunteers cannot create events.");
         }
@@ -74,7 +74,7 @@ public class LocationService {
         if(user == null) {
             throw new Exception("User not found");
         }
-        UserRole role = user.get().getRole();
+        UserRole role = user.getRole();
         if (role.getRole() == Role.ROLE_VOLUNTEER) {
             throw new Exception("Volunteers cannot remove events.");
         }
@@ -90,7 +90,7 @@ public class LocationService {
         if(user == null) {
             throw new Exception("User not found");
         }
-        UserRole role = user.get().getRole();
+        UserRole role = user.getRole();
         if (role.getRole() == Role.ROLE_VOLUNTEER) {
             throw new Exception("Volunteers cannot edit events.");
         }

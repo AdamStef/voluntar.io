@@ -27,6 +27,8 @@ import pl.sumatywny.voluntario.repository.UserRepository;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor

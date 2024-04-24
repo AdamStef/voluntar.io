@@ -3,6 +3,7 @@ package pl.sumatywny.voluntario.model.user;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pl.sumatywny.voluntario.enums.Role;
 

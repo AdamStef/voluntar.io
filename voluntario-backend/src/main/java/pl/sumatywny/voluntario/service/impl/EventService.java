@@ -26,7 +26,9 @@ public class EventService {
                 .name(eventDTO.getName())
                 .description(eventDTO.getDescription())
                 .organizer(user)
+                .organizer(user)
                 .numberOfVolunteersNeeded(eventDTO.getNumberOfVolunteersNeeded())
+                .participants(new ArrayList<>())
                 .participants(new ArrayList<>())
                 .startDate(eventDTO.getStartDate())
                 .endDate(eventDTO.getEndDate())
@@ -56,6 +58,7 @@ public class EventService {
         if (event == null) {
             throw new NotFoundException(String.format("Event %d not found.", eventID));
         }
+
 
         User user = userRepository.findFirstById(userID);
         if (user == null) {

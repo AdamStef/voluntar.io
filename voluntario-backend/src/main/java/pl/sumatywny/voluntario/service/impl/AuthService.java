@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 import pl.sumatywny.voluntario.dtos.user.RegisterDTO;
 import pl.sumatywny.voluntario.dtos.auth.AuthRequestDTO;
 import pl.sumatywny.voluntario.enums.Role;
@@ -113,7 +116,18 @@ public class AuthService {
         }
     }
 
-    public Optional<User> getUserFromSession() {
-        return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public User getUserFromSession() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new IllegalStateException("User not authenticated.");
+        }
+
+        var user = userRepository.findByEmail(authentication.getName());
+        if (user.isEmpty()) {
+            throw new IllegalStateException("User not found.");
+        }
+
+        return user.get();
     }
 }

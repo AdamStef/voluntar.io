@@ -28,8 +28,5 @@ export default defineConfig(({ mode }) => {
         usePolling: true,
       },
     },
-    build: {
-      watch: {},
-    },
   };
 });

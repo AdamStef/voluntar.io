@@ -22,7 +22,7 @@ public class LocationService {
     }
 
     public String createLocation(LocationDTO locationDTO, User user) throws Exception {
-        if(user.isEmpty()) {
+        if(user == null) {
             throw new Exception("User not found");
         }
         UserRole role = user.get().getRole();
@@ -71,7 +71,7 @@ public class LocationService {
     }
 
     public String removeLocation(Long locationID, User user) throws Exception {
-        if(user.isEmpty()) {
+        if(user == null) {
             throw new Exception("User not found");
         }
         UserRole role = user.get().getRole();
@@ -87,7 +87,7 @@ public class LocationService {
     }
 
     public String editLocation(Long locationID, LocationDTO locationDTO, User user) throws Exception {
-        if(user.isEmpty()) {
+        if(user == null) {
             throw new Exception("User not found");
         }
         UserRole role = user.get().getRole();

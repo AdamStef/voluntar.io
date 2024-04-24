@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.sumatywny.voluntario.dtos.ExceptionResponse;
+import pl.sumatywny.voluntario.exception.NotFoundException;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -75,5 +76,15 @@ public class RestExceptionHandler {
                 .validationErrors(errors)
                 .build();
         return ResponseEntity.status(BAD_REQUEST).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleException(NotFoundException ex) {
+        var exceptionResponse = ExceptionResponse.builder()
+                .errorCode(NOT_FOUND.value())
+                .error("Not found")
+                .errorDescription(ex.getMessage())
+                .build();
+        return ResponseEntity.status(NOT_FOUND).body(exceptionResponse);
     }
 }

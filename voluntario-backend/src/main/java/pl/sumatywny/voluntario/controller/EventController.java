@@ -20,43 +20,46 @@ public class EventController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> register(@RequestBody EventDTO eventDTO) {
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(eventDTO, authService.getUserFromSession()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        }
+//    @IsOrganization
+    public ResponseEntity<?> create(@RequestBody EventDTO eventDTO) {
+        var user = authService.getUserFromSession();
+//            if (user.isEmpty()) {
+//                var response = ExceptionResponse.builder()
+//                        .errorCode(HttpStatus.UNAUTHORIZED.value())
+//                        .error("Unauthorized")
+//                        .errorDescription("User not found.")
+//                        .build();
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+//            }
+        var event = eventService.createEvent(eventDTO, user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
     @PostMapping("/{eventID}/participants")
     public ResponseEntity<?> addParticipant(@PathVariable("eventID") Long eventID) {
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addParticipant(eventID, authService.getUserFromSession()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        var user = authService.getUserFromSession();
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addParticipant(eventID, user));
     }
 
-    @DeleteMapping(value = {"/{eventID}/participants", "/{eventID}/participants/{participantID}"})
-    public ResponseEntity<?> removeParticipant(@PathVariable(name = "eventID") Long eventID, @PathVariable(name = "participantID", required = false) Long participantID) {
-        try {
-            if (participantID == null) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(eventID, authService.getUserFromSession().get().getId()));
-            } else {
-                return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(eventID, participantID));
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    @DeleteMapping( "/{eventID}/participants/{participantID}")
+    public ResponseEntity<?> removeParticipant(
+            @PathVariable(name = "eventID") Long eventID,
+            @PathVariable(name = "participantID", required = false) Long participantID) {
+//        var user = authService.getUserFromSession();
+//            if (Objects.equals(user.getId(), participantID)) {
+//                return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(eventID, user.getId()));
+//            }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(eventID, participantID));
+//        if (participantID == null) {
+//            return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(eventID, authService.getUserFromSession().getId()));
+//        } else {
+//        }
     }
 
     @GetMapping("/{eventID}/participants")
     public ResponseEntity<?> allParticipants(@PathVariable("eventID") Long eventID) {
-        try {
-            return ResponseEntity.ok().body(eventService.getAllParticipants(eventID));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(eventService.getAllParticipants(eventID));
     }
 
     @GetMapping()
@@ -66,19 +69,12 @@ public class EventController {
 
     @GetMapping("/{eventID}")
     public ResponseEntity<?> event(@PathVariable("eventID") Long eventID) {
-        try {
-            return ResponseEntity.ok().body(eventService.getEvent(eventID));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(eventService.getEvent(eventID));
     }
 
     @DeleteMapping("/{eventID}")
     public ResponseEntity<?> removeEvent(@PathVariable("eventID") Long eventID) {
-        try {
-            return ResponseEntity.ok().body(eventService.removeEvent(eventID));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        eventService.removeEvent(eventID);
+        return ResponseEntity.noContent().build();
     }
 }

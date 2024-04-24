@@ -1,11 +1,11 @@
 package pl.sumatywny.voluntario.model.event;
 
 import jakarta.persistence.*;
+import lombok.*;
 import pl.sumatywny.voluntario.model.user.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,23 +37,4 @@ public class Event {
 
     @Version
     private Long version;
-
-
-    public Boolean addParticipant(User user) {
-        if (participants.contains(user)) {
-            return false;
-        }
-        else {
-            return participants.add(user);
-        }
-    }
-
-    public Boolean removeParticipant(User user) {
-        if (participants.contains(user)) {
-            return participants.remove(user);
-        }
-        else {
-            return false;
-        }
-    }
 }

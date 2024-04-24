@@ -2,10 +2,12 @@ package pl.sumatywny.voluntario.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.sumatywny.voluntario.dtos.LocationDTO;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.LocationService;
+
 @RestController
 @RequestMapping("/api/locations")
 public class LocationController {
@@ -18,49 +20,29 @@ public class LocationController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasRole('ORGANIZATION')")
     public ResponseEntity<?> createLocation(@RequestBody LocationDTO locationDTO) {
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(locationService.createLocation(locationDTO, authService.getUserFromSession()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(locationService.createLocation(locationDTO, authService.getUserFromSession()));
     }
 
     @PutMapping("/{locationID}")
     public ResponseEntity<?> editLocation(@PathVariable("locationID") Long locationID, @RequestBody LocationDTO locationDTO) {
-        try {
-            return ResponseEntity.ok().body(locationService.editLocation(locationID, locationDTO, authService.getUserFromSession()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(locationService.editLocation(locationID, locationDTO, authService.getUserFromSession()));
     }
 
     @GetMapping("/{locationID}")
     public ResponseEntity<?> getLocation(@PathVariable("locationID") Long locationID) {
-        try {
-            return ResponseEntity.ok().body(locationService.getLocation(locationID));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(locationService.getLocation(locationID));
     }
 
     @GetMapping()
     public ResponseEntity<?> getAllLocations() {
-        try {
-            return ResponseEntity.ok().body(locationService.getAllLocations());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(locationService.getAllLocations());
     }
+
     @DeleteMapping("/{locationID}")
     public ResponseEntity<?> removeLocation(@PathVariable("locationID") Long locationID) {
-        try {
-            return ResponseEntity.ok().body(locationService.removeLocation(locationID, authService.getUserFromSession()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        locationService.removeLocation(locationID, authService.getUserFromSession());
+        return ResponseEntity.noContent().build();
     }
-
-
-
 }

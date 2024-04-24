@@ -3,46 +3,28 @@ package pl.sumatywny.voluntario.service.impl;
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.dtos.LocationDTO;
 import pl.sumatywny.voluntario.enums.Role;
+import pl.sumatywny.voluntario.exception.NotFoundException;
+import pl.sumatywny.voluntario.exception.PermissionsException;
 import pl.sumatywny.voluntario.model.event.Location;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.model.user.UserRole;
 import pl.sumatywny.voluntario.repository.LocationRepository;
-import pl.sumatywny.voluntario.repository.UserRepository;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class LocationService {
     private final LocationRepository locationRepository;
+
     public LocationService(LocationRepository locationRepository) {
         this.locationRepository = locationRepository;
     }
 
-    public String createLocation(LocationDTO locationDTO, User user) throws Exception {
-        if(user == null) {
-            throw new Exception("User not found");
+    public Location createLocation(LocationDTO locationDTO, User user) {
+        if (user.getRole().getRole() == Role.ROLE_VOLUNTEER) {
+            throw new PermissionsException("Volunteers cannot create events.");
         }
-        UserRole role = user.getRole();
-        if (role.getRole() == Role.ROLE_VOLUNTEER) {
-            throw new Exception("Volunteers cannot create events.");
-        }
-        Set<Location> locations = new HashSet<>(locationRepository.findAll());
-        for (Location l : locations) {
-            if (l.getName().equals(locationDTO.getName())
-            && l.getCity().equals(locationDTO.getCity())
-            && l.getStreet().equals(locationDTO.getStreet())
-            && l.getNumber().equals(locationDTO.getNumber())
-            && l.getFlatNumber().equals(locationDTO.getFlatNumber())
-            && l.getPostalCode().equals(locationDTO.getPostalCode())
-            && l.getLatitude().equals(locationDTO.getLatitude())
-            && l.getLongitude().equals(locationDTO.getLongitude())
-            && l.getAdditionalInformation().equals(locationDTO.getAdditionalInformation())) {
-                throw new Exception("Location already exists.");
-            }
-        }
+
         Location location = Location.builder()
                 .name(locationDTO.getName())
                 .city(locationDTO.getCity())
@@ -54,15 +36,15 @@ public class LocationService {
                 .longitude(locationDTO.getLongitude())
                 .additionalInformation(locationDTO.getAdditionalInformation())
                 .build();
-        locationRepository.save(location);
-        return "Location created.";
+        return locationRepository.save(location);
     }
 
-    public Location getLocation(Long locationID) throws Exception {
+    public Location getLocation(Long locationID) {
         Location location = locationRepository.findFirstById(locationID);
         if (location == null) {
-            throw new Exception("Location not found.");
+            throw new NotFoundException("Location not found.");
         }
+
         return location;
     }
 
@@ -70,34 +52,30 @@ public class LocationService {
         return locationRepository.findAll();
     }
 
-    public String removeLocation(Long locationID, User user) throws Exception {
-        if(user == null) {
-            throw new Exception("User not found");
-        }
+    public void removeLocation(Long locationID, User user) {
         UserRole role = user.getRole();
         if (role.getRole() == Role.ROLE_VOLUNTEER) {
-            throw new Exception("Volunteers cannot remove events.");
+            throw new PermissionsException("Volunteers cannot remove events.");
         }
+
         Location location = locationRepository.findFirstById(locationID);
         if (location == null) {
-            throw new Exception("Location not found.");
+            throw new NotFoundException("Location not found.");
         }
+
         locationRepository.delete(location);
-        return "Location removed.";
     }
 
-    public String editLocation(Long locationID, LocationDTO locationDTO, User user) throws Exception {
-        if(user == null) {
-            throw new Exception("User not found");
+    public Location editLocation(Long locationID, LocationDTO locationDTO, User user) {
+        if (user.getRole().getRole() == Role.ROLE_VOLUNTEER) {
+            throw new PermissionsException("Volunteers cannot edit events.");
         }
-        UserRole role = user.getRole();
-        if (role.getRole() == Role.ROLE_VOLUNTEER) {
-            throw new Exception("Volunteers cannot edit events.");
-        }
+
         Location location = locationRepository.findFirstById(locationID);
         if (location == null) {
-            throw new Exception("Location not found.");
+            throw new NotFoundException("Location not found.");
         }
+
         location.setName(locationDTO.getName());
         location.setCity(locationDTO.getCity());
         location.setPostalCode(locationDTO.getPostalCode());
@@ -107,8 +85,6 @@ public class LocationService {
         location.setLatitude(locationDTO.getLatitude());
         location.setLongitude(locationDTO.getLongitude());
         location.setAdditionalInformation(locationDTO.getAdditionalInformation());
-        locationRepository.save(location);
-        return "Location edited.";
+        return locationRepository.save(location);
     }
-
 }

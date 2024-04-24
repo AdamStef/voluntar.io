@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.sumatywny.voluntario.dtos.ExceptionResponse;
 import pl.sumatywny.voluntario.exception.NotFoundException;
+import pl.sumatywny.voluntario.exception.PermissionsException;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -24,7 +25,7 @@ import static org.springframework.http.HttpStatus.*;
 public class RestExceptionHandler {
     private record ExceptionDetails(String message, HttpStatus httpStatus, ZonedDateTime timestamp) { }
 
-   @ExceptionHandler(value = {RuntimeException.class, UnsupportedOperationException.class})
+   @ExceptionHandler(value = {RuntimeException.class, Exception.class, UnsupportedOperationException.class})
    public ResponseEntity<?> runTimeException(Exception ex) {
         ex.printStackTrace();
        var exceptionDetails = new ExceptionDetails(
@@ -86,5 +87,15 @@ public class RestExceptionHandler {
                 .errorDescription(ex.getMessage())
                 .build();
         return ResponseEntity.status(NOT_FOUND).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(PermissionsException.class)
+    public ResponseEntity<ExceptionResponse> handleException(PermissionsException ex) {
+        var exceptionResponse = ExceptionResponse.builder()
+                .errorCode(FORBIDDEN.value())
+                .error("User does not have permission")
+                .errorDescription(ex.getMessage())
+                .build();
+        return ResponseEntity.status(FORBIDDEN).body(exceptionResponse);
     }
 }

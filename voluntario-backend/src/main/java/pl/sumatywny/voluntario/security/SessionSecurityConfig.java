@@ -1,7 +1,6 @@
-package pl.sumatywny.voluntario.config;
+package pl.sumatywny.voluntario.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,49 +9,32 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.session.Session;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
-import pl.sumatywny.voluntario.service.impl.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
-    @Value(value = "${custom.max.session}")
+@RequiredArgsConstructor
+public class SessionSecurityConfig {
+    @Value(value = "${app.security.max-sessions}")
     private int maxSession;
+
     private final RedisIndexedSessionRepository redisIndexedSessionRepository;
-    private final AuthenticationEntryPoint authEntryPoint;
-
-    public SecurityConfig(
-            RedisIndexedSessionRepository redisIndexedSessionRepository,
-            @Qualifier("authEntryPoint") AuthenticationEntryPoint authEntryPoint) {
-        this.redisIndexedSessionRepository = redisIndexedSessionRepository;
-        this.authEntryPoint = authEntryPoint;
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsServiceImpl();
-    }
+    private final UserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -62,7 +44,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService());
+        provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
@@ -85,7 +67,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register", "api/auth/login").permitAll()
                         .anyRequest().authenticated()
-//                        .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -94,7 +75,7 @@ public class SecurityConfig {
                         .sessionRegistry(sessionRegistry())
                 )
 //                .authenticationProvider(authenticationProvider())
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
+//                .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
                         .invalidateHttpSession(true)
@@ -105,9 +86,7 @@ public class SecurityConfig {
                                 redisIndexedSessionRepository.deleteById(id);
                             }
                         })
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            SecurityContextHolder.clearContext();
-                        })
+                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
                 )
                 //TODO: https://medium.com/@nagarjun_nagesh/remember-me-authentication-in-spring-boot-da56478cda69
                 .build();
@@ -116,13 +95,15 @@ public class SecurityConfig {
     /**
      * Maintains a registry of Session information instances. For better understanding visit
      * <a href="https://github.com/spring-projects/spring-session/blob/main/spring-session-docs/modules/ROOT/examples/java/docs/security/SecurityConfiguration.java">...</a>
-     * **/
+     **/
     @Bean
     public SpringSessionBackedSessionRegistry<? extends Session> sessionRegistry() {
         return new SpringSessionBackedSessionRegistry<>(redisIndexedSessionRepository);
     }
 
-    /** A SecurityContextRepository implementation which stores the security context in the HttpSession between requests. */
+    /**
+     * A SecurityContextRepository implementation which stores the security context in the HttpSession between requests.
+     */
     @Bean
     public SecurityContextRepository securityContextRepository() {
         return new HttpSessionSecurityContextRepository();

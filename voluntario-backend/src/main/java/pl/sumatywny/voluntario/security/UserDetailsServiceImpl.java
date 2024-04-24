@@ -1,12 +1,12 @@
-package pl.sumatywny.voluntario.service.impl;
+package pl.sumatywny.voluntario.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.model.user.userdetails.CustomUserDetails;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.UserRepository;
@@ -15,17 +15,21 @@ import java.util.Optional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        logger.debug("Loading user by email: " + email);
+        logger.debug("Loading user by email: {}", email);
         Optional<User> user = userRepository.findByEmail(email);
 
         if (user.isEmpty()) {
-            logger.error("User Not Found with username: " + email);
+            logger.error("User Not Found with username: {}", email);
             throw new UsernameNotFoundException("User Not Found with email: " + email);
         }
         return new CustomUserDetails(user.get());

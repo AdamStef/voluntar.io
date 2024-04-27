@@ -13,7 +13,7 @@ import pl.sumatywny.voluntario.repository.RoleRepository;
 public class VoluntarioApplication {
 	@Autowired
 	private RoleRepository roleRepository;
-
+  
 	public static void main(String[] args) {
 		SpringApplication.run(VoluntarioApplication.class, args);
 	}

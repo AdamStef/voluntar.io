@@ -1,7 +1,7 @@
 package pl.sumatywny.voluntario.dtos;
 
-import lombok.Builder;
-import lombok.Data;
+
+import lombok.*;
 import pl.sumatywny.voluntario.model.user.User;
 
 import java.time.LocalDateTime;

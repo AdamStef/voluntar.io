@@ -1,5 +1,6 @@
 package pl.sumatywny.voluntario.service.impl;
 
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +49,7 @@ public class EventService {
             throw new NotFoundException(String.format("Event %d not found.", eventID));
         }
 
-        event.addParticipant(user);
+        event.getParticipants().add(user);
         return eventRepository.save(event);
     }
 
@@ -58,7 +59,6 @@ public class EventService {
         if (event == null) {
             throw new NotFoundException(String.format("Event %d not found.", eventID));
         }
-
 
         User user = userRepository.findFirstById(userID);
         if (user == null) {
@@ -70,16 +70,6 @@ public class EventService {
         } else {
             throw new NotFoundException(String.format("User %d not found in event %d.", userID, eventID));
         }
-
-//        event.getParticipants().remove(user);
-//        return eventRepository.save(event);
-
-//        if (event.removeParticipant(user)) {
-//            eventRepository.save(event);
-//            return "The volunteer was removed from the participants list";
-//        } else {
-//            throw new Exception("The volunteer was not on the participants list");
-//        }
     }
 
     public List<User> getAllParticipants(Long eventID) {
@@ -87,6 +77,7 @@ public class EventService {
         if (event == null) {
             throw new NotFoundException(String.format("Event %d not found.", eventID));
         }
+
         return event.getParticipants();
     }
 
@@ -102,11 +93,13 @@ public class EventService {
         return event;
     }
 
+
     public void removeEvent(Long eventID) {
         Event event = eventRepository.findFirstById(eventID);
         if (event == null) {
             throw new NotFoundException(String.format("Event %d not found.", eventID));
         }
+
         eventRepository.delete(event);
     }
 }

@@ -83,7 +83,7 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
     <Panel className="flex flex-col justify-between gap-4 pb-0">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <CalendarCheck className="h-24 w-24" />
+          <CalendarCheck className="hidden h-24 w-24 md:block" />
           <div className="flex flex-col gap-2">
             <H1>{event.name}</H1>
             <p className="font-semibold text-destructive">

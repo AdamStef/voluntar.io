@@ -33,12 +33,12 @@ export const EventDetails = () => {
         activeIndex={activeIndex}
         setActiveIndex={setActiveIndex}
       />
-      <div className="flex items-start gap-2">
-        <div className="w-2/3">
+      <div className="flex w-full flex-col gap-2 md:flex-row md:items-start">
+        <div className="md:w-2/3">
           {activeIndex === 0 && <EventDetailsInformation event={event} />}
           {activeIndex === 1 && <EventDetailsDiscussion />}
         </div>
-        <Panel className="w-1/3">Map</Panel>
+        <Panel className="md:w-1/3">Map</Panel>
       </div>
     </div>
   );

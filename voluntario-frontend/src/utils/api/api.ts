@@ -1,5 +1,9 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { LoginCredentialsParams, RegisterUserParams } from '../types/params';
+import {
+  AddParticipantParams,
+  LoginCredentialsParams,
+  RegisterUserParams,
+} from '../types/params';
 import { EventType, UserType } from '../types/types';
 import { isValidDateString } from '../helpers';
 
@@ -54,7 +58,8 @@ export const getEvents = async () =>
 export const getEvent = async (id: string) =>
   axiosClient.get<EventType>(`/events/${id}`);
 
-export const addParticipantToEvent = async (
-  eventId: string,
-  participantId: string,
-) => axiosClient.post(`/events/${eventId}/participants/${participantId}`);
+export const addParticipantToEvent = async ({
+  eventId,
+  participantId,
+}: AddParticipantParams) =>
+  axiosClient.post(`/events/${eventId}/participants/${participantId}`);

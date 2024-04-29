@@ -1,6 +1,6 @@
 import { EventType } from '@/utils/types/types';
 import { CalendarCheck } from 'lucide-react';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { H1 } from '../ui/typography/heading';
 import { getLocationString } from '@/utils/helpers';
 import { Button } from '../ui/button';
@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { Panel } from '../ui/Panel';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import { addParticipantToEvent } from '@/utils/api/api';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const tabButtonVariants = cva('font-semibold p-2', {
   variants: {
@@ -55,11 +56,27 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
   setActiveIndex,
 }) => {
   const { user } = useAuthContext();
+  const [canJoin, setCanJoin] = useState<boolean>(
+    event.participants.every((p) => p.id !== user?.id),
+  );
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: addParticipantToEvent,
+    onSuccess: () => {
+      console.log('Participant added');
+      queryClient.invalidateQueries({ queryKey: ['events'] });
+      queryClient.invalidateQueries({ queryKey: ['events', event.id] });
+    },
+  });
+
+  React.useEffect(() => {
+    setCanJoin(event.participants.every((p) => p.id !== user?.id));
+  }, [event.participants, user]);
 
   const handleAddParticipant = () => {
-    if (!user) return;
-    console.log('Adding participant');
-    addParticipantToEvent(event.id.toString(), user.id);
+    if (!user || !canJoin) return;
+    mutate({ eventId: event.id.toString(), participantId: user.id });
   };
 
   return (
@@ -95,9 +112,11 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
           >
             Dyskusja
           </TabButton>
-          <Button className="ml-10" onClick={handleAddParticipant}>
-            Dołącz
-          </Button>
+          {canJoin && (
+            <Button className="ml-10" onClick={handleAddParticipant}>
+              Dołącz
+            </Button>
+          )}
         </div>
         {/* <Button className="">Dołącz</Button> */}
       </div>

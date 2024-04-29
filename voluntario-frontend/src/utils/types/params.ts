@@ -14,3 +14,8 @@ export type RegisterUserParams = {
   password: string;
   role: Role;
 };
+
+export type AddParticipantParams = {
+  eventId: string;
+  participantId: string;
+};

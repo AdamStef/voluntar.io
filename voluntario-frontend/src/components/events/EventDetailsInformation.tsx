@@ -5,13 +5,14 @@ import { RiOrganizationChart } from 'react-icons/ri';
 import { EventType } from '@/utils/types/types';
 import { getLocationString } from '@/utils/helpers';
 import { Panel } from '../ui/Panel';
+import { Progress } from '../ui/progress';
 
 const Info: React.FC<{
   icon: React.ReactNode;
   children: React.ReactNode;
 }> = ({ icon, children }) => {
   return (
-    <p className="flex gap-1">
+    <p className="flex items-center gap-2">
       {icon}
       {children}
     </p>
@@ -25,12 +26,18 @@ type EventDetailsInformationProps = {
 export const EventDetailsInformation: React.FC<
   EventDetailsInformationProps
 > = ({ event }) => {
-  console.log(event);
   return (
     <Panel className="flex flex-col gap-1">
       <H2>Szczegółowe informacje</H2>
       <Info icon={<FaPeopleGroup size={24} />}>
-        Liczba uczestników: {event.numberOfVolunteersNeeded}
+        Liczba uczestników: {event.participants.length}/
+        {event.numberOfVolunteersNeeded}
+        <Progress
+          className="w-1/5"
+          value={
+            (event.participants.length / event.numberOfVolunteersNeeded) * 100
+          }
+        />
       </Info>
       <Info icon={<RiOrganizationChart size={24} />}>
         Organizator: Fundacja Lorem Ipsum {/* TODO: put organization */}

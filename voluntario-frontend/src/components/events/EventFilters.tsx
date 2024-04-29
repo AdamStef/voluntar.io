@@ -6,7 +6,7 @@ type Props = {
 
 export const EventFilters = ({ className }: Props) => {
   return (
-    <div className={cn('rounded border', className)}>
+    <div className={cn('rounded border px-4 py-2', className)}>
       <h2 className="font-semibold">Filtry:</h2>
       <hr />
       <div>

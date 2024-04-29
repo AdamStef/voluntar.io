@@ -30,8 +30,10 @@ export const EventDetailsInformation: React.FC<
     <Panel className="flex flex-col gap-1">
       <H2>Szczegółowe informacje</H2>
       <Info icon={<FaPeopleGroup size={24} />}>
-        Liczba uczestników: {event.participants.length}/
-        {event.numberOfVolunteersNeeded}
+        Liczba uczestników:{' '}
+        <p className="font-semibold">
+          {event.participants.length}/{event.numberOfVolunteersNeeded}
+        </p>
         <Progress
           className="w-1/5"
           value={
@@ -40,12 +42,16 @@ export const EventDetailsInformation: React.FC<
         />
       </Info>
       <Info icon={<RiOrganizationChart size={24} />}>
-        Organizator: Fundacja Lorem Ipsum {/* TODO: put organization */}
+        Organizator: <p className="font-semibold">Fundacja Lorem Ipsum</p>{' '}
+        {/* TODO: put organization */}
       </Info>
       <Info icon={<MapPin size={24} />}>
-        Localizacja: {getLocationString(event.location)}
+        Localizacja:{' '}
+        <p className="font-semibold">{getLocationString(event.location)}</p>
       </Info>
-      <Info icon={<ClockIcon size={24} />}>Czas trwania: 50h</Info>
+      <Info icon={<ClockIcon size={24} />}>
+        Czas trwania: <p className="font-semibold">50h</p>
+      </Info>
       <div className="mt-4">
         <H4>Opis</H4>
         <p>{event.description}</p>

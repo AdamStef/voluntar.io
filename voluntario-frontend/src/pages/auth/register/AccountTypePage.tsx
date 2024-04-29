@@ -1,5 +1,8 @@
-import { LogoLink } from '@/components/ui/Logo';
-import { Link } from 'react-router-dom';
+import { RegisterOrganizationForm } from '@/components/forms/RegisterOrganizationForm';
+import { LogoLink } from '@/components/icons/Logo';
+import { OrganizationIcon } from '@/components/icons/OrganizationIcon';
+import { VolunteerIcon } from '@/components/icons/VolunteerIcon';
+import { Link, Outlet } from 'react-router-dom';
 
 export const AccountTypePage = () => {
   const gradient =
@@ -12,23 +15,29 @@ export const AccountTypePage = () => {
       ></div>
       <div className="w-3/4 max-md:max-w-sm md:w-1/2 md:basis-2/3"></div>
 
-      <div className="fixed w-4/5">
+      <div className="absolute h-full w-4/5 overflow-y-scroll">
         <LogoLink to="/home" size="lg" className="mx-auto w-24 md:w-48" />
+        {/* <RegisterOrganizationForm /> */}
+        {/* <Outlet /> */}
+        {/* <LogoLink to="/home" size="lg" className="mx-auto w-24 md:w-48" />
         <h1 className="w-full text-center align-middle text-2xl font-bold md:text-4xl">
           Wybierz typ konta
         </h1>
         <div className="mx-auto mt-8 flex flex-col items-center gap-2 md:flex-row md:justify-evenly">
-          <Link to="/register/volunteer">
-            <div className="aspect-square w-48 bg-blue-700 md:w-64">
-              Wolontariusz
-            </div>
+          <Link
+            to="/register/volunteer"
+            className="rounded-sm border-2 bg-white"
+          >
+            <VolunteerIcon className="h-48 w-48 md:h-64 md:w-64" />
           </Link>
-          <Link to="/register/organization">
-            <div className="aspect-square w-48 bg-red-700 md:w-64">
-              Organizacja
-            </div>
+          <Link
+            to="/register/organization"
+            className="rounded-sm border-2 bg-white"
+          >
+            <OrganizationIcon className="h-48 w-48 md:h-64 md:w-64" />
           </Link>
-        </div>
+        </div> */}
+
         <p className="my-4 text-center align-middle">
           Masz już konto?{' '}
           <span>

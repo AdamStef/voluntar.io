@@ -1,5 +1,6 @@
 package pl.sumatywny.voluntario.model.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import pl.sumatywny.voluntario.model.user.User;
@@ -25,7 +26,7 @@ public class Event {
     @ManyToOne
     private User organizer;
     private int numberOfVolunteersNeeded;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "events_participants",
             joinColumns = @JoinColumn(name = "events_id"),
@@ -35,6 +36,10 @@ public class Event {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    @Version
-    private Long version;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Location location;
+//
+//    @Version
+//    @JsonIgnore
+//    private Long version;
 }

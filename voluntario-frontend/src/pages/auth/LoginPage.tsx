@@ -1,5 +1,5 @@
 import { LoginForm } from '@/components/forms/LoginForm';
-import { LogoLink } from '@/components/ui/Logo';
+import { LogoLink } from '@/components/icons/Logo';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 

@@ -1,4 +1,4 @@
-import LogoSvg from '@/assets/Logo.svg';
+import LogoSvg from '@/assets/icons/Logo.svg';
 import { cn } from '@/lib/utils';
 import { VariantProps, cva } from 'class-variance-authority';
 import React from 'react';
@@ -9,6 +9,7 @@ const logoVariants = cva('aspect-square mx-auto object-scale-down', {
     size: {
       default: 'w-24',
       sm: 'w-16',
+      md: 'w-24',
       lg: 'w-48  max-w-sm',
     },
   },
@@ -44,7 +45,7 @@ export const LogoLink: React.FC<LogoProps & { to: string }> = ({
     // <Link to={to}>
     <Logo
       onClick={() => navigate(to /* , { replace: true } */)}
-      className={className}
+      className={cn('cursor-pointer', className)}
       size={size}
     />
     // </Link>

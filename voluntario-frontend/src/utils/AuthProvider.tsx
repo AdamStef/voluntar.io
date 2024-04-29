@@ -1,76 +1,60 @@
 import { ReactNode, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axiosClient from './api/axios';
-import { LoginDataType, User } from '@/types';
-import { AxiosError } from 'axios';
+import { UserType } from '@/utils/types/types';
 import { AuthContext } from './context/AuthContext';
+import { getAuthUser } from './api/api';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   children: ReactNode;
 };
 
 export const AuthProvider = ({ children }: Props) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<UserType | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  // const controller = new AbortController();
 
-  const login = async (data: LoginDataType) => {
-    try {
-      const response = await axiosClient.post('/auth/login', data);
-      if (response.status === 200) {
-        const user = response.data;
-        setUser(user);
-        console.log('Logged in user: ' + JSON.stringify(user));
-        navigate('/home');
-      }
-    } catch (error) {
-      const err = error as AxiosError;
-      return err;
-    }
-  };
+  // useEffect(() => {
+  //   // console.log('ProtectedRoute user: ' + JSON.stringify(user));
+  //   // getAuthUser()
+  //   //   .then((response) => {
+  //   //     const user = response.data;
+  //   //     setUser(user);
+  //   //     console.log('Authenticated user: ' + JSON.stringify(user));
+  //   //   })
+  //   //   .catch(() => {
+  //   //     // const err = error as AxiosError;
+  //   //     // console.warn('User is unauthenticated', err);
+  //   //     setUser(null);
+  //   //     navigate('/');
+  //   //   })
+  //   //   .finally(() => {
+  //   //     // setTimeout(() => setIsLoading(false), 1000);
+  //   //     setIsLoading(false);
+  //   //   });
 
-  const logout = async () => {
-    try {
-      await axiosClient.post('/auth/logout');
-    } catch (error) {
-      const err = error as AxiosError;
-      return err;
-    } finally {
-      setIsLoading(false);
-      setUser(null);
-      console.log('Logged out');
-      navigate('/');
-    }
-  };
+  //   const getUser = async () => {
+  //     try {
+  //       const response = await getAuthUser();
+  //       if (response.status === 200) {
+  //         const user = response.data;
+  //         setUser(user);
+  //         console.log('Authenticated user: ' + JSON.stringify(user));
+  //       }
+  //     } catch (error) {
+  //       console.warn('User is unauthenticated');
+  //       await setTimeout(() => {}, 5000);
+  //       setUser(null);
+  //       navigate('/');
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-  useEffect(() => {
-    const getAuthUser = async () => {
-      setIsLoading(true);
-
-      try {
-        const response = await axiosClient.get('/auth/me');
-        if (response.status === 200) {
-          const user = response.data;
-          setUser(user);
-          console.log('Authenticated user: ' + JSON.stringify(user));
-        }
-      } catch (error) {
-        console.error('AuthProvider ' + error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    getAuthUser();
-
-    // return () => {
-    //   controller.abort();
-    // };
-  }, []);
+  //   getUser();
+  // }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, setUser }}>
       {children}
     </AuthContext.Provider>
   );

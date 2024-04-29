@@ -1,5 +1,5 @@
 import RegisterForm from '@/components/forms/RegisterVolunteerForm';
-import { LogoLink } from '@/components/ui/Logo';
+import { LogoLink } from '@/components/icons/Logo';
 import { Link } from 'react-router-dom';
 
 export const RegisterVolunteerPage = () => {

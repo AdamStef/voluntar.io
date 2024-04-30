@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "97c9ee21-9158-46d1-8f26-41fa1193f685",
+		"_postman_id": "cd85314a-c037-4338-9129-d7b294181063",
 		"name": "voluntar.io",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "31669741"
+		"_exporter_id": "34632865"
 	},
 	"item": [
 		{
@@ -376,6 +376,182 @@
 							""
 						]
 					}
+				}
+			]
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "GetPosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basic_url}}/posts",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreatePost",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"content\": \"To jest druga treść posta. Lorem ipsum dolor sit amet, consectetur adipiscing elit.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basic_url}}/posts?eventID=1",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"posts"
+							],
+							"query": [
+								{
+									"key": "eventID",
+									"value": "1",
+									"description": "które wydarzneie"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove post",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basic_url}}/posts/1",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"content\": \"Wlasnie zedytowalem posta!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basic_url}}/posts/2",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"posts",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all posts of an event",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basic_url}}/posts/events/1",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"posts",
+								"events",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Event",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Wolontariat w schronisku dla zwierząt\",\r\n    \"description\": \"Pomoc przy opiece nad psami i kotami bezdomnymi.\",\r\n    \"numberOfVolunteersNeeded\": 5,\r\n    \"startDate\": \"2024-05-01T09:00:00\",\r\n    \"endDate\": \"2024-05-01T17:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basic_url}}/events",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basic_url}}/events",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

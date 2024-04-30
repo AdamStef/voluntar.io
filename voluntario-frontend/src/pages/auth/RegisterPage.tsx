@@ -20,7 +20,7 @@ export const RegisterPage = () => {
       )}
 
       <div className="absolute left-1/2 w-4/5 -translate-x-1/2 pb-20 md:w-1/2">
-        <LogoLink to="/home" size="md" className="mx-auto w-24 md:w-48" />
+        <LogoLink to="/" size="md" className="mx-auto w-24 md:w-48" />
         <div className="rounded-sm bg-white px-8 py-10 md:border-2">
           <Outlet />
 

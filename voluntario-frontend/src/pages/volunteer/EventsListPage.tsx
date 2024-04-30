@@ -2,12 +2,12 @@ import { EventFilters } from '@/components/events/EventFilters';
 import { EventList } from '@/components/events/EventList';
 import { EventSearchBox } from '@/components/events/EventSearchBox';
 import { Button } from '@/components/ui/button';
+import { useScreenSize } from '@/hooks/useScreenSize';
 // import { Dialog } from '@/components/ui/dialog';
 import { Filter } from 'lucide-react';
-import { useMediaQuery } from 'react-responsive';
 
 export const EventsListPage = () => {
-  const isSmallScreen = useMediaQuery({ query: '(max-width: 768px)' });
+  const { isSmall } = useScreenSize();
 
   return (
     <div className="mb-8 h-full w-full">
@@ -19,7 +19,7 @@ export const EventsListPage = () => {
       </Dialog> */}
       <EventSearchBox />
       <div className="container mt-6 flex flex-col gap-3 md:flex-row">
-        {isSmallScreen ? (
+        {isSmall ? (
           <Button variant={'outline'} asChild>
             <div className="flex justify-center gap-1">
               Filtry
@@ -37,7 +37,7 @@ export const EventsListPage = () => {
           <EventList />
         </div>
       </div>
-      {/* {isSmallScreen ? (
+      {/* {isSmall ? (
         <div className="mx-2 my-3 flex justify-center">
           <Button variant={'outline'} className="w-full max-w-sm">
             Filtry

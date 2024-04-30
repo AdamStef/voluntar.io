@@ -1,18 +1,16 @@
 import { LogoLink } from '@/components/icons/Logo';
 import { Link, Outlet } from 'react-router-dom';
-import { useMediaQuery } from 'react-responsive';
+import { useScreenSize } from '@/hooks/useScreenSize';
 
 export const RegisterPage = () => {
-  const isSmallScreen = useMediaQuery({
-    maxDeviceWidth: 768,
-  });
+  const { isSmall } = useScreenSize();
 
   const gradient =
     'md:bg-gradient-to-tr md:from-green-500 md:via-green-500 md:to-green-300';
 
   return (
     <div className="mx-auto flex h-dvh flex-row">
-      {!isSmallScreen && (
+      {!isSmall && (
         <>
           <div className={`m-0 h-dvh basis-1/3 ${gradient}`}></div>
           <div className="h-max basis-2/3"></div>

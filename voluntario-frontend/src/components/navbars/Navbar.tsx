@@ -2,13 +2,11 @@ import { Button } from '../ui/button';
 import React, { useContext, useState } from 'react';
 import Hamburger from 'hamburger-react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useAuthContext } from '@/hooks/useAuthContext';
 import { NavbarItemType } from '@/utils/types/types';
 import { Logo } from '../icons/Logo';
 import { Spinner } from '../ui/Spinner';
 import { postLogoutUser } from '@/utils/api/api';
 import { AxiosError } from 'axios';
-import { useAuth } from '@/hooks/useAuth';
 import { AuthContext } from '@/utils/context/AuthContext';
 
 const navItems: NavbarItemType[] = [
@@ -92,9 +90,7 @@ const MobileNavbarItem: React.FC<MobileNavbarItemProps> = ({
 
 const Navbar: React.FC = () => {
   const [showNavbar, setShowNavbar] = useState(false);
-  // const { user } = useAuthContext();
   const { user, setUser } = useContext(AuthContext);
-  // const { user } = useAuth();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -104,7 +100,6 @@ const Navbar: React.FC = () => {
 
   const handleLogout = async () => {
     setIsLoading(true);
-    // await logout();
     postLogoutUser()
       .then(() => {
         setUser(null);

@@ -29,7 +29,6 @@ const validationSchema = z
     email: z.string().email(),
     password: z.string().min(8),
     passwordConfirmation: z.string().min(8),
-    // role: z.enum([Role.VOLUNTEER, Role.ORGANIZATION]),
     gender: z.enum(['MALE', 'FEMALE']),
   })
   .refine((data) => data.password === data.passwordConfirmation, {
@@ -46,6 +45,14 @@ type Props = {
 const RegisterVolunteerForm: React.FC<Props> = ({ className }) => {
   const form = useForm<RegisterFormSchema>({
     resolver: zodResolver(validationSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '',
+      password: '',
+      passwordConfirmation: '',
+    },
   });
   const navigate = useNavigate();
 

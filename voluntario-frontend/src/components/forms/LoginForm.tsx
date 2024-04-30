@@ -35,6 +35,10 @@ export const LoginForm: React.FC<Props> = ({ className }) => {
   const navigate = useNavigate();
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(LoginFormSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
   const inputRef = useRef<HTMLInputElement>(null);
 

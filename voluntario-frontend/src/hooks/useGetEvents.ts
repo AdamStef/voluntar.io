@@ -20,28 +20,6 @@ export const useGetEvent = (eventId: string) => {
         .getQueryData<EventType[]>(['events'])
         ?.find((d) => d.id.toString() === eventId);
     },
-    // getEvent(eventId)
-    //   .then((res) => res.data)
-    //   // .then(() => new Promise((resolve) => setTimeout(resolve, 5000)))
-    //   .catch(() => {
-    //     // navigate('/not-found');
-    //     throw new Error('Nie znaleziono wydarzenia');
-    //   }),
-    // initialData: {
-    //   id: 0,
-    //   name: '',
-    //   description: '',
-    //   startDate: new Date(),
-    //   endDate: new Date(),
-    //   location: {
-    //     id: 0,
-    //     name: '',
-    //     city: '',
-    //     postalCode: '',
-    //     street: '',
-    //     number: '',
-    //   },
-    // } as EventType,
   });
 
   return query;

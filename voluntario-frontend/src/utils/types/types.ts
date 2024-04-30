@@ -1,6 +1,3 @@
-import { AxiosError } from 'axios';
-import { LoginCredentialsParams } from './params';
-
 export enum Role {
   ADMIN = 'admin',
   ORGANIZATION = 'organization',
@@ -16,14 +13,6 @@ export type UserType = {
   phoneNumber: string;
   gender: 'male' | 'female';
 };
-
-// export type AuthContextType = {
-//   user?: UserType | null;
-//   isLoading: boolean;
-//   login: (data: LoginCredentialsParams) => Promise<void | AxiosError>;
-//   logout: () => Promise<void | AxiosError>;
-//   // setAuthUser: (user: User) => void;
-// };
 
 export type NavbarItemType = {
   name: string;

@@ -13,11 +13,11 @@ const Info: React.FC<{
   children: React.ReactNode;
 }> = ({ icon, children, header }) => {
   return (
-    <p className="flex items-center gap-2">
+    <div className="flex items-center gap-2">
       {icon}
       <p className="hidden md:inline-block">{header}</p>
       {children}
-    </p>
+    </div>
   );
 };
 

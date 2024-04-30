@@ -8,7 +8,10 @@ import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Panel } from '../ui/Panel';
 import { useAuthContext } from '@/hooks/useAuthContext';
-import { addParticipantToEvent } from '@/utils/api/api';
+import {
+  addParticipantToEvent,
+  removeParticipantFromEvent,
+} from '@/utils/api/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const tabButtonVariants = cva('font-semibold p-2', {
@@ -55,16 +58,26 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
   activeIndex,
   setActiveIndex,
 }) => {
+  const queryClient = useQueryClient();
   const { user } = useAuthContext();
   const [canJoin, setCanJoin] = useState<boolean>(
     event.participants.every((p) => p.id !== user?.id),
   );
-  const queryClient = useQueryClient();
+  const [canLeave, setCanLeave] = useState<boolean>(
+    event.participants.some((p) => p.id === user?.id),
+  );
 
-  const { mutate } = useMutation({
+  const { mutate: addParticipantMutate } = useMutation({
     mutationFn: addParticipantToEvent,
     onSuccess: () => {
-      console.log('Participant added');
+      queryClient.invalidateQueries({ queryKey: ['events'] });
+      queryClient.invalidateQueries({ queryKey: ['events', event.id] });
+    },
+  });
+
+  const { mutate: removeParticipantMutate } = useMutation({
+    mutationFn: removeParticipantFromEvent,
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['events'] });
       queryClient.invalidateQueries({ queryKey: ['events', event.id] });
     },
@@ -72,11 +85,23 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
 
   React.useEffect(() => {
     setCanJoin(event.participants.every((p) => p.id !== user?.id));
+    setCanLeave(event.participants.some((p) => p.id === user?.id));
   }, [event.participants, user]);
 
   const handleAddParticipant = () => {
     if (!user || !canJoin) return;
-    mutate({ eventId: event.id.toString(), participantId: user.id });
+    addParticipantMutate({
+      eventId: event.id.toString(),
+      participantId: user.id,
+    });
+  };
+
+  const handleLeaveEvent = () => {
+    if (!user || !canLeave) return;
+    removeParticipantMutate({
+      eventId: event.id.toString(),
+      participantId: user.id,
+    });
   };
 
   return (
@@ -115,6 +140,15 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
           {canJoin && (
             <Button className="ml-10" onClick={handleAddParticipant}>
               Dołącz
+            </Button>
+          )}
+          {canLeave && (
+            <Button
+              className="ml-10"
+              variant={'destructive'}
+              onClick={handleLeaveEvent}
+            >
+              Opuść
             </Button>
           )}
         </div>

@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import {
-  AddParticipantParams,
+  AddParticipantParams as EventParticipantParams,
   LoginCredentialsParams,
   RegisterUserParams,
 } from '../types/params';
@@ -61,5 +61,11 @@ export const getEvent = async (id: string) =>
 export const addParticipantToEvent = async ({
   eventId,
   participantId,
-}: AddParticipantParams) =>
+}: EventParticipantParams) =>
   axiosClient.post(`/events/${eventId}/participants/${participantId}`);
+
+export const removeParticipantFromEvent = async ({
+  eventId,
+  participantId,
+}: EventParticipantParams) =>
+  axiosClient.delete(`/events/${eventId}/participants/${participantId}`);

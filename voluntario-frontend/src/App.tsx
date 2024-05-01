@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { LoginPage } from './pages/auth/LoginPage';
 import { AuthProvider } from './utils/AuthProvider';
-import { Home } from './pages/Home';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Layout } from './pages/Layout';
 import { Dashboard } from './pages/Dashboard';
@@ -16,6 +15,7 @@ import { RegisterPage } from './pages/auth/RegisterPage';
 import { AccountType } from './components/AccountType';
 import RegisterVolunteerForm from './components/forms/RegisterVolunteerForm';
 import { RegisterOrganizationForm } from './components/forms/RegisterOrganizationForm';
+import { LandingPage } from './pages/LandingPage';
 
 const queryClient = new QueryClient();
 
@@ -42,7 +42,7 @@ function App() {
 
         <Route path="/login" element={<LoginPage />} />
         <Route element={<Layout />}>
-          <Route index element={<Home />} />
+          <Route index element={<LandingPage />} />
         </Route>
 
         {/* Authenticated routes */}

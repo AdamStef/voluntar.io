@@ -9,12 +9,19 @@ import { Layout } from './pages/Layout';
 import { Dashboard } from './pages/Dashboard';
 import { RegisterVolunteerPage } from './pages/auth/register/RegisterVolunteerPage';
 import { NotFound } from './pages/NotFound';
+import { LandingPage } from './pages/LandingPage';
 
 function App() {
   return (
+   
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          <Route path="/landing-page" element={<LandingPage/>}/>
+            <Route
+              path="/landing-page"
+              element={<LandingPage/>}
+          /> 
           <Route path="/register" element={<AccountTypePage />} />
           <Route
             path="/register/volunteer"

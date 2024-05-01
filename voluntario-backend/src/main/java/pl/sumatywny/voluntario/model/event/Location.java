@@ -31,5 +31,4 @@ public class Location {
 
     //Dodatkowe info, typu wejście od ulicy X
     private String additionalInformation;
-
 }

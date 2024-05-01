@@ -1,4 +1,4 @@
-import { Navbar } from '@/components/ui/Navbar';
+import { Navbar } from '@/components/navbars/Navbar';
 import { FaFrown } from 'react-icons/fa';
 
 export const NotFound = () => {

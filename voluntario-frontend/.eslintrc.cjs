@@ -6,6 +6,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
     'plugin:jsx-a11y/recommended',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
@@ -25,18 +26,3 @@ module.exports = {
     'prettier/prettier': 'error',
   },
 };
-
-// module.exports = {
-//   extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:react-hooks/recommended', 'plugin:jsx-a11y/recommended'],
-//   plugins: ['react', 'react-hooks', 'jsx-a11y', 'prettier'],
-//   parserOptions: {
-//     ecmaVersion: 2021,
-//     sourceType: 'module',
-//     ecmaFeatures: {
-//       jsx: true,
-//     },
-//   },
-//   rules: {
-//     'prettier/prettier': 'error',
-//   },
-// };

@@ -1,4 +1,4 @@
-import { Navbar } from '@/components/ui/Navbar';
+import { Navbar } from '@/components/navbars/Navbar';
 import { Outlet } from 'react-router-dom';
 
 export const Layout = () => {
@@ -7,12 +7,8 @@ export const Layout = () => {
       <header>
         <Navbar />
       </header>
-      <main>
-        <Outlet />
-      </main>
-      {/* <footer>
-        <p>Footer</p>
-      </footer> */}
+      <Outlet />
+      {/* <footer className="h-24"></footer> */}
     </>
   );
 };

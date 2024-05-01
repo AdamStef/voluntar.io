@@ -4,4 +4,5 @@ import pl.sumatywny.voluntario.model.user.User;
 
 public interface UserService {
     User getUserByEmail(String email);
+    User getUserById(Long id);
 }

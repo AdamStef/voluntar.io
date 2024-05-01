@@ -54,6 +54,8 @@ public class AuthController {
         var principal = (CustomUserDetails) authentication.getPrincipal();
         var user = userService.getUserByEmail(principal.getUsername());
 
+        //TODO: If not authenticated remove JSESSIONID cookie
+
         return ResponseEntity.ok().body(UserResponseDTO.mapFromUser(user));
     }
 }

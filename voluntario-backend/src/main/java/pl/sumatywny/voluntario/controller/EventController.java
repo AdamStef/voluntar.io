@@ -1,23 +1,22 @@
 package pl.sumatywny.voluntario.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sumatywny.voluntario.dtos.EventDTO;
+import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.EventService;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/events")
 public class EventController {
 
     private final EventService eventService;
     private final AuthService authService;
-
-    public EventController(EventService eventService, AuthService authService) {
-        this.eventService = eventService;
-        this.authService = authService;
-    }
+    private final UserService userService;
 
     @PostMapping()
 //    @IsOrganization
@@ -37,8 +36,19 @@ public class EventController {
 
     @PostMapping("/{eventID}/participants")
     public ResponseEntity<?> addParticipant(@PathVariable("eventID") Long eventID) {
-        var user = authService.getUserFromSession();
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addParticipant(eventID, user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addParticipant(eventID));
+    }
+
+    @PostMapping("/{eventID}/participants/{participantID}")
+    public ResponseEntity<?> addParticipant(
+            @PathVariable("eventID") Long eventID,
+            @PathVariable("participantID") Long participantID) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addParticipant(eventID, participantID));
+    }
+
+    @GetMapping("/{eventID}/participants")
+    public ResponseEntity<?> allParticipants(@PathVariable("eventID") Long eventID) {
+        return ResponseEntity.ok().body(eventService.getAllParticipants(eventID));
     }
 
     @DeleteMapping( "/{eventID}/participants/{participantID}")
@@ -55,11 +65,6 @@ public class EventController {
 //            return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(eventID, authService.getUserFromSession().getId()));
 //        } else {
 //        }
-    }
-
-    @GetMapping("/{eventID}/participants")
-    public ResponseEntity<?> allParticipants(@PathVariable("eventID") Long eventID) {
-        return ResponseEntity.ok().body(eventService.getAllParticipants(eventID));
     }
 
     @GetMapping()

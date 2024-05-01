@@ -1,21 +1,22 @@
-import { Button } from './button';
-import React, { useState } from 'react';
+import { Button } from '../ui/button';
+import React, { useContext, useState } from 'react';
 import Hamburger from 'hamburger-react';
-import { Link, NavLink } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import { NavbarItemType } from '@/types';
-import { Logo } from './Logo';
-import { FaSpinner } from 'react-icons/fa';
-// import { FaSpinner } from 'react-icons/fa';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { NavbarItemType } from '@/utils/types/types';
+import { Logo } from '../icons/Logo';
+import { Spinner } from '../ui/Spinner';
+import { postLogoutUser } from '@/utils/api/api';
+import { AxiosError } from 'axios';
+import { AuthContext } from '@/utils/context/AuthContext';
 
 const navItems: NavbarItemType[] = [
   {
-    name: 'Home',
+    name: 'Strona główna',
     path: '/home',
   },
   {
-    name: 'Dashboard',
-    path: '/dashboard',
+    name: 'Lista wydarzeń',
+    path: '/events',
   },
   {
     name: 'Contact',
@@ -89,22 +90,29 @@ const MobileNavbarItem: React.FC<MobileNavbarItemProps> = ({
 
 const Navbar: React.FC = () => {
   const [showNavbar, setShowNavbar] = useState(false);
-  const { user, logout, isLoading } = useAuth();
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { user, setUser } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar);
   };
 
-  const handleLogout = () => {
-    // setIsLoading(true);
-    logout();
-    // .then(() => {
-    //   console.log('Logged out: ' + isLoading);
-    //   setIsLoading(false); // TODO: This is not working
-    // });
-    setShowNavbar(false);
-    // setIsLoading(false);
+  const handleLogout = async () => {
+    setIsLoading(true);
+    postLogoutUser()
+      .then(() => {
+        setUser(null);
+      })
+      .catch((error) => {
+        const err = error as AxiosError;
+        console.error('Error logging out: ' + err);
+      })
+      .finally(() => {
+        setShowNavbar(false);
+        setIsLoading(false);
+        navigate('/home', { replace: true });
+      });
   };
 
   return (
@@ -118,17 +126,39 @@ const Navbar: React.FC = () => {
         </div>
       </Link>
       <div className="mr-8 hidden items-center md:flex lg:mr-24">
-        <ul className="mr-8 flex justify-between gap-8 text-lg text-secondary">
+        {/* <ul className="mr-8 flex justify-between gap-8 text-lg text-secondary">
           {navItems.map((item) => (
             <NavbarItem key={item.name} name={item.name} path={item.path} />
           ))}
-        </ul>
+        </ul> */}
         {/* {navButtons.map((item) => (
           <Button key={item.name} onClick={item.onClick}>
             {item.name}
           </Button>
         ))} */}
-        <Button onClick={handleLogout}>Wyloguj się</Button>
+        {user != null ? (
+          <>
+            <ul className="mr-8 flex justify-between gap-8 text-lg text-secondary">
+              {navItems.map((item) => (
+                <NavbarItem key={item.name} name={item.name} path={item.path} />
+              ))}
+            </ul>
+            <Button onClick={handleLogout} variant={'secondary'}>
+              {isLoading ?? <Spinner className="mr-1 text-white" />}
+              Wyloguj się
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button asChild>
+              <Link to={'/login'}>Zaloguj się</Link>
+            </Button>
+            <Button className="ml-2" asChild>
+              <Link to={'/register'}>Zarejestruj się</Link>
+            </Button>
+          </>
+        )}
+        {/* <Button onClick={handleLogout}>Wyloguj się</Button> */}
       </div>
 
       <div className="mr-4 block md:hidden">
@@ -141,8 +171,8 @@ const Navbar: React.FC = () => {
             : 'fixed bottom-0 left-[-100%] top-0 w-[60%] duration-500 ease-in-out'
         }
       >
-        <div className="flex h-screen flex-col justify-between">
-          <ul className="flex flex-col divide-y">
+        <div className="z-50 flex h-screen flex-col justify-between">
+          {/* <ul className="flex flex-col divide-y">
             {navItems.map((item) => (
               <MobileNavbarItem
                 key={item.name}
@@ -151,7 +181,7 @@ const Navbar: React.FC = () => {
                 setShowNavbar={setShowNavbar}
               />
             ))}
-          </ul>
+          </ul> */}
           {/* <div className="flex flex-col items-center justify-center">
             {navButtons.map((item) => (
               <Button
@@ -164,14 +194,26 @@ const Navbar: React.FC = () => {
             ))}
           </div> */}
           {user != null ? (
-            <Button
-              onClick={handleLogout}
-              variant={'secondary'}
-              className="m-4"
-            >
-              {isLoading ?? <FaSpinner className="mr-2 animate-spin" />}
-              Wyloguj się
-            </Button>
+            <>
+              <ul className="flex flex-col divide-y">
+                {navItems.map((item) => (
+                  <MobileNavbarItem
+                    key={item.name}
+                    name={item.name}
+                    path={item.path}
+                    setShowNavbar={setShowNavbar}
+                  />
+                ))}
+              </ul>
+              <Button
+                onClick={handleLogout}
+                variant={'secondary'}
+                className="m-4"
+              >
+                {isLoading ?? <Spinner className="mr-1 text-white" />}
+                Wyloguj się
+              </Button>
+            </>
           ) : (
             <>
               <div className="m-4 flex flex-col gap-2">

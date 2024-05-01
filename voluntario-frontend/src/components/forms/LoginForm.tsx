@@ -11,10 +11,13 @@ import {
 } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { FaSpinner } from 'react-icons/fa';
-import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import { HTMLProps, useEffect, useRef } from 'react';
+import { Spinner } from '../ui/Spinner';
+import { postLoginUser } from '@/utils/api/api';
+import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
+import { useAuthContext } from '@/hooks/useAuthContext';
 
 const LoginFormSchema = z.object({
   email: z.string().email(),
@@ -28,9 +31,14 @@ type Props = {
 };
 
 export const LoginForm: React.FC<Props> = ({ className }) => {
-  const { login } = useAuth();
+  const { setUser } = useAuthContext();
+  const navigate = useNavigate();
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(LoginFormSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -40,8 +48,14 @@ export const LoginForm: React.FC<Props> = ({ className }) => {
 
   const onSubmit = async (data: LoginFormValues) => {
     console.log('Login user: ' + JSON.stringify(data));
-    const err = await login(data);
-    if (err) {
+
+    try {
+      const res = await postLoginUser(data);
+      setUser(res.data);
+      navigate('/home');
+    } catch (error) {
+      console.error('Error logging in user: ' + error);
+      const err = error as AxiosError;
       if (err.response?.status == 401) {
         form.reset({ password: '' });
         form.setError('root.serverError', {
@@ -97,7 +111,7 @@ export const LoginForm: React.FC<Props> = ({ className }) => {
           )}
         />
         <Button className="w-full" type="submit">
-          {isSubmitting && <FaSpinner className="mr-1 animate-spin" />}
+          {isSubmitting && <Spinner className="mr-1 text-white" />}
           Login
         </Button>
         {errors.root?.serverError && (

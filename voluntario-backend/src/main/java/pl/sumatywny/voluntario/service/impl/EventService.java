@@ -20,6 +20,7 @@ import java.util.List;
 public class EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final AuthService authService;
 //    private LocationRepository locationRepository;
 
     public Event createEvent(EventDTO eventDTO, User user) {
@@ -39,15 +40,31 @@ public class EventService {
     }
 
     @Transactional
-    public Event addParticipant(Long eventID, User user) {
-        if (user.getRole().getRole() != Role.ROLE_VOLUNTEER) {
+    public Event addParticipant(Long eventID, Long userID) {
+        var user = userRepository.findById(userID)
+                .orElseThrow(() -> new NotFoundException(String.format("User %d not found.", userID)));
+
+        if (!isUserVolunteer(user)) {
             throw new NotFoundException("Only volunteers can participate in events.");
         }
 
-        Event event = eventRepository.findFirstById(eventID);
-        if (event == null) {
-            throw new NotFoundException(String.format("Event %d not found.", eventID));
+        Event event = eventRepository.findById(eventID)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
+
+        event.getParticipants().add(user);
+        return eventRepository.save(event);
+    }
+
+    @Transactional
+    public Event addParticipant(Long eventID) {
+        var user = authService.getUserFromSession();
+
+        if (!isUserVolunteer(user)) {
+            throw new NotFoundException("Only volunteers can participate in events.");
         }
+
+        Event event = eventRepository.findById(eventID)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
 
         event.getParticipants().add(user);
         return eventRepository.save(event);
@@ -55,15 +72,11 @@ public class EventService {
 
     @Transactional
     public Event removeParticipant(Long eventID, Long userID) {
-        Event event = eventRepository.findFirstById(eventID);
-        if (event == null) {
-            throw new NotFoundException(String.format("Event %d not found.", eventID));
-        }
+        Event event = eventRepository.findById(eventID)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
 
-        User user = userRepository.findFirstById(userID);
-        if (user == null) {
-            throw new NotFoundException(String.format("User %d not found.", userID));
-        }
+        User user = userRepository.findById(userID)
+                .orElseThrow(() -> new NotFoundException(String.format("User %d not found.", userID)));
 
         if (event.getParticipants().remove(user)) {
             return eventRepository.save(event);
@@ -73,10 +86,8 @@ public class EventService {
     }
 
     public List<User> getAllParticipants(Long eventID) {
-        Event event = eventRepository.findFirstById(eventID);
-        if (event == null) {
-            throw new NotFoundException(String.format("Event %d not found.", eventID));
-        }
+        Event event = eventRepository.findById(eventID)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
 
         return event.getParticipants();
     }
@@ -86,21 +97,20 @@ public class EventService {
     }
 
     public Event getEvent(Long eventID) {
-        Event event = eventRepository.findFirstById(eventID);
-        if (event == null) {
-            throw new NotFoundException(String.format("Event %d not found.", eventID));
-        }
-        return event;
+        return eventRepository.findById(eventID)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
     }
 
 
     public void removeEvent(Long eventID) {
-        Event event = eventRepository.findFirstById(eventID);
-        if (event == null) {
-            throw new NotFoundException(String.format("Event %d not found.", eventID));
-        }
+        Event event = eventRepository.findById(eventID)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
 
         eventRepository.delete(event);
+    }
+
+    private boolean isUserVolunteer(User user) {
+        return user.getRole().getRole() == Role.ROLE_VOLUNTEER;
     }
 }
 

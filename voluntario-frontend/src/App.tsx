@@ -1,44 +1,61 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { AccountTypePage } from './pages/auth/register/AccountTypePage';
 import { LoginPage } from './pages/auth/LoginPage';
-// import { AuthContext } from './utils/context/AuthContext';
 import { AuthProvider } from './utils/AuthProvider';
-import { Home } from './pages/Home';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Layout } from './pages/Layout';
 import { Dashboard } from './pages/Dashboard';
-import { RegisterVolunteerPage } from './pages/auth/register/RegisterVolunteerPage';
 import { NotFound } from './pages/NotFound';
+import { EventsListPage } from './pages/volunteer/EventsListPage';
+import { EventDetailsPage } from './pages/volunteer/EventDetailsPage';
+import { HomePage } from './pages/HomePage';
+import { ReactNode } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { RegisterPage } from './pages/auth/RegisterPage';
+import { AccountType } from './components/AccountType';
+import RegisterVolunteerForm from './components/forms/RegisterVolunteerForm';
+import { RegisterOrganizationForm } from './components/forms/RegisterOrganizationForm';
+import { LandingPage } from './pages/LandingPage';
+
+const queryClient = new QueryClient();
+
+function AppWithProviders({ children }: { children: ReactNode }) {
+  return (
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>{children}</AuthProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </BrowserRouter>
+  );
+}
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/register" element={<AccountTypePage />} />
-          <Route
-            path="/register/volunteer"
-            element={<RegisterVolunteerPage />}
-          />
-          <Route
-            path="/register/organization"
-            element={<h1>Organization</h1>}
-          />
-          <Route path="/login" element={<LoginPage />} />
-          <Route element={<Layout />}>
-            <Route index element={<Home />} />
-          </Route>
+    <AppWithProviders>
+      <Routes>
+        <Route path="/register" element={<RegisterPage />}>
+          <Route index element={<AccountType />} />
+          <Route path="volunteer" element={<RegisterVolunteerForm />} />
+          <Route path="organization" element={<RegisterOrganizationForm />} />
+        </Route>
 
-          {/* Authenticated routes */}
-          <Route element={<ProtectedRoute children={<Layout />} />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Route>
+        <Route path="/login" element={<LoginPage />} />
+        <Route element={<Layout />}>
+          <Route index element={<LandingPage />} />
+        </Route>
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+        {/* Authenticated routes */}
+        <Route element={<ProtectedRoute children={<Layout />} />}>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/events" element={<EventsListPage />} />
+          <Route path="/events/:eventId" element={<EventDetailsPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AppWithProviders>
   );
 }
 

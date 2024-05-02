@@ -1,5 +1,5 @@
 import { LoginForm } from '@/components/forms/LoginForm';
-import { LogoLink } from '@/components/ui/Logo';
+import { LogoLink } from '@/components/icons/Logo';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ export const LoginPage = () => {
   return (
     <div className="flex h-screen flex-col items-center md:flex-row">
       <div className="flex w-3/4 flex-col items-center gap-4 max-md:max-w-sm md:w-1/2 md:basis-2/3 md:gap-4">
-        <LogoLink to="/home" size="lg" className="my-4 w-24 md:my-8 md:w-48" />
+        <LogoLink to="/" size="lg" className="my-4 w-24 md:my-8 md:w-48" />
         <h1 className="text-2xl font-bold md:text-4xl">Zaloguj się</h1>
         <LoginForm className="md:mx-auto md:w-1/2 md:max-w-sm" />
       </div>

@@ -5,9 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sumatywny.voluntario.dtos.EventDTO;
+import pl.sumatywny.voluntario.dtos.post.PostResponseDTO;
 import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.EventService;
+import pl.sumatywny.voluntario.service.impl.PostService;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,7 +18,7 @@ public class EventController {
 
     private final EventService eventService;
     private final AuthService authService;
-    private final UserService userService;
+    private final PostService postService;
 
     @PostMapping()
 //    @IsOrganization
@@ -34,35 +36,35 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
-    @PostMapping("/{eventID}/participants")
-    public ResponseEntity<?> addParticipant(@PathVariable("eventID") Long eventID) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addParticipant(eventID));
+    @PostMapping("/{eventId}/participants")
+    public ResponseEntity<?> addParticipant(@PathVariable("eventId") Long eventId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addParticipant(eventId));
     }
 
-    @PostMapping("/{eventID}/participants/{participantID}")
+    @PostMapping("/{eventId}/participants/{participantId}")
     public ResponseEntity<?> addParticipant(
-            @PathVariable("eventID") Long eventID,
-            @PathVariable("participantID") Long participantID) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addParticipant(eventID, participantID));
+            @PathVariable("eventId") Long eventId,
+            @PathVariable("participantId") Long participantId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addParticipant(eventId, participantId));
     }
 
-    @GetMapping("/{eventID}/participants")
-    public ResponseEntity<?> allParticipants(@PathVariable("eventID") Long eventID) {
-        return ResponseEntity.ok().body(eventService.getAllParticipants(eventID));
+    @GetMapping("/{eventId}/participants")
+    public ResponseEntity<?> allParticipants(@PathVariable("eventId") Long eventId) {
+        return ResponseEntity.ok().body(eventService.getAllParticipants(eventId));
     }
 
-    @DeleteMapping( "/{eventID}/participants/{participantID}")
+    @DeleteMapping( "/{eventId}/participants/{participantId}")
     public ResponseEntity<?> removeParticipant(
-            @PathVariable(name = "eventID") Long eventID,
-            @PathVariable(name = "participantID", required = false) Long participantID) {
+            @PathVariable(name = "eventId") Long eventId,
+            @PathVariable(name = "participantId", required = false) Long participantId) {
 //        var user = authService.getUserFromSession();
-//            if (Objects.equals(user.getId(), participantID)) {
-//                return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(eventID, user.getId()));
+//            if (Objects.equals(user.getId(), participantId)) {
+//                return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(eventId, user.getId()));
 //            }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(eventID, participantID));
-//        if (participantID == null) {
-//            return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(eventID, authService.getUserFromSession().getId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(eventId, participantId));
+//        if (participantId == null) {
+//            return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(eventId, authService.getUserFromSession().getId()));
 //        } else {
 //        }
     }
@@ -72,14 +74,21 @@ public class EventController {
         return ResponseEntity.ok().body(eventService.getAllEvents());
     }
 
-    @GetMapping("/{eventID}")
-    public ResponseEntity<?> event(@PathVariable("eventID") Long eventID) {
-        return ResponseEntity.ok().body(eventService.getEvent(eventID));
+    @GetMapping("/{eventId}")
+    public ResponseEntity<?> event(@PathVariable("eventId") Long eventId) {
+        return ResponseEntity.ok().body(eventService.getEvent(eventId));
     }
 
-    @DeleteMapping("/{eventID}")
-    public ResponseEntity<?> removeEvent(@PathVariable("eventID") Long eventID) {
-        eventService.removeEvent(eventID);
+    @DeleteMapping("/{eventId}")
+    public ResponseEntity<?> removeEvent(@PathVariable("eventId") Long eventId) {
+        eventService.removeEvent(eventId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{eventId}/posts")
+    public ResponseEntity<?> allPostsByEvent(@PathVariable("eventId") Long eventId) {
+        var event = eventService.getEvent(eventId);
+        var posts = postService.getAllPostsByEvent(event);
+        return ResponseEntity.ok().body(posts.stream().map(PostResponseDTO::mapToDto).toList());
     }
 }

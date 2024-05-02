@@ -7,10 +7,11 @@ import pl.sumatywny.voluntario.model.post.Post;
 import pl.sumatywny.voluntario.model.user.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    Post findFirstById(Long id);
+    Optional<Post> findById(Long id);
     List<Post> findAll();
     List<Post> findAllByOrganizer(User organizer);
     List<Post> findAllByEvent(Event event);

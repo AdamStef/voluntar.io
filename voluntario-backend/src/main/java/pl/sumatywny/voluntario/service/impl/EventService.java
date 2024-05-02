@@ -40,54 +40,54 @@ public class EventService {
     }
 
     @Transactional
-    public Event addParticipant(Long eventID, Long userID) {
-        var user = userRepository.findById(userID)
-                .orElseThrow(() -> new NotFoundException(String.format("User %d not found.", userID)));
+    public Event addParticipant(Long eventId, Long userId) {
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("User %d not found.", userId)));
 
         if (!isUserVolunteer(user)) {
             throw new NotFoundException("Only volunteers can participate in events.");
         }
 
-        Event event = eventRepository.findById(eventID)
-                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventId)));
 
         event.getParticipants().add(user);
         return eventRepository.save(event);
     }
 
     @Transactional
-    public Event addParticipant(Long eventID) {
+    public Event addParticipant(Long eventId) {
         var user = authService.getUserFromSession();
 
         if (!isUserVolunteer(user)) {
             throw new NotFoundException("Only volunteers can participate in events.");
         }
 
-        Event event = eventRepository.findById(eventID)
-                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventId)));
 
         event.getParticipants().add(user);
         return eventRepository.save(event);
     }
 
     @Transactional
-    public Event removeParticipant(Long eventID, Long userID) {
-        Event event = eventRepository.findById(eventID)
-                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
+    public Event removeParticipant(Long eventId, Long userId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventId)));
 
-        User user = userRepository.findById(userID)
-                .orElseThrow(() -> new NotFoundException(String.format("User %d not found.", userID)));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("User %d not found.", userId)));
 
         if (event.getParticipants().remove(user)) {
             return eventRepository.save(event);
         } else {
-            throw new NotFoundException(String.format("User %d not found in event %d.", userID, eventID));
+            throw new NotFoundException(String.format("User %d not found in event %d.", userId, eventId));
         }
     }
 
-    public List<User> getAllParticipants(Long eventID) {
-        Event event = eventRepository.findById(eventID)
-                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
+    public List<User> getAllParticipants(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventId)));
 
         return event.getParticipants();
     }
@@ -96,15 +96,15 @@ public class EventService {
         return eventRepository.findAll();
     }
 
-    public Event getEvent(Long eventID) {
-        return eventRepository.findById(eventID)
-                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
+    public Event getEvent(Long eventId) {
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventId)));
     }
 
 
-    public void removeEvent(Long eventID) {
-        Event event = eventRepository.findById(eventID)
-                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
+    public void removeEvent(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventId)));
 
         eventRepository.delete(event);
     }

@@ -16,6 +16,7 @@ import { AccountType } from './components/AccountType';
 import RegisterVolunteerForm from './components/forms/RegisterVolunteerForm';
 import { RegisterOrganizationForm } from './components/forms/RegisterOrganizationForm';
 import { LandingPage } from './pages/LandingPage';
+import Leaderboard from './pages/Leaderboard';
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,8 @@ function App() {
         <Route element={<Layout />}>
           <Route index element={<LandingPage />} />
         </Route>
+
+        <Route path="/leaderboard" element={<Leaderboard />} />
 
         {/* Authenticated routes */}
         <Route element={<ProtectedRoute children={<Layout />} />}>

@@ -3,7 +3,6 @@ package pl.sumatywny.voluntario.service.impl;
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.dtos.LocationDTO;
 import pl.sumatywny.voluntario.enums.Role;
-import pl.sumatywny.voluntario.exception.NotFoundException;
 import pl.sumatywny.voluntario.exception.PermissionsException;
 import pl.sumatywny.voluntario.model.event.Location;
 import pl.sumatywny.voluntario.model.user.User;
@@ -11,6 +10,7 @@ import pl.sumatywny.voluntario.model.user.UserRole;
 import pl.sumatywny.voluntario.repository.LocationRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class LocationService {
@@ -42,7 +42,7 @@ public class LocationService {
     public Location getLocation(Long locationID) {
         Location location = locationRepository.findFirstById(locationID);
         if (location == null) {
-            throw new NotFoundException("Location not found.");
+            throw new NoSuchElementException("Location not found.");
         }
 
         return location;
@@ -60,7 +60,7 @@ public class LocationService {
 
         Location location = locationRepository.findFirstById(locationID);
         if (location == null) {
-            throw new NotFoundException("Location not found.");
+            throw new NoSuchElementException("Location not found.");
         }
 
         locationRepository.delete(location);
@@ -73,7 +73,7 @@ public class LocationService {
 
         Location location = locationRepository.findFirstById(locationID);
         if (location == null) {
-            throw new NotFoundException("Location not found.");
+            throw new NoSuchElementException("Location not found.");
         }
 
         location.setName(locationDTO.getName());

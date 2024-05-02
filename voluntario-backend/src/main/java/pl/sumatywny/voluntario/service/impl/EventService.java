@@ -2,11 +2,13 @@ package pl.sumatywny.voluntario.service.impl;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.dtos.EventDTO;
 import pl.sumatywny.voluntario.enums.Role;
-import pl.sumatywny.voluntario.exception.NotFoundException;
+import pl.sumatywny.voluntario.exception.PermissionsException;
 import pl.sumatywny.voluntario.model.event.Event;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.EventRepository;
@@ -14,6 +16,7 @@ import pl.sumatywny.voluntario.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -40,55 +43,33 @@ public class EventService {
     }
 
     @Transactional
-    public Event addParticipant(Long eventID, Long userID) {
-        var user = userRepository.findById(userID)
-                .orElseThrow(() -> new NotFoundException(String.format("User %d not found.", userID)));
-
+    public Event addParticipant(Event event, User user) {
         if (!isUserVolunteer(user)) {
-            throw new NotFoundException("Only volunteers can participate in events.");
+            throw new NoSuchElementException("Only volunteers can participate in events.");
         }
 
-        Event event = eventRepository.findById(eventID)
-                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
+        if (event.getParticipants().contains(user)) {
+            throw new IllegalStateException(String.format("User %d already in event %d.", user.getId(), event.getId()));
+        }
+
+        if (event.getParticipants().size() >= event.getNumberOfVolunteersNeeded()) {
+            throw new IllegalStateException(String.format("Event %d is full.", event.getId()));
+        }
 
         event.getParticipants().add(user);
         return eventRepository.save(event);
     }
 
     @Transactional
-    public Event addParticipant(Long eventID) {
-        var user = authService.getUserFromSession();
-
-        if (!isUserVolunteer(user)) {
-            throw new NotFoundException("Only volunteers can participate in events.");
-        }
-
-        Event event = eventRepository.findById(eventID)
-                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
-
-        event.getParticipants().add(user);
-        return eventRepository.save(event);
-    }
-
-    @Transactional
-    public Event removeParticipant(Long eventID, Long userID) {
-        Event event = eventRepository.findById(eventID)
-                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
-
-        User user = userRepository.findById(userID)
-                .orElseThrow(() -> new NotFoundException(String.format("User %d not found.", userID)));
-
+    public Event removeParticipant(Event event, User user) {
         if (event.getParticipants().remove(user)) {
             return eventRepository.save(event);
         } else {
-            throw new NotFoundException(String.format("User %d not found in event %d.", userID, eventID));
+            throw new NoSuchElementException(String.format("User %d not found in event %d.", user.getId(), event.getId()));
         }
     }
 
-    public List<User> getAllParticipants(Long eventID) {
-        Event event = eventRepository.findById(eventID)
-                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
-
+    public List<User> getAllParticipants(Event event) {
         return event.getParticipants();
     }
 
@@ -96,15 +77,22 @@ public class EventService {
         return eventRepository.findAll();
     }
 
+    public Page<Event> getAllEvents(String search, Pageable pageable) {
+        if (!search.isEmpty()) {
+            return eventRepository.findAllByNameContainingIgnoreCase(search, pageable);
+        }
+        return eventRepository.findAll(pageable);
+    }
+
     public Event getEvent(Long eventID) {
         return eventRepository.findById(eventID)
-                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
+                .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventID)));
     }
 
 
     public void removeEvent(Long eventID) {
         Event event = eventRepository.findById(eventID)
-                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventID)));
+                .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventID)));
 
         eventRepository.delete(event);
     }

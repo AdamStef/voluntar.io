@@ -8,11 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.dtos.EventDTO;
 import pl.sumatywny.voluntario.enums.Role;
-import pl.sumatywny.voluntario.exception.PermissionsException;
 import pl.sumatywny.voluntario.model.event.Event;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.EventRepository;
-import pl.sumatywny.voluntario.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +20,6 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class EventService {
     private final EventRepository eventRepository;
-    private final UserRepository userRepository;
-    private final AuthService authService;
 //    private LocationRepository locationRepository;
 
     public Event createEvent(EventDTO eventDTO, User user) {
@@ -84,15 +80,15 @@ public class EventService {
         return eventRepository.findAll(pageable);
     }
 
-    public Event getEvent(Long eventID) {
-        return eventRepository.findById(eventID)
-                .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventID)));
+    public Event getEvent(Long eventId) {
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventId)));
     }
 
 
-    public void removeEvent(Long eventID) {
-        Event event = eventRepository.findById(eventID)
-                .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventID)));
+    public void removeEvent(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventId)));
 
         eventRepository.delete(event);
     }

@@ -39,8 +39,8 @@ public class LocationService {
         return locationRepository.save(location);
     }
 
-    public Location getLocation(Long locationID) {
-        Location location = locationRepository.findFirstById(locationID);
+    public Location getLocation(Long locationId) {
+        Location location = locationRepository.findFirstById(locationId);
         if (location == null) {
             throw new NoSuchElementException("Location not found.");
         }
@@ -52,13 +52,13 @@ public class LocationService {
         return locationRepository.findAll();
     }
 
-    public void removeLocation(Long locationID, User user) {
+    public void removeLocation(Long locationId, User user) {
         UserRole role = user.getRole();
         if (role.getRole() == Role.ROLE_VOLUNTEER) {
             throw new PermissionsException("Volunteers cannot remove events.");
         }
 
-        Location location = locationRepository.findFirstById(locationID);
+        Location location = locationRepository.findFirstById(locationId);
         if (location == null) {
             throw new NoSuchElementException("Location not found.");
         }
@@ -66,12 +66,12 @@ public class LocationService {
         locationRepository.delete(location);
     }
 
-    public Location editLocation(Long locationID, LocationDTO locationDTO, User user) {
+    public Location editLocation(Long locationId, LocationDTO locationDTO, User user) {
         if (user.getRole().getRole() == Role.ROLE_VOLUNTEER) {
             throw new PermissionsException("Volunteers cannot edit events.");
         }
 
-        Location location = locationRepository.findFirstById(locationID);
+        Location location = locationRepository.findFirstById(locationId);
         if (location == null) {
             throw new NoSuchElementException("Location not found.");
         }

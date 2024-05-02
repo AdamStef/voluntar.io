@@ -76,14 +76,14 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(event, user));
     }
 
-    @GetMapping("/pageable")
+    @GetMapping()
     public ResponseEntity<?> allEvents(
             @RequestParam(name = "search", required = false, defaultValue = "") String search,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok().body(eventService.getAllEvents(search, pageable));
     }
 
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity<?> allEvents() {
         return ResponseEntity.ok().body(eventService.getAllEvents());
     }

@@ -20,5 +20,6 @@ export function isValidDateString(dateString: unknown): boolean {
 }
 
 export function getLocationString(location: EventLocationType): string {
+  if (!location) return 'Nieznana';
   return `${location.name}, ul ${location.street} ${location.number} ${location.city}`;
 }

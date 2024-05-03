@@ -1,3 +1,4 @@
+
 export enum Role {
   ADMIN = 'admin',
   ORGANIZATION = 'organization',
@@ -38,8 +39,20 @@ export type EventLocationType = {
   postalCode: string;
   street: string;
   number: string;
-  flatNumber?: string | null;
-  latitude?: string | null;
-  longitude?: string | null;
+  flatNumber?: number| null;
+  latitude?: number | null;
+  longitude?: number | null;
   additionalInformation?: string | null;
 };
+
+export type EventPostType = {
+  id: number;
+  content: string;
+  organizerId: number;
+  event: EventType;
+  wasEdited: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  map(element: (post: any) => JSX.Element): any;
+};
+

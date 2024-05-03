@@ -20,6 +20,7 @@ const Leaderboard = ({ users }: { users: any[] }) => {
                     </div>
                 </div>
             ))}
+            
         </main>
     );
 };
@@ -70,7 +71,8 @@ const App = () => {
                 </div>
 
                 {/* let's comeback to this part later and dthink about this blue color */}
-                <div className="p-3 shadow-lg mx-auto max-w-4xl" style={{ backgroundColor: '#ABBED1' }}>
+                <div className="p-3 shadow-lg mx-auto max-w-4xl bg-leaderboard-blue">
+
                     <div className="flex justify-between">
                         <div className="w-1/5 text-sm">Pozycja</div>
                         <div className="w-1/5 text-sm">Nazwa użytkownika</div>

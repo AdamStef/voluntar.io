@@ -9,6 +9,7 @@ import pl.sumatywny.voluntario.dtos.post.PostResponseDTO;
 import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.EventService;
+import pl.sumatywny.voluntario.service.impl.LocationService;
 import pl.sumatywny.voluntario.service.impl.PostService;
 
 @RestController
@@ -19,6 +20,7 @@ public class EventController {
     private final EventService eventService;
     private final AuthService authService;
     private final PostService postService;
+    private final LocationService locationService;
 
     @PostMapping()
 //    @IsOrganization
@@ -91,4 +93,18 @@ public class EventController {
         var posts = postService.getAllPostsByEvent(event);
         return ResponseEntity.ok().body(posts.stream().map(PostResponseDTO::mapToDto).toList());
     }
+
+    @GetMapping("/{eventId}/location")
+    public ResponseEntity<?> getEventLocation(@PathVariable("eventId") Long eventId) {
+        var event = eventService.getEvent(eventId);
+        var location = event.getLocation();
+        return ResponseEntity.ok().body(location);
+    }
+
+    @PutMapping("/{eventId}/location")
+    public ResponseEntity<?> updateEventLocation(@PathVariable("eventId") Long eventId, @RequestParam("locationId") Long locationId) {
+        eventService.assignNewLocation(eventId, locationId);
+        return ResponseEntity.ok().body("Location updated successfully.");
+    }
+
 }

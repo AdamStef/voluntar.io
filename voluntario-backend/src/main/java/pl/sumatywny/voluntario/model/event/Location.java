@@ -23,11 +23,11 @@ public class Location {
     private String street;
     private String number;
     //Może być nullem
-    private String flatNumber;
+    private int flatNumber;
 
     //Może się przyda do jakiejś integracji z mapą
-    private String latitude;
-    private String longitude;
+    private double latitude;
+    private double longitude;
 
     //Dodatkowe info, typu wejście od ulicy X
     private String additionalInformation;

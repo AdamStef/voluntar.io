@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "4f8d1e94-3f80-4b89-91d9-95d9dbda58b4",
+		"_postman_id": "cd85314a-c037-4338-9129-d7b294181063",
 		"name": "voluntar.io",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "31669741",
-		"_collection_link": "https://blue-crater-52358.postman.co/workspace/SUMY-Workspace~73926df5-7a8b-4d9d-8020-1c3110b7bd87/collection/32305026-4f8d1e94-3f80-4b89-91d9-95d9dbda58b4?action=share&source=collection_link&creator=31669741"
+		"_exporter_id": "34632865"
 	},
 	"item": [
 		{
@@ -101,6 +100,28 @@
 					"item": [
 						{
 							"name": "Login admin",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -180,56 +201,34 @@
 							},
 							"response": []
 						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"// // Set access_token variable to accessToken from response body\r",
+									"// var responseBody = pm.response.json();\r",
+									"// pm.collectionVariables.set('access_token', responseBody.accessToken);"
+								]
+							}
+						}
 					]
 				},
 				{
-					"name": "Test",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/auth/test",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"auth",
-								"test"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Status",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/auth/me",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"auth",
-								"me"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "logout",
+					"name": "Logout",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -247,9 +246,6 @@
 					"response": []
 				}
 			],
-			"auth": {
-				"type": "noauth"
-			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -282,13 +278,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{basic_url}}/test/hello",
+							"raw": "{{basic_url}}/test",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
-								"test",
-								"hello"
+								"test"
 							]
 						}
 					},
@@ -361,16 +356,6 @@
 					"response": []
 				}
 			],
-			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0b3JnYW5pemF0aW9uIiwiaWF0IjoxNzExNDc5OTg0LCJleHAiOjE3MTE1NjYzODR9.o4mi8H8zGkXMjaHhwIG6_eOnbjUCSMsjDXc7euOPa9A",
-						"type": "string"
-					}
-				]
-			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -395,141 +380,19 @@
 			]
 		},
 		{
-			"name": "Event",
+			"name": "Posts",
 			"item": [
 				{
-					"name": "CreateEvent",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"TEST1\",\r\n  \"description\": \"Lorem\",\r\n  \"numberOfVolunteersNeeded\": \"4\",\r\n  \"startDate\": \"2022-04-16T12:00:00\",\r\n  \"endDate\": \"2022-04-17T12:00:00\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{basic_url}}/events",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"events"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "addParticipant",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/events/1/participants",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"events",
-								"1",
-								"participants"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "removeParticipant",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/events/1/participants/2",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"events",
-								"1",
-								"participants",
-								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "removeParticipant Copy",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/events/5/participants",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"events",
-								"5",
-								"participants"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "allParticipants",
+					"name": "GetPosts",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{basic_url}}/events/1/participants",
+							"raw": "{{basic_url}}/posts",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
-								"events",
-								"1",
-								"participants"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "allEvents",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/events",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"events"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get all posts by event",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/events/2/posts",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"events",
-								"2",
 								"posts"
 							]
 						}
@@ -537,17 +400,59 @@
 					"response": []
 				},
 				{
-					"name": "event",
+					"name": "CreatePost",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"content\": \"To jest druga treść posta. Lorem ipsum dolor sit amet, consectetur adipiscing elit.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{basic_url}}/events/5",
+							"raw": "{{basic_url}}/posts?eventID=1",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
-								"events",
+								"posts"
+							],
+							"query": [
+								{
+									"key": "eventID",
+									"value": "1",
+									"description": "które wydarzneie"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove post",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basic_url}}/posts/5",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"posts",
 								"5"
 							]
 						}
@@ -555,16 +460,44 @@
 					"response": []
 				},
 				{
-					"name": "removeEvent",
+					"name": "edit post",
 					"request": {
-						"method": "DELETE",
+						"method": "PUT",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"content\": \"Wlasnie zedytowalem posta!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{basic_url}}/events/1",
+							"raw": "{{basic_url}}/posts/6",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
+								"posts",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all posts of an event",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basic_url}}/posts/events/1",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"posts",
 								"events",
 								"1"
 							]
@@ -575,16 +508,16 @@
 			]
 		},
 		{
-			"name": "Locations",
+			"name": "Event",
 			"item": [
 				{
-					"name": "Create location",
+					"name": "create",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Example Location\",\r\n  \"city\": \"New York\",\r\n  \"postalCode\": \"10001\",\r\n  \"street\": \"Broadway\",\r\n  \"number\": \"123\",\r\n  \"flatNumber\": \"Apt 2B\",\r\n  \"latitude\": \"40.7128\",\r\n  \"longitude\": \"-74.0060\",\r\n  \"additionalInformation\": \"Near Times Square\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Wolontariat w schronisku dla zwierząt\",\r\n    \"description\": \"Pomoc przy opiece nad psami i kotami bezdomnymi.\",\r\n    \"numberOfVolunteersNeeded\": 5,\r\n    \"startDate\": \"2024-05-01T09:00:00\",\r\n    \"endDate\": \"2024-05-01T17:00:00\",\r\n    \"locationId\": 1\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -592,137 +525,28 @@
 							}
 						},
 						"url": {
-							"raw": "{{basic_url}}/locations",
+							"raw": "{{basic_url}}/events",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
-								"locations"
+								"events"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get location",
+					"name": "get",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/locations/1",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"locations",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get all locations",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/locations",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"locations"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Remove location",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/locations/1",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"locations",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Complaints",
-			"item": [
-				{
-					"name": "allComplaints",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/complaints/",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"complaints",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "complaint",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/complaints/2",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"complaints",
-								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getComplaintByStatus",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/complaints/",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"complaints",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "createComplaint",
-					"request": {
-						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"text\": \"Testowa skarga\",\r\n    \"reportedID\": 2\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -730,166 +554,25 @@
 							}
 						},
 						"url": {
-							"raw": "{{basic_url}}/complaints/",
+							"raw": "{{basic_url}}/events",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
-								"complaints",
-								""
+								"events"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "claimComplaint",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"text\": \"Testowa skarga\",\r\n    \"reported\": 2\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{basic_url}}/complaints/claim/1",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"complaints",
-								"claim",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "resolveComplaint",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"response\": \"Było, zamkykam\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{basic_url}}/complaints/resolve/1",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"complaints",
-								"resolve",
-								"1"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Posts",
-			"item": [
-				{
-					"name": "Create post",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"eventId\": 2,\r\n    \"content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum et justo vitae leo efficitur posuere non non dolor. Nullam tincidunt accumsan dolor eu maximus. Aliquam tincidunt urna sed semper finibus. Mauris a quam scelerisque sapien hendrerit interdum. Donec a rutrum quam. Pellentesque faucibus iaculis porta. Donec tempus dignissim tristique. Suspendisse in ligula suscipit, tristique orci ac, varius ex. Cras tincidunt magna sed velit aliquet mattis. Suspendisse non suscipit odio. Ut non nisi eu metus iaculis interdum.\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{basic_url}}/posts",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"posts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get one post",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/posts/4",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"posts",
-								"4"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get all posts",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/posts",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"posts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete post",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/posts/1",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"posts",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Edit post",
+					"name": "set location",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"eventId\": \"4\",\r\n    \"content\": \"EDITED POST. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum et justo vitae leo efficitur posuere non non dolor. Nullam tincidunt accumsan dolor eu maximus. Aliquam tincidunt urna sed semper finibus. Mauris a quam scelerisque sapien hendrerit interdum. Donec a rutrum quam. Pellentesque faucibus iaculis porta. Donec tempus dignissim tristique. Suspendisse in ligula suscipit, tristique orci ac, varius ex. Cras tincidunt magna sed velit aliquet mattis. Suspendisse non suscipit odio. Ut non nisi eu metus iaculis interdum.\"\r\n}",
+							"raw": "\"locationId\": 3\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -897,13 +580,87 @@
 							}
 						},
 						"url": {
-							"raw": "{{basic_url}}/posts/4",
+							"raw": "{{basic_url}}/events/1/location?locationId=3",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
-								"posts",
-								"4"
+								"events",
+								"1",
+								"location"
+							],
+							"query": [
+								{
+									"key": "locationId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get event location",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basic_url}}/events/1/location",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"events",
+								"1",
+								"location"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "location",
+			"item": [
+				{
+					"name": "create location",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Lokdsdsaasd\",\r\n    \"city\": \"Chujosaddsadasice\",\r\n    \"postalCode\": \"92-100\",\r\n    \"street\": \"Sezamkowa\",\r\n    \"number\": \"95a\",\r\n    \"flatNumber\": 13,\r\n    \"latitude\": 190,\r\n    \"longitude\": 130,\r\n    \"additionalInformation\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basic_url}}/locations",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"locations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get locations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basic_url}}/locations",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"locations"
 							]
 						}
 					},
@@ -947,14 +704,7 @@
 		}
 	],
 	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{access_token}}",
-				"type": "string"
-			}
-		]
+		"type": "inherit"
 	},
 	"event": [
 		{

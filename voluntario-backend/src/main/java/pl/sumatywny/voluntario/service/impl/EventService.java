@@ -6,10 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.dtos.EventDTO;
 import pl.sumatywny.voluntario.enums.Role;
+import pl.sumatywny.voluntario.exception.CouldNotSaveException;
 import pl.sumatywny.voluntario.exception.NotFoundException;
 import pl.sumatywny.voluntario.model.event.Event;
+import pl.sumatywny.voluntario.model.event.Location;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.EventRepository;
+import pl.sumatywny.voluntario.repository.LocationRepository;
 import pl.sumatywny.voluntario.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -21,9 +24,13 @@ public class EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
-//    private LocationRepository locationRepository;
+    private final LocationRepository locationRepository;
 
+    @Transactional
     public Event createEvent(EventDTO eventDTO, User user) {
+        Location location = locationRepository.findById(eventDTO.getLocationId())
+                .orElseThrow(() -> new NotFoundException(String.format("Location %d not found.", eventDTO.getLocationId())));
+
         Event event = Event.builder()
                 .name(eventDTO.getName())
                 .description(eventDTO.getDescription())
@@ -31,9 +38,9 @@ public class EventService {
                 .organizer(user)
                 .numberOfVolunteersNeeded(eventDTO.getNumberOfVolunteersNeeded())
                 .participants(new ArrayList<>())
-                .participants(new ArrayList<>())
                 .startDate(eventDTO.getStartDate())
                 .endDate(eventDTO.getEndDate())
+                .location(location)
                 .build();
 
         return eventRepository.save(event);
@@ -111,6 +118,26 @@ public class EventService {
 
     private boolean isUserVolunteer(User user) {
         return user.getRole().getRole() == Role.ROLE_VOLUNTEER;
+    }
+
+    public Location assignNewLocation(Long eventId, Long locationId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventId)));
+        Location location = locationRepository.findById(locationId)
+                .orElseThrow(() -> new NotFoundException(String.format("Location %d not found.", locationId)));
+        try{
+            event.setLocation(location);
+            eventRepository.save(event);
+        } catch (Exception e) {
+            throw new CouldNotSaveException(String.format("Location %d not found.", locationId));
+        }
+        return location;
+    }
+
+    private Location getEventLocation(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %d not found.", eventId)));
+        return event.getLocation();
     }
 }
 

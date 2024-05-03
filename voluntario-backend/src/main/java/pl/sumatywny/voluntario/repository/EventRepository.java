@@ -12,8 +12,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAll();
-    @Query("SELECT e FROM Event e JOIN FETCH e.location WHERE e.id = :id")
+//    @Query("SELECT e FROM Event e JOIN FETCH e.location WHERE e.id = :id")
     Optional<Event> findById(Long id);
+
 //    List<Event> findAllByUserId(Long userId);
 //    List<Event> findByStartDate(int year, int month, int day);
 //    List<Event> findByEndDate(int year, int month, int day);

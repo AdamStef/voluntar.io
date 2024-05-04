@@ -6,6 +6,8 @@ import { Panel } from '../ui/Panel';
 import { useGetEvent } from '@/hooks/useGetEvents';
 import { useParams } from 'react-router-dom';
 import { Spinner } from '../ui/Spinner';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 
 type EventDetailsParams = {
   eventId: string;
@@ -26,6 +28,15 @@ export const EventDetails = () => {
   if (isError) return <div>{error.message}</div>;
 
   if (!event) return null;
+
+  const eventPosition =
+    event.location.latitude && event.location.longitude
+      ? [
+          parseFloat(event.location.latitude || ''),
+          parseFloat(event.location.longitude || ''),
+        ]
+      : null;
+
   return (
     <div className="flex flex-col gap-4">
       <EventDetailsHeader
@@ -38,7 +49,25 @@ export const EventDetails = () => {
           {activeIndex === 0 && <EventDetailsInformation event={event} />}
           {activeIndex === 1 && <EventDetailsDiscussion />}
         </div>
-        <Panel className="md:w-1/3">Map</Panel>
+        <Panel className="md:w-1/3">
+          Dokładna lokalizacja
+          <MapContainer
+            center={eventPosition}
+            zoom={15}
+            scrollWheelZoom={false}
+            style={{ width: '100%', height: '205px' }}
+          >
+            {eventPosition && (
+              <>
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={eventPosition} />
+              </>
+            )}
+          </MapContainer>
+        </Panel>
       </div>
     </div>
   );

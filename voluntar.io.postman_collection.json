@@ -183,34 +183,6 @@
 					]
 				},
 				{
-					"name": "Test",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{basic_url}}/auth/test",
-							"host": [
-								"{{basic_url}}"
-							],
-							"path": [
-								"auth",
-								"test"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Status",
 					"request": {
 						"method": "GET",
@@ -247,9 +219,6 @@
 					"response": []
 				}
 			],
-			"auth": {
-				"type": "noauth"
-			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -361,16 +330,6 @@
 					"response": []
 				}
 			],
-			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0b3JnYW5pemF0aW9uIiwiaWF0IjoxNzExNDc5OTg0LCJleHAiOjE3MTE1NjYzODR9.o4mi8H8zGkXMjaHhwIG6_eOnbjUCSMsjDXc7euOPa9A",
-						"type": "string"
-					}
-				]
-			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -404,7 +363,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"TEST1\",\r\n  \"description\": \"Lorem\",\r\n  \"numberOfVolunteersNeeded\": \"4\",\r\n  \"startDate\": \"2022-04-16T12:00:00\",\r\n  \"endDate\": \"2022-04-17T12:00:00\"\r\n}",
+							"raw": "{\r\n  \"name\": \"TEST1\",\r\n  \"description\": \"Lorem\",\r\n  \"numberOfVolunteersNeeded\": \"4\",\r\n  \"startDate\": \"2022-04-16T12:00:00\",\r\n  \"endDate\": \"2022-04-17T12:00:00\",\r\n  \"location\": {\r\n        \"name\": \"Example Location\",\r\n        \"city\": \"New York\",\r\n        \"postalCode\": \"10001\",\r\n        \"street\": \"Broadway\",\r\n        \"number\": \"123\",\r\n        \"flatNumber\": \"Apt 2B\",\r\n        \"latitude\": \"40.7128\",\r\n        \"longitude\": \"-74.0060\",\r\n        \"additionalInformation\": \"Near Times Square\"\r\n  }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -429,13 +388,13 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{basic_url}}/events/1/participants",
+							"raw": "{{basic_url}}/events/22/participants",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
 								"events",
-								"1",
+								"22",
 								"participants"
 							]
 						}
@@ -501,17 +460,31 @@
 					"response": []
 				},
 				{
-					"name": "allEvents",
+					"name": "allEvents example search and pagination",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{basic_url}}/events",
+							"raw": "{{basic_url}}/events?page=0&size=5&search=senior",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
 								"events"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								},
+								{
+									"key": "search",
+									"value": "senior"
+								}
 							]
 						}
 					},
@@ -542,13 +515,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{basic_url}}/events/5",
+							"raw": "{{basic_url}}/events/2",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
 								"events",
-								"5"
+								"2"
 							]
 						}
 					},
@@ -567,6 +540,47 @@
 							"path": [
 								"events",
 								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all events pageable",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basic_url}}/events?page=0",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"events"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basic_url}}/events/all",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"events",
+								"all"
 							]
 						}
 					},
@@ -870,13 +884,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{basic_url}}/posts/1",
+							"raw": "{{basic_url}}/posts/2",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
 								"posts",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -897,13 +911,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{basic_url}}/posts/4",
+							"raw": "{{basic_url}}/posts/5",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
 								"posts",
-								"4"
+								"5"
 							]
 						}
 					},
@@ -946,16 +960,6 @@
 			"response": []
 		}
 	],
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{access_token}}",
-				"type": "string"
-			}
-		]
-	},
 	"event": [
 		{
 			"listen": "prerequest",

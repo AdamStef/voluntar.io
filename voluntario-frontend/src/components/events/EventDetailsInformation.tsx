@@ -28,19 +28,18 @@ type EventDetailsInformationProps = {
 export const EventDetailsInformation: React.FC<
   EventDetailsInformationProps
 > = ({ event }) => {
+  const numberOfParticipants = event.participants.length ?? 0;
   return (
     <Panel className="flex flex-col gap-1">
       <H2>Szczegółowe informacje</H2>
       <Info icon={<FaPeopleGroup size={24} />} header="Liczba uczestników: ">
         {/* Liczba uczestników:{' '} */}
         <p className="font-semibold">
-          {event.participants.length}/{event.numberOfVolunteersNeeded}
+          {numberOfParticipants}/{event.numberOfVolunteersNeeded}
         </p>
         <Progress
           className="w-1/5"
-          value={
-            (event.participants.length / event.numberOfVolunteersNeeded) * 100
-          }
+          value={(numberOfParticipants / event.numberOfVolunteersNeeded) * 100}
         />
       </Info>
       <Info icon={<RiOrganizationChart size={24} />} header="Organizator: ">

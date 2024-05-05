@@ -8,9 +8,9 @@ public class LocationDTO {
     private String city;
     private String postalCode;
     private String street;
-    private String number;
-    private String flatNumber;
-    private String latitude;
-    private String longitude;
+    private Integer number;
+    private Integer flatNumber;
+    private Double latitude;
+    private Double longitude;
     private String additionalInformation;
 }

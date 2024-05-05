@@ -37,10 +37,10 @@ export type EventLocationType = {
   city: string;
   postalCode: string;
   street: string;
-  number: string;
-  flatNumber?: string | null;
-  latitude?: string | null;
-  longitude?: string | null;
+  number: number;
+  flatNumber?: number | null;
+  latitude?: number | null;
+  longitude?: number | null;
   additionalInformation?: string | null;
 };
 

@@ -13,7 +13,10 @@ export const Panel: React.FC<PanelProps & HTMLAttributes<HTMLDivElement>> = ({
 }) => {
   return (
     <div
-      className={cn('rounded-sm bg-panel p-4 text-panel-foreground', className)}
+      className={cn(
+        'rounded-sm bg-panel p-4 text-panel-foreground shadow-sm',
+        className,
+      )}
       {...props}
     >
       {children}

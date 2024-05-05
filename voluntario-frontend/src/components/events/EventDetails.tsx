@@ -7,7 +7,9 @@ import { useGetEvent } from '@/hooks/useGetEvents';
 import { useParams } from 'react-router-dom';
 import { Spinner } from '../ui/Spinner';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
+import { LatLngTuple } from 'leaflet';
+import { getEventPosition } from '@/utils/helpers';
+import { H3 } from '../ui/typography/heading';
 
 type EventDetailsParams = {
   eventId: string;
@@ -29,13 +31,7 @@ export const EventDetails = () => {
 
   if (!event) return null;
 
-  const eventPosition =
-    event.location.latitude && event.location.longitude
-      ? [
-          parseFloat(event.location.latitude || ''),
-          parseFloat(event.location.longitude || ''),
-        ]
-      : null;
+  const eventPosition: LatLngTuple | null = getEventPosition(event);
 
   return (
     <div className="flex flex-col gap-4">
@@ -50,12 +46,14 @@ export const EventDetails = () => {
           {activeIndex === 1 && <EventDetailsDiscussion />}
         </div>
         <Panel className="md:w-1/3">
-          Dokładna lokalizacja
+          <H3 className="border-b border-secondary pb-2">
+            Dokładna lokalizacja
+          </H3>
           <MapContainer
-            center={eventPosition}
+            center={eventPosition ?? [0, 0]}
             zoom={15}
             scrollWheelZoom={false}
-            style={{ width: '100%', height: '205px' }}
+            className="mt-2 h-[250px] border shadow-lg"
           >
             {eventPosition && (
               <>

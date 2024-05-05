@@ -18,4 +18,5 @@ public class EventDTO {
 //    private List<User> participants;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private LocationDTO location;
 }

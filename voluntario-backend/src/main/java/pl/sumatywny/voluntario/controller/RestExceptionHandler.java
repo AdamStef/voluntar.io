@@ -9,11 +9,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.sumatywny.voluntario.dtos.ExceptionResponse;
-import pl.sumatywny.voluntario.exception.NotFoundException;
 import pl.sumatywny.voluntario.exception.PermissionsException;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -79,8 +79,8 @@ public class RestExceptionHandler {
         return ResponseEntity.status(BAD_REQUEST).body(exceptionResponse);
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ExceptionResponse> handleException(NotFoundException ex) {
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<ExceptionResponse> handleException(NoSuchElementException ex) {
         var exceptionResponse = ExceptionResponse.builder()
                 .errorCode(NOT_FOUND.value())
                 .error("Not found")

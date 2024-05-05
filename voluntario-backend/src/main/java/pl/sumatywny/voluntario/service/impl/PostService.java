@@ -3,7 +3,6 @@ package pl.sumatywny.voluntario.service.impl;
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.dtos.post.PostRequestDTO;
 import pl.sumatywny.voluntario.enums.Role;
-import pl.sumatywny.voluntario.exception.NotFoundException;
 import pl.sumatywny.voluntario.exception.PermissionsException;
 import pl.sumatywny.voluntario.model.event.Event;
 import pl.sumatywny.voluntario.model.post.Post;
@@ -11,6 +10,7 @@ import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.PostRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -36,7 +36,7 @@ public class PostService {
     }
 
     public Post getPost(Long postID) {
-        return postRepository.findById(postID).orElseThrow(() -> new NotFoundException("Post not found."));
+        return postRepository.findById(postID).orElseThrow(() -> new NoSuchElementException("Post not found."));
     }
 
     public List<Post> getAllPosts() {
@@ -56,7 +56,7 @@ public class PostService {
             throw new PermissionsException("Volunteers cannot remove events.");
         }
 
-        Post post = postRepository.findById(postID).orElseThrow(() -> new NotFoundException("Post not found."));
+        Post post = postRepository.findById(postID).orElseThrow(() -> new NoSuchElementException("Post not found."));
         if (!Objects.equals(user.getId(), post.getOrganizer().getId()) && user.getRole().getRole() != Role.ROLE_ADMIN) {
             System.out.println("nie masz uprawnien");
             throw new PermissionsException("You cannot remove this post.");
@@ -70,7 +70,7 @@ public class PostService {
             throw new PermissionsException("Volunteers cannot edit events.");
         }
 
-        Post post = postRepository.findById(postID).orElseThrow(() -> new NotFoundException("Post not found."));
+        Post post = postRepository.findById(postID).orElseThrow(() -> new NoSuchElementException("Post not found."));
 
         if (!Objects.equals(user.getId(), post.getOrganizer().getId()) && user.getRole().getRole() != Role.ROLE_ADMIN) {
             throw new PermissionsException("You cannot edit this post.");

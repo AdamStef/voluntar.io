@@ -4,12 +4,11 @@ import {
   LoginCredentialsParams,
   RegisterUserParams,
 } from '../types/params';
-import {EventLocationType, EventType, UserType} from '../types/types';
+import { EventType, UserType } from '../types/types';
 import { isValidDateString } from '../helpers';
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  // baseURL: "http://localhost:8080",
   headers: {
     'Content-Type': 'application/json',
   },
@@ -62,8 +61,10 @@ export const postLocation = async (data: EventLocationType)=>
 export const getLocations = async () =>
     axiosClient.get<EventLocationType[]>('/locations').then((res) => res.data);
 
-export const getEvents = async () =>
-  axiosClient.get<EventType[]>('/events').then((res) => res.data);
+export const getEvents = async (page: number, search: string) =>
+  axiosClient
+    .get<Page<EventType>>(`/events?page=${page}&search=${search}`)
+    .then((res) => res.data);
 
 export const getEvent = async (id: string) =>
   axiosClient.get<EventType>(`/events/${id}`);

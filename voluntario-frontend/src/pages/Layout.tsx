@@ -8,7 +8,7 @@ export const Layout = () => {
         <Navbar />
       </header>
       <Outlet />
-      {/* <footer className="h-24"></footer> */}
+      <footer className="pt-24"></footer>
     </>
   );
 };

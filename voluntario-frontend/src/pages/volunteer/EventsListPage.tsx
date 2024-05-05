@@ -33,7 +33,7 @@ export const EventsListPage = () => {
             <EventFilters />
           </div>
         )}
-        <div className="basis-3/4">
+        <div className="">
           <EventList />
         </div>
       </div>

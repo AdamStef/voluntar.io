@@ -4,11 +4,12 @@ import {
   LoginCredentialsParams,
   RegisterUserParams,
 } from '../types/params';
-import { EventType, UserType } from '../types/types';
+import {EventLocationType, EventType, UserType} from '../types/types';
 import { isValidDateString } from '../helpers';
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  // baseURL: "http://localhost:8080",
   headers: {
     'Content-Type': 'application/json',
   },
@@ -52,6 +53,15 @@ export const postRegisterUser = async (data: RegisterUserParams) =>
   axiosClient.post('/auth/register', data);
 
 // Events
+export const postEvent = async (data: EventType)=>
+  axiosClient.post('/events', data);
+
+export const postLocation = async (data: EventLocationType)=>
+    axiosClient.post('/locations', data);
+
+export const getLocations = async () =>
+    axiosClient.get<EventLocationType[]>('/locations').then((res) => res.data);
+
 export const getEvents = async () =>
   axiosClient.get<EventType[]>('/events').then((res) => res.data);
 

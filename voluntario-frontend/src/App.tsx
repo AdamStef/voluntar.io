@@ -16,12 +16,10 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { AccountType } from './components/AccountType';
 import RegisterVolunteerForm from './components/forms/RegisterVolunteerForm';
-import { RegisterOrganizationForm } from './components/forms/RegisterOrganizationForm';
 import { LandingPage } from './pages/LandingPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { Provider } from 'react-redux';
 import { store } from './utils/context/store';
-import RegisterOrganizationForm from './components/forms/RegisterOrganizationForm';
 import {AddEventPage} from "@/pages/organizer/AddEventPage.tsx";
 
 const queryClient = new QueryClient();
@@ -46,7 +44,6 @@ function App() {
         <Route path="/register" element={<RegisterPage />}>
           <Route index element={<AccountType />} />
           <Route path="volunteer" element={<RegisterVolunteerForm />} />
-          <Route path="organization" element={<RegisterOrganizationForm />} />
         </Route>
 
         <Route path="/login" element={<LoginPage />} />

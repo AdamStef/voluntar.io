@@ -11,6 +11,7 @@ import lombok.*;
 @Setter
 @Entity
 @Table(name = "locations")
+@Embeddable
 @Data
 @ToString
 public class Location {

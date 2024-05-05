@@ -9,8 +9,6 @@ import { EventType } from "@/utils/types/types.ts"
 import axios from "axios";
 import {LocationsList} from "@/pages/organizer/LocationsList.tsx";
 
-
-
 export const AddEventPage = () => {
 
 
@@ -19,14 +17,14 @@ export const AddEventPage = () => {
         <div className="relative">
             <p className="text-center font-bold my-2 text-xl">Dodawanie wydarzenia</p>
             <div className="flex">
-                <div className="inline-block w-1/2">
-                    <LocationForm/>
-                </div>
-                <div className="inline-block w-1/2 ">
+                {/*<div className="inline-block w-1/2">*/}
+                {/*    /!*<LocationForm/>*!/*/}
+                {/*</div>*/}
+                <div className="mx-auto">
                     <AddEventForm/>
                 </div>
             </div>
-            <LocationsList></LocationsList>
+            {/*<LocationsList></LocationsList>*/}
         </div>
     );
 };

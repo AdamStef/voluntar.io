@@ -40,6 +40,7 @@ public class EventService {
                 .description(eventDTO.getDescription())
                 .organizer(user)
                 .organizer(user)
+//                .location(eventDTO.getLocation())
                 .numberOfVolunteersNeeded(eventDTO.getNumberOfVolunteersNeeded())
                 .participants(new ArrayList<>())
                 .participants(new ArrayList<>())

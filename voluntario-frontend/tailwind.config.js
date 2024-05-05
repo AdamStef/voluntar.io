@@ -21,6 +21,9 @@ export default {
         roboto: ['Roboto', 'sans-serif'],
       },
       colors: {
+        leaderboard: {
+          blue: 'var(--leaderboard-blue)',
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
-import { EventLocationType } from './types/types';
+import { EventLocationType, EventType } from './types/types';
+import { LatLngTuple } from 'leaflet';
 // export function isValidDateString(dateString: unknown): boolean {
 //   // return typeof dateString === 'string' && !isNaN(Date.parse(dateString));
 //   return (
@@ -23,3 +24,9 @@ export function getLocationString(location: EventLocationType): string {
   if (!location) return 'Nieznana';
   return `${location.name}, ul ${location.street} ${location.number} ${location.city}`;
 }
+
+export const getEventPosition = (event: EventType) => {
+  if (!event.location || !event.location.latitude || !event.location.longitude)
+    return null;
+  return [event.location.latitude, event.location.longitude] as LatLngTuple;
+};

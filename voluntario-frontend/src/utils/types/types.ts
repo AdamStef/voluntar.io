@@ -39,8 +39,8 @@ export type EventLocationType = {
   street: string;
   number: string;
   flatNumber?: string | null;
-  latitude?: string | null;
-  longitude?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   additionalInformation?: string | null;
 };
 

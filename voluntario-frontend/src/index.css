@@ -46,10 +46,6 @@
     --gray-300: #D9D9D9;
 
     --leaderboard-blue: #ABBED1;
-    
-    .bg-leaderboard-blue {
-      background-color: var(--leaderboard-blue);
-    }
   }
 
   .dark {

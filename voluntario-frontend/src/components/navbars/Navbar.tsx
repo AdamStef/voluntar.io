@@ -19,8 +19,8 @@ const navItems: NavbarItemType[] = [
     path: '/events',
   },
   {
-    name: 'Contact',
-    path: '/contact',
+    name: 'Ranking',
+    path: '/leaderboard',
   },
 ];
 

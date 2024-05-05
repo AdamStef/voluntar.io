@@ -16,7 +16,7 @@ import { AccountType } from './components/AccountType';
 import RegisterVolunteerForm from './components/forms/RegisterVolunteerForm';
 import { RegisterOrganizationForm } from './components/forms/RegisterOrganizationForm';
 import { LandingPage } from './pages/LandingPage';
-import Leaderboard from './pages/Leaderboard';
+import { LeaderboardPage } from './pages/LeaderboardPage';
 
 const queryClient = new QueryClient();
 
@@ -46,14 +46,13 @@ function App() {
           <Route index element={<LandingPage />} />
         </Route>
 
-        <Route path="/leaderboard" element={<Leaderboard />} />
-
         {/* Authenticated routes */}
         <Route element={<ProtectedRoute children={<Layout />} />}>
           <Route path="/home" element={<HomePage />} />
           <Route path="/events" element={<EventsListPage />} />
           <Route path="/events/:eventId" element={<EventDetailsPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

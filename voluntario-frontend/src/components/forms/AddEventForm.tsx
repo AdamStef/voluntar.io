@@ -28,6 +28,9 @@ import { Spinner } from '../ui/Spinner';
 import {useMutation} from "@tanstack/react-query/build/modern";
 import axios from "axios";
 
+
+
+
 const locationSchema = z.object(
     {
         name: z.string(),
@@ -94,6 +97,8 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
 
     const onSubmit = async (data: EventType) => {
         const req: EventType = { ...data};
+        req.location.latitude = currentPos[0];
+        req.location.longitude = currentPos[1];
         console.log('Add event:  ' + JSON.stringify(req));
         try {
             await postEvent(req);
@@ -104,6 +109,17 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                 message: 'Something went wrong',
             });
         }
+    };
+
+    const [currentPos, setCurrentPos] = useState([52, 20]);
+    const LocationFinder = () => {
+        const map = useMapEvents({
+            click(e) {
+                setCurrentPos([e.latlng.lat, e.latlng.lng])
+                console.log(currentPos);
+            },
+        });
+        return null;
     };
 
     return (
@@ -197,13 +213,40 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                 />
 
                 <FormField
+                    name="location.flatNumber"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Wybierz punkt na mapie</FormLabel>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                {/*<Map/>*/}
+                <MapContainer
+                    center={currentPos}
+                    zoom={15}
+                    scrollWheelZoom={true}
+                    style={{ width: '100%', height: '205px' }}>
+                    <>
+                        <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        <Marker position={currentPos} />
+                    </>
+                    <LocationFinder />
+                </MapContainer>
+
+                <FormField
                     name="location.latitude"
                     control={form.control}
                     render={({ field }) => (
                         <FormItem >
                             <FormLabel >Szerokość geograficzna</FormLabel>
                             <FormControl>
-                                <Input placeholder="" type="text" {...field} />
+                                <Input placeholder="" type="text" {...field} value={currentPos[1]}  />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -217,7 +260,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                         <FormItem >
                             <FormLabel >Długość geograficzna</FormLabel>
                             <FormControl>
-                                <Input placeholder="" type="number" {...field} />
+                                <Input placeholder="" type="number" {...field} value={currentPos[0]} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -237,22 +280,6 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                         </FormItem>
                     )}
                 />
-
-                {/*<Map/>*/}
-                {/*<MapContainer*/}
-                {/*    center={[0,0]}*/}
-                {/*    zoom={15}*/}
-                {/*    scrollWheelZoom={false}*/}
-                {/*    style={{ width: '100%', height: '205px' }}>*/}
-                {/*    <>*/}
-                {/*        <TileLayer*/}
-                {/*            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">'*/}
-                {/*            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"*/}
-                {/*        />*/}
-                {/*        <Marker position={[0,0]} />*/}
-                {/*    </>*/}
-                {/*    /!*<LocationMarker/>*!/*/}
-                {/*</MapContainer>*/}
 
                 <FormField
                     name="name"

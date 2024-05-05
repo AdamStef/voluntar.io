@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.dtos.EventDTO;
 import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.model.event.Event;
+import pl.sumatywny.voluntario.model.event.Location;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.EventRepository;
 
@@ -20,9 +21,20 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class EventService {
     private final EventRepository eventRepository;
-//    private LocationRepository locationRepository;
 
     public Event createEvent(EventDTO eventDTO, User user) {
+        Location location = Location.builder()
+                .name(eventDTO.getLocation().getName())
+                .city(eventDTO.getLocation().getCity())
+                .postalCode(eventDTO.getLocation().getPostalCode())
+                .street(eventDTO.getLocation().getStreet())
+                .number(eventDTO.getLocation().getNumber())
+                .flatNumber(eventDTO.getLocation().getFlatNumber())
+                .latitude(eventDTO.getLocation().getLatitude())
+                .longitude(eventDTO.getLocation().getLongitude())
+                .additionalInformation(eventDTO.getLocation().getAdditionalInformation())
+                .build();
+
         Event event = Event.builder()
                 .name(eventDTO.getName())
                 .description(eventDTO.getDescription())
@@ -33,6 +45,7 @@ public class EventService {
                 .participants(new ArrayList<>())
                 .startDate(eventDTO.getStartDate())
                 .endDate(eventDTO.getEndDate())
+                .location(location)
                 .build();
 
         return eventRepository.save(event);

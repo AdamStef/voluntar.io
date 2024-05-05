@@ -10,7 +10,7 @@ public class LocationDTO {
     private String street;
     private String number;
     private String flatNumber;
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
     private String additionalInformation;
 }

@@ -40,7 +40,7 @@ public class Event {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Location location;
 
     @CreatedDate
@@ -48,8 +48,4 @@ public class Event {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
-//
-//    @Version
-//    @JsonIgnore
-//    private Long version;
 }

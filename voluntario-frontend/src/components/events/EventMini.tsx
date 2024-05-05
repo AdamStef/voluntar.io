@@ -19,7 +19,7 @@ export const EventMini: React.FC<EventMiniProps> = ({ event, className }) => {
   return (
     <div
       className={cn(
-        'flex flex-col gap-2 rounded-sm p-4 bg-secondary text-secondary-foreground',
+        'flex flex-col gap-2 rounded-sm bg-secondary p-4 text-secondary-foreground',
         className,
       )}
     >

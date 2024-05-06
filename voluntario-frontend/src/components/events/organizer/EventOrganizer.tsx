@@ -1,13 +1,14 @@
-import { cn } from '@/lib/utils';
-import { EventType } from '@/utils/types/types';
+import { cn } from '@/lib/utils.ts';
+import { EventType } from '@/utils/types/types.ts';
 import React, {useState} from 'react';
-import { H3 } from '../ui/typography/heading';
+import { H3 } from '../../ui/typography/heading.tsx';
 import { Calendar, MapPin } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button.tsx';
 import { Link } from 'react-router-dom';
-import { getLocationString } from '@/utils/helpers';
-import { Progress } from '../ui/progress';
+import { getLocationString } from '@/utils/helpers.ts';
+import { Progress } from '../../ui/progress.tsx';
 import axios from "axios";
+import {removeEvent, removeParticipantFromEvent} from "@/utils/api/api.ts";
 
 type EventProps = {
   event: EventType;
@@ -16,22 +17,17 @@ type EventProps = {
 
 export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
 
-  const [currentEvent, setCurrentEvent] = useState();
-  // function listVolunteers = (eventId) => {
-  //   setCurrentEvent(eventId);
-  //   console.log(currentEvent);
-  //   // try {
-  //   //   // Make API request specific to the event
-  //   //   const response = await axios.post(`http://localhost:8080/api/events/${eventId}/participants`, {
-  //   //     // Add specific parameters here if needed
-  //   //   });
-  //   //   console.log('API response:', response.data);
-  //   // } catch (error) {
-  //   //   console.error('Error:', error);
-  //   // }
-  // };
+  // const [currentEvent, setCurrentEvent] = useState();
+  const [deleted, setDeleted] = useState(false)
+
+  function deleteEvent() {
+    removeEvent(String(event.id));
+    setDeleted(true);
+  }
 
   return (
+      <>
+        {!deleted && (
     <div
       className={cn(
         'flex h-48 max-h-64 w-full justify-between gap-4 rounded-sm bg-secondary p-4 text-secondary-foreground',
@@ -76,10 +72,17 @@ export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
       </div>
 
       {/* <div className="h-24 w-24 bg-primary">map</div> */}
-      <Button asChild className="basis-1/5">
-        <Link to={`/events/${event.id}`}>Zobacz więcej</Link>
-      </Button>
+      <div>
+        <Button asChild className="my-2">
+          <Link to={`/events/${event.id}`}>Zobacz więcej</Link>
+        </Button>
+        <Button className="my-2 bg-red-600" onClick={deleteEvent}>
+          Usuń wydarzenie
+        </Button>
+      </div>
+
     </div>
-    // </div>
+        )}
+    </>
   );
 };

@@ -6,27 +6,7 @@ import { format } from "date-fns";
 import {removeParticipantFromEvent} from "@/utils/api/api.ts";
 import {useState} from "react";
 
-
-const unconfirmedSignup =
-    {
-        id: 1,
-        eventName: 'Pomaganie',
-        date: '2024-05-08',
-        volunteerName: 'Michał Sumatowski',
-        age: 22,
-        rate: 4,
-        info: 'Lorem ipzum adsfdaLorem ipzum adsfdaLorem ipzum adsfdaLorem ipzum adsfdaLorem ipzum adsfda'
-    }
-;
-
-function acceptVolunteer() {
-    console.log('accepted');
-}
-
-
-
 export const Participant = (props) => {
-
     const [rejected, setRejected] = useState(false)
 
     function rejectVolunteer() {

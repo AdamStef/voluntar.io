@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RadioGroup } from '@radix-ui/react-radio-group';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import {date, z} from 'zod';
 import { RadioGroupItem } from '../ui/radio-group';
@@ -102,6 +102,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
         console.log('Add event:  ' + JSON.stringify(req));
         try {
             await postEvent(req);
+            navigate('/organizer');
         } catch (error) {
             console.error(error);
             form.setError('root.serverError', {
@@ -357,7 +358,6 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
 
                 <Button className="w-40 col-span-2" type="submit">
                     {isSubmitting && <Spinner className="mr-1 text-white" />}
-                    Dodaj wydarzenie
                 </Button>
                 {errors.root?.serverError && (
                     <p className="text-center text-sm text-destructive">

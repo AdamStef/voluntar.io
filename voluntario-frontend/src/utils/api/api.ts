@@ -80,3 +80,6 @@ export const removeParticipantFromEvent = async ({
   participantId,
 }: EventParticipantParams) =>
   axiosClient.delete(`/events/${eventId}/participants/${participantId}`);
+
+export const removeEvent = async (id: string) =>
+    axiosClient.delete<EventType>(`/events/${id}`);

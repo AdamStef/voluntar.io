@@ -23,7 +23,7 @@ export const Participant = (props) => {
     return (
     <>
         {!rejected && (
-        <div className="relative w-80 h-80 bg-green-400">
+        <div className="relative w-80 h-80 my-2 bg-green-400">
         <div className="flex">
             <Calendar className="h-11 w-11 ml-2 mt-2" />
             <div>

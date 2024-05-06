@@ -7,7 +7,6 @@ import {ParticipantList} from "@/components/organizer/ParticipantList.tsx";
 
 export const OrganizerHomePage = () => {
     return (
-
         <div className="container flex flex-col gap-3 md:flex-row">
             <div className="flex w-3/4 flex-col">
                 <div className="relative flex">

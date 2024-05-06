@@ -46,9 +46,13 @@ const eventSchema = z
         description: z.string(),
         startDate: z.date(),
         endDate: z.date(),
-        numberOfVolunteersNeeded: z.coerce.number(),
+        numberOfVolunteersNeeded: z.coerce.number().min(1),
         location: locationSchema
+    }).refine((data) => data.startDate < data.endDate, {
+        message: 'Data zakończenia musi być później',
+        path: ['endDate']
     });
+
 
 type EventFormSchema = z.infer<typeof eventSchema>;
 

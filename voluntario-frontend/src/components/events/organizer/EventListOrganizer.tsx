@@ -9,6 +9,7 @@ import {
 } from '@/utils/context/paging/pagingSlice.ts';
 import { selectSearch } from '@/utils/context/searchSlice.ts';
 import { PaginationComponent } from '@/components/events/PaginationComponent.tsx';
+import {useState} from "react";
 
 export const EventListOrganizer = () => {
   const dispatch = useAppDispatch();

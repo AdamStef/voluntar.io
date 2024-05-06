@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { getEvents } from '@/utils/api/api';
 import { Participant } from './Participant.tsx'
-import { Event } from '@/components/events/Event';
 import { useQuery } from '@tanstack/react-query';
 import { Spinner } from '../ui/Spinner';
 import { useAppDispatch, useAppSelector } from '@/utils/context/store';
@@ -10,18 +9,6 @@ import {
     selectCurrentPage,
 } from '@/utils/context/paging/pagingSlice';
 import { selectSearch } from '@/utils/context/searchSlice';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { EventMini } from '@/components/events/EventMini.tsx';
-import { Icon, LatLngExpression } from 'leaflet';
-import { PaginationComponent } from '@/components/events/PaginationComponent.tsx';
-import { getEventPosition } from '@/utils/helpers';
-import EventIcon from '@/assets/icons/event-marker-icon.svg';
-import { EventType } from '@/utils/types/types';
-
-const customMarkerIcon = new Icon({
-    iconUrl: EventIcon,
-    iconSize: [48, 48], // Rozmiar ikony
-});
 
 export const ParticipantList = () => {
     const dispatch = useAppDispatch();
@@ -32,12 +19,6 @@ export const ParticipantList = () => {
         queryFn: () => getEvents(page, search),
         // initialData: {},
     });
-
-    // const [showMap, setShowMap] = useState(false);
-    //
-    // const toggleView = () => {
-    //     setShowMap((prev) => !prev);
-    // };
 
     if (isPending)
         return (
@@ -75,15 +56,14 @@ export const ParticipantList = () => {
         data.content.forEach(event => {
             // Iterate through each participant of the current event
             event.participants.forEach(participant => {
-                // Create a new object representing the participant along with event details
                 const participantWithEventInfo = {
                     ...participant,
-                    eventId: event.id, // Assuming each event has an 'id' property
-                    eventStartDate: event.startDate, // Assuming each event has an 'id' property
-                    eventEndDate: event.endDate, // Assuming each event has an 'id' property
-                    // eventName: event.name // Assuming each event has a 'name' property
+                    eventId: event.id,
+                    eventName: event.name,
+                    eventStartDate: event.startDate,
+                    eventEndDate: event.endDate,
+
                 };
-                // Push the participant object with event information to the combinedParticipants array
                 combinedParticipants.push(participantWithEventInfo);
             });
         });

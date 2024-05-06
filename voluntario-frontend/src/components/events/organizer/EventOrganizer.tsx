@@ -7,8 +7,7 @@ import { Button } from '../../ui/button.tsx';
 import { Link } from 'react-router-dom';
 import { getLocationString } from '@/utils/helpers.ts';
 import { Progress } from '../../ui/progress.tsx';
-import axios from "axios";
-import {removeEvent, removeParticipantFromEvent} from "@/utils/api/api.ts";
+import {removeEvent} from "@/utils/api/api.ts";
 
 type EventProps = {
   event: EventType;
@@ -17,7 +16,6 @@ type EventProps = {
 
 export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
 
-  // const [currentEvent, setCurrentEvent] = useState();
   const [deleted, setDeleted] = useState(false)
 
   function deleteEvent() {
@@ -72,11 +70,11 @@ export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
       </div>
 
       {/* <div className="h-24 w-24 bg-primary">map</div> */}
-      <div>
-        <Button asChild className="my-2">
+      <div className="relative basis-1/5">
+        <Button asChild className="my-1 absolute right-0">
           <Link to={`/events/${event.id}`}>Zobacz więcej</Link>
         </Button>
-        <Button className="my-2 bg-red-600" onClick={deleteEvent}>
+        <Button className="my-2 bg-red-600 absolute top-14 right-0" onClick={deleteEvent}>
           Usuń wydarzenie
         </Button>
       </div>

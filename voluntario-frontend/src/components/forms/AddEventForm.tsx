@@ -10,23 +10,18 @@ import {
 import 'react-datepicker/dist/react-datepicker.css'
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { RadioGroup } from '@radix-ui/react-radio-group';
 import { useForm } from 'react-hook-form';
-import {Link, useNavigate} from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import DatePicker from 'react-datepicker';
-import {date, z} from 'zod';
-import { RadioGroupItem } from '../ui/radio-group';
+import {z} from 'zod';
 import React, {HTMLProps, useState} from 'react';
 import { cn } from '@/lib/utils';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import { useMapEvents } from 'react-leaflet/hooks';
 import 'leaflet/dist/leaflet.css';
-import { RegisterUserParams } from '@/utils/types/params';
-import {EventType, Role} from '@/utils/types/types';
-import {postEvent, postLocation, postRegisterUser} from '@/utils/api/api';
+import {EventType} from '@/utils/types/types';
+import {postEvent} from '@/utils/api/api';
 import { Spinner } from '../ui/Spinner';
-import {useMutation} from "@tanstack/react-query/build/modern";
-import axios from "axios";
 
 
 
@@ -51,7 +46,6 @@ const eventSchema = z
         description: z.string(),
         startDate: z.date(),
         endDate: z.date(),
-        // TODO: mapka a nie wspolrzedne xD
         numberOfVolunteersNeeded: z.coerce.number(),
         location: locationSchema
     });
@@ -63,10 +57,6 @@ type Props = {
 };
 
 const AddEventForm: React.FC<Props> = ({ className }) => {
-
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
-
      const form = useForm<EventFormSchema>({
         resolver: zodResolver(eventSchema),
         defaultValues: {
@@ -358,6 +348,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
 
                 <Button className="w-40 col-span-2" type="submit">
                     {isSubmitting && <Spinner className="mr-1 text-white" />}
+                    Dodaj wydarzenie
                 </Button>
                 {errors.root?.serverError && (
                     <p className="text-center text-sm text-destructive">

@@ -76,7 +76,8 @@ export const ParticipantList = () => {
     return (
         <>
             <div>
-                {combinedParticipants.map(participant => (
+                {
+                    combinedParticipants.map(participant => (
                     <Participant participant={participant}/>
                 ))}
             </div>

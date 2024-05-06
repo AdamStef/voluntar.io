@@ -308,7 +308,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                             <FormLabel>Data rozpoczęcia<br/></FormLabel>
                             <FormControl>
                                 <DatePicker selected={field.value} onChange={field.onChange} showTimeSelect
-                                            dateFormat="dd.MM.yyyy hh:mm"/>
+                                            dateFormat="dd.MM.yyyy hh:mm" className="border rounded-lg p-2"/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -323,14 +323,12 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                             <FormLabel>Data zakończenia<br/></FormLabel>
                             <FormControl>
                                 <DatePicker selected={field.value} onChange={field.onChange} showTimeSelect
-                                            dateFormat="dd.MM.yyyy hh:mm"/>
+                                            dateFormat="dd.MM.yyyy hh:mm" className="border rounded-lg p-2"/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-
-                {/*TODO: mapka*/}
 
                 <FormField
                     name="numberOfVolunteersNeeded"

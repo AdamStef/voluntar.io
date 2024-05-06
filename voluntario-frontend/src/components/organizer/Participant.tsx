@@ -16,6 +16,10 @@ export const Participant = (props) => {
         setRejected(true);
     }
 
+    // function acceptVolunteer() {
+    //     setRejected(true);
+    // }
+
     return (
     <>
         {!rejected && (
@@ -45,6 +49,7 @@ export const Participant = (props) => {
         </div>
         <div className="flex w-full absolute bottom-2.5 justify-evenly">
             {/*<Button className="bg-green-600" onClick={acceptVolunteer}>Przyjmij</Button>*/}
+            {/*<Button className="bg-green-600" onClick={acceptVolunteer} >Akceptuj</Button>*/}
             <Button className="bg-red-600" onClick={rejectVolunteer} >Usuń z wydarzenia</Button>
             {/*<Button asChild className="bg-blue-600">*/}
             {/*    <Link to={`/volunteer`}>Więcej</Link>*/}

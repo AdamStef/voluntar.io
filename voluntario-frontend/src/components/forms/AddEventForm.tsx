@@ -116,14 +116,14 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
     return (
         <Form {...form}>
             <form
-                className={cn('mx-auto max-w-sm space-y-3', className)}
+                className={cn('mx-auto md:grid md:grid-cols-2 gap-x-10', className)}
                 onSubmit={form.handleSubmit(onSubmit)}
             >
                 <FormField
                     name="location.name"
                     control={form.control}
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="col-span-2">
                             <FormLabel>Miejsce wydarzenia</FormLabel>
                             <FormControl>
                                 <Input type="text" {...field} />
@@ -175,14 +175,15 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                     )}
                 />
 
+
                 <FormField
                     name="location.number"
                     control={form.control}
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="col-start-1">
                             <FormLabel>Numer budynku</FormLabel>
                             <FormControl>
-                                <Input placeholder="" type="text" {...field} />
+                                <Input className="w-1/3" placeholder="" type="text" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -196,45 +197,38 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                         <FormItem>
                             <FormLabel>Numer lokalu</FormLabel>
                             <FormControl>
-                                <Input placeholder="" type="text" {...field} />
+                                <Input className="w-1/3" placeholder="" type="text" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
 
-                <FormField
-                    name="location.flatNumber"
-                    control={form.control}
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Wybierz punkt na mapie</FormLabel>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
                 {/*<Map/>*/}
-                <MapContainer
-                    center={currentPos}
-                    zoom={15}
-                    scrollWheelZoom={true}
-                    style={{ width: '100%', height: '205px' }}>
-                    <>
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                        <Marker position={currentPos} />
-                    </>
-                    <LocationFinder />
-                </MapContainer>
+                <div className="col-span-2">
+                    <p className="text-sm my-2">Dokładna lokalizacja na mapie</p>
+                    <MapContainer
+                        center={currentPos}
+                        zoom={15}
+                        scrollWheelZoom={true}
+                        style={{ width: '100%', height: '205px' }}>
+                        <>
+                            <TileLayer
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+                            <Marker position={currentPos} />
+                        </>
+                        <LocationFinder />
+                    </MapContainer>
+                </div>
 
+                {/*hidden bo bez nich nie działało a po co to pokazywać*/}
                 <FormField
                     name="location.latitude"
                     control={form.control}
                     render={({ field }) => (
-                        <FormItem >
+                        <FormItem className="hidden">
                             <FormLabel >Szerokość geograficzna</FormLabel>
                             <FormControl>
                                 <Input disabled placeholder="" type="text" {...field} value={currentPos[1]}  />
@@ -248,7 +242,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                     name="location.longitude"
                     control={form.control}
                     render={({ field }) => (
-                        <FormItem >
+                        <FormItem className="hidden">
                             <FormLabel >Długość geograficzna</FormLabel>
                             <FormControl>
                                 <Input disabled placeholder="" type="number" {...field} value={currentPos[0]} />
@@ -262,7 +256,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                     name="location.additionalInformation"
                     control={form.control}
                     render={({ field }) => (
-                        <FormItem >
+                        <FormItem className="col-span-2">
                             <FormLabel >Dodatkowe informacje</FormLabel>
                             <FormControl>
                                 <Input placeholder="np. wskazówki jak dotrzeć..." type="text" {...field} />
@@ -276,7 +270,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                     name="name"
                     control={form.control}
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="col-span-2">
                             <FormLabel>Nazwa wydarzenia</FormLabel>
                             <FormControl>
                                 <Input type="text" {...field} />
@@ -290,7 +284,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                     name="description"
                     control={form.control}
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="col-span-2">
                             <FormLabel>Opis wydarzenia</FormLabel>
                             <FormControl>
                                 <Input type="text" {...field} />
@@ -337,14 +331,14 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                         <FormItem>
                             <FormLabel>Liczba wolontariuszy</FormLabel>
                             <FormControl>
-                                <Input placeholder="Liczba wolontariuszy" type="number" {...field} />
+                                <Input className="w-1/3" type="number" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
 
-                <Button className="w-40 col-span-2" type="submit">
+                <Button className="w-40 my-2 col-span-2" type="submit">
                     {isSubmitting && <Spinner className="mr-1 text-white" />}
                     Dodaj wydarzenie
                 </Button>

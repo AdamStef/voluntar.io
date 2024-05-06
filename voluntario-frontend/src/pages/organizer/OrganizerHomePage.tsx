@@ -24,6 +24,7 @@ export const OrganizerHomePage = () => {
             </div>
             <div className="w-1/4">
                 <p className="text-center font-bold my-2 text-xl">Zapisani wolontariusze</p>
+                {/*<p className="text-center my-2 text-lg">Filtruj po wydarzeniu: </p>*/}
                 <ParticipantList/>
             </div>
         </div>

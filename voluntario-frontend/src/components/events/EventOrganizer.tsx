@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { EventType } from '@/utils/types/types';
-import React from 'react';
+import React, {useState} from 'react';
 import { H3 } from '../ui/typography/heading';
 import { Calendar, MapPin } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -14,19 +14,23 @@ type EventProps = {
   className?: string;
 };
 
-const listVolunteers = async (eventId) => {
-  try {
-    // Make API request specific to the event
-    const response = await axios.post(`http://localhost:8080/api/events/${eventId}/participants`, {
-      // Add specific parameters here if needed
-    });
-    console.log('API response:', response.data);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-};
-
 export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
+
+  const [currentEvent, setCurrentEvent] = useState();
+  // function listVolunteers = (eventId) => {
+  //   setCurrentEvent(eventId);
+  //   console.log(currentEvent);
+  //   // try {
+  //   //   // Make API request specific to the event
+  //   //   const response = await axios.post(`http://localhost:8080/api/events/${eventId}/participants`, {
+  //   //     // Add specific parameters here if needed
+  //   //   });
+  //   //   console.log('API response:', response.data);
+  //   // } catch (error) {
+  //   //   console.error('Error:', error);
+  //   // }
+  // };
+
   return (
     <div
       className={cn(
@@ -75,9 +79,6 @@ export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
       <Button asChild className="basis-1/5">
         <Link to={`/events/${event.id}`}>Zobacz więcej</Link>
       </Button>
-      <button onClick={listVolunteers(event.id)}>
-        Zobacz wolontariuszy
-      </button>
     </div>
     // </div>
   );

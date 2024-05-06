@@ -122,7 +122,9 @@ export const EventList = () => {
       {!showMap && (
         <div className="flex flex-col gap-5">
           {data.content.map((event) => (
+              <div>
             <Event key={event.id} event={event} />
+              </div>
           ))}
           <PaginationComponent />
         </div>

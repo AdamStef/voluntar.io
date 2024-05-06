@@ -1,7 +1,8 @@
-import '@/components/organizer/UnconfirmedList.tsx';
+import '@/components/organizer/ParticipantList.tsx';
 import { EventListOrganizer } from '@/components/events/EventListOrganizer.tsx';
+import { EventList } from '@/components/events/EventList.tsx';
 
-import {UnconfirmedList} from "@/components/organizer/UnconfirmedList.tsx";
+import {ParticipantList} from "@/components/organizer/ParticipantList.tsx";
 
 export const OrganizerHomePage = () => {
     return (
@@ -15,7 +16,7 @@ export const OrganizerHomePage = () => {
             </div>
             <div className="w-1/4">
                 <p className="text-center font-bold my-2 text-xl">Zapisani wolontariusze</p>
-                <UnconfirmedList/>
+                <ParticipantList/>
             </div>
         </div>
 

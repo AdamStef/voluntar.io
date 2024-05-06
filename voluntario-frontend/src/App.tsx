@@ -59,7 +59,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/organizer" element={<OrganizerHomePage />} />
             <Route path="/addevent" element={<AddEventPage />} />
-              <Route path="/leaderboard" element={<LeaderboardPage />} />
+            <Route path="/leaderboard" element={<LeaderboardPage />} />
           </Route>
 
         <Route path="*" element={<NotFound />} />

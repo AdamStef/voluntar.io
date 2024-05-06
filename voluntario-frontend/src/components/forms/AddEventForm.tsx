@@ -246,7 +246,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                         <FormItem >
                             <FormLabel >Szerokość geograficzna</FormLabel>
                             <FormControl>
-                                <Input placeholder="" type="text" {...field} value={currentPos[1]}  />
+                                <Input disabled placeholder="" type="text" {...field} value={currentPos[1]}  />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -260,7 +260,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                         <FormItem >
                             <FormLabel >Długość geograficzna</FormLabel>
                             <FormControl>
-                                <Input placeholder="" type="number" {...field} value={currentPos[0]} />
+                                <Input disabled placeholder="" type="number" {...field} value={currentPos[0]} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

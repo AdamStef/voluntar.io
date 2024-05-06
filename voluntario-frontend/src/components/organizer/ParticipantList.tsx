@@ -3,12 +3,14 @@ import { getEvents } from '@/utils/api/api';
 import { Participant } from './Participant.tsx'
 import { useQuery } from '@tanstack/react-query';
 import { Spinner } from '../ui/Spinner';
+import Select from 'react-select';
 import { useAppDispatch, useAppSelector } from '@/utils/context/store';
 import {
     PagingSlice,
     selectCurrentPage,
 } from '@/utils/context/paging/pagingSlice';
-import { selectSearch } from '@/utils/context/searchSlice';
+import {SearchSlice, selectSearch} from '@/utils/context/searchSlice';
+import {format} from "date-fns";
 
 export const ParticipantList = () => {
     const dispatch = useAppDispatch();
@@ -19,6 +21,8 @@ export const ParticipantList = () => {
         queryFn: () => getEvents(page, search),
         // initialData: {},
     });
+
+    const [selectedOption, setSelectedOption] = useState(null);
 
     if (isPending)
         return (
@@ -73,13 +77,39 @@ export const ParticipantList = () => {
 
     const combinedParticipants = combineParticipants();
 
+    const filterParticipants = (selectedOption) => {
+        return selectedOption === null ?
+            combinedParticipants :
+            combinedParticipants.filter(participant => participant.eventId === selectedOption.value);
+    };
+
+    const filteredParticipants = filterParticipants(selectedOption);
+
     return (
         <>
             <div>
-                {
+                <Select
+                    placeholder="Filtruj po wydarzeniu..."
+                    onChange={setSelectedOption}
+                    options={data.content.map(event => ({
+                        value: event.id,
+                        label: event.name
+                    }))}
+                    className="my-2"
+                />
+                {selectedOption != null ?
+                    filteredParticipants.map(participant => (
+                        <Participant key={`${participant.id}_${participant.eventId}`} participant={participant}/>
+                    )) :
                     combinedParticipants.map(participant => (
-                    <Participant participant={participant}/>
-                ))}
+                        <Participant key={`${participant.id}_${participant.eventId}`} participant={participant}/>
+                    ))
+                }
+                {/*{*/}
+                {/*    combinedParticipants.map(participant => (*/}
+                {/*        <Participant key={`${participant.id}_${participant.eventId}`} participant={participant}/>*/}
+                {/*    ))*/}
+                {/*}*/}
             </div>
         </>
     );

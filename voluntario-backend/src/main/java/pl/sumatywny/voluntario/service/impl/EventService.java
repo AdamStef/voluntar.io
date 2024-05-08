@@ -1,6 +1,6 @@
 package pl.sumatywny.voluntario.service.impl;
 
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -85,6 +85,10 @@ public class EventService {
 
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
+    }
+
+    public List<Event> getOrganizerEvents(User user) {
+        return eventRepository.findAllByOrganizer_Id(user.getId());
     }
 
     public Page<Event> getAllEvents(String search, Pageable pageable) {

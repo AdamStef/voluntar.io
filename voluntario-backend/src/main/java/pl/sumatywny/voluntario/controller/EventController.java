@@ -94,6 +94,13 @@ public class EventController {
         return ResponseEntity.ok().body(eventService.getAllEvents());
     }
 
+    @GetMapping("/organizer")
+//    @PreAuthorize("hasRole('ORGANIZATION')")
+    public ResponseEntity<?> getOrganizerEvents() {
+        User user = authService.getUserFromSession();
+        return ResponseEntity.ok().body(eventService.getOrganizerEvents(user));
+    }
+
     @GetMapping("/{eventId}")
     public ResponseEntity<?> event(@PathVariable("eventId") Long eventId) {
         return ResponseEntity.ok().body(eventService.getEvent(eventId));

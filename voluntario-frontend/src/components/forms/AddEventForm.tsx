@@ -23,9 +23,6 @@ import {EventType} from '@/utils/types/types';
 import {postEvent} from '@/utils/api/api';
 import { Spinner } from '../ui/Spinner';
 
-
-
-
 const locationSchema = z.object(
     {
         name: z.string(),

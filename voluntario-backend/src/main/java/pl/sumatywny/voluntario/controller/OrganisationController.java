@@ -18,9 +18,9 @@ public class OrganisationController {
     private final UserService userService;
     private final AuthService authService;
 
-    @PostMapping()
-    public ResponseEntity<?> createOrganisation(@RequestBody OrganisationDTO organisationDTO) {
-        var user = authService.getUserFromSession();
+    @PostMapping("/registerOrganisation/{userID}")
+    public ResponseEntity<?> createOrganisation(@RequestBody OrganisationDTO organisationDTO, @PathVariable("userID") Long userID) {
+        var user = userService.getUserById(userID);
         var organisation = organisationService.createOrganisation(organisationDTO, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(organisation);
     }

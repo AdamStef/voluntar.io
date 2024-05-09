@@ -72,10 +72,16 @@ export const EventList = () => {
       return [0, 0];
     }
     const lat = events
-      .map((event) => (event.location.latitude ? event.location.latitude : 0))
+      .map((event) =>
+        event.location && event.location.latitude ? event.location.latitude : 0,
+      )
       .reduce((a, b) => a + b);
     const lng = events
-      .map((event) => (event.location.longitude ? event.location.longitude : 0))
+      .map((event) =>
+        event.location && event.location.longitude
+          ? event.location.longitude
+          : 0,
+      )
       .reduce((a, b) => a + b);
     return [lat / events.length, lng / events.length];
   };

@@ -28,7 +28,7 @@ export type EventType = {
   participants: UserType[];
   startDate: Date;
   endDate: Date;
-  location: EventLocationType;
+  location?: EventLocationType;
 };
 
 export type EventLocationType = {
@@ -44,7 +44,6 @@ export type EventLocationType = {
   additionalInformation?: string | null;
 };
 
-
 export type EventPostType = {
   id: number;
   content: string;
@@ -53,7 +52,6 @@ export type EventPostType = {
   wasEdited: boolean;
   createdAt: Date;
   updatedAt: Date;
-  map(element: (post: any) => JSX.Element): any;
 };
 
 export type Page<T> = {

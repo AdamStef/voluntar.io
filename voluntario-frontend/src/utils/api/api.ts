@@ -73,7 +73,7 @@ export const removeParticipantFromEvent = async ({
   axiosClient.delete(`/events/${eventId}/participants/${participantId}`);
 
 export const getEventPosts = async (eventId: string) =>
-  axiosClient.get<EventPostType>(`/events/${eventId}/posts`);
+  axiosClient.get<EventPostType[]>(`/events/${eventId}/posts`);
 
 export const getUser = async (userId: string) =>
   axiosClient.get<UserType>(`/users/${userId}`);

@@ -22,7 +22,7 @@ export const Participant = (props) => {
         <div className="flex">
             <Calendar className="h-11 w-11 ml-2 mt-2" />
             <div>
-                <p className="ml-2 mt-1.5 text-lg font-bold">{props.participant.eventName}</p>
+                <p className="line-clamp-1 ml-2 mt-1.5 text-lg font-bold">{props.participant.eventName}</p>
                 <p className="ml-2 text-sm">{format(props.participant.eventStartDate, "dd.MM.yyyy")} - {format(props.participant.eventEndDate, "dd.MM.yyyy")}</p>
             </div>
         </div>

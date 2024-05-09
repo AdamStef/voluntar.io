@@ -8,6 +8,7 @@ import {useEffect, useState} from "react";
 
 export const OrganizerHomePage = () => {
 
+    const [loading, setLoading] = useState(true);
     const [eventData, setEventData] = useState([]);
 
     const fetchData = async () => {
@@ -16,6 +17,9 @@ export const OrganizerHomePage = () => {
             setEventData(events);
         } catch (error) {
             console.error('Failed to fetch events:', error);
+        }
+        finally {
+            setLoading(false); // Set loading to false regardless of success or failure
         }
     };
 
@@ -33,12 +37,12 @@ export const OrganizerHomePage = () => {
                     </Button>
                 </div>
                 <div className="mt-2 items-center gap-6">
-                    <EventListOrganizer eventData={eventData} onChange={fetchData()}/>
+                    <EventListOrganizer eventData={eventData} loading={loading} onChange={fetchData()}/>
                 </div>
             </div>
             <div className="w-1/4">
                 <p className="text-center font-bold my-2 text-xl">Zapisani wolontariusze</p>
-                <ParticipantList eventData={eventData} onChange={fetchData()}/>
+                <ParticipantList eventData={eventData} loading={loading} onChange={fetchData()}/>
             </div>
         </div>
 

@@ -22,6 +22,8 @@ import 'leaflet/dist/leaflet.css';
 import {EventType} from '@/utils/types/types';
 import {postEvent} from '@/utils/api/api';
 import { Spinner } from '../ui/Spinner';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS for styles
 
 const locationSchema = z.object(
     {

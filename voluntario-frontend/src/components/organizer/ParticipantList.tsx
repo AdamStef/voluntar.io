@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Participant } from './Participant.tsx'
 import Select from 'react-select';
+import { format } from "date-fns";
 
 export const ParticipantList = (props) => {
 
@@ -45,18 +46,27 @@ export const ParticipantList = (props) => {
                     onChange={setSelectedOption}
                     options={props.eventData.map(event => ({
                         value: event.id,
-                        label: event.name
+                        label: `${event.name} - ${format(event.startDate, "dd.MM.yyyy")}`
                     }))}
                     className="my-2"
                 />
-                {selectedOption != null ?
-                    filteredParticipants.map(participant => (
-                        <Participant key={`${participant.id}_${participant.eventId}`} participant={participant}/>
-                    )) :
-                    combinedParticipants.map(participant => (
-                        <Participant key={`${participant.id}_${participant.eventId}`} participant={participant}/>
-                    ))
-                }
+                {selectedOption != null ? (
+                    filteredParticipants.length > 0 ? (
+                        filteredParticipants.map(participant => (
+                            <Participant key={`${participant.id}_${participant.eventId}`} participant={participant}/>
+                        ))
+                    ) : (
+                        <div>Nie znaleziono wolontariuszy</div>
+                    )
+                ) : (
+                    combinedParticipants.length > 0 ? (
+                        combinedParticipants.map(participant => (
+                            <Participant key={`${participant.id}_${participant.eventId}`} participant={participant}/>
+                        ))
+                    ) : (
+                        <div>Nie znaleziono wolontariuszy</div>
+                    )
+                )}
             </div>
         </>
     );

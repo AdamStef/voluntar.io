@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils.ts';
 import { EventType } from '@/utils/types/types.ts';
 import React, {useState} from 'react';
 import { H3 } from '../../ui/typography/heading.tsx';
-import { Calendar, MapPin } from 'lucide-react';
+import { Calendar, MapPin, Info } from 'lucide-react';
 import { Button } from '../../ui/button.tsx';
 import { Link } from 'react-router-dom';
 import { getLocationString } from '@/utils/helpers.ts';
@@ -55,6 +55,13 @@ export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
             <MapPin className="h-4 w-4" />
           </span>
           <p className="text-sm">{getLocationString(event.location)}</p>
+        </div>
+        {/*description*/}
+        <div className="flex items-center">
+          <span className="mr-1">
+            <Info className="h-4 w-4"/>
+          </span>
+          <p className="line-clamp-3 text-sm">{event.description}</p>
         </div>
         {/* <p>{event.description}</p> */}
       </div>

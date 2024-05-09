@@ -9,10 +9,8 @@ export const ParticipantList = (props) => {
     const combineParticipants = () => {
         let combinedParticipants = [];
 
-        // Iterate through each event
         if (props.eventData && props.eventData.length > 0) {
             props.eventData.forEach(event => {
-                // Iterate through each participant of the current event
                 event.participants.forEach(participant => {
                     const participantWithEventInfo = {
                         ...participant,
@@ -59,11 +57,6 @@ export const ParticipantList = (props) => {
                         <Participant key={`${participant.id}_${participant.eventId}`} participant={participant}/>
                     ))
                 }
-                {/*{*/}
-                {/*    combinedParticipants.map(participant => (*/}
-                {/*        <Participant key={`${participant.id}_${participant.eventId}`} participant={participant}/>*/}
-                {/*    ))*/}
-                {/*}*/}
             </div>
         </>
     );

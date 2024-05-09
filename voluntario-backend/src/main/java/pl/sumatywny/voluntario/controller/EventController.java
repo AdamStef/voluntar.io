@@ -111,4 +111,18 @@ public class EventController {
         var posts = postService.getAllPostsByEvent(event);
         return ResponseEntity.ok().body(posts.stream().map(PostResponseDTO::mapToDto).toList());
     }
+
+    @GetMapping("/{eventId}/location")
+    public ResponseEntity<?> getEventLocation(@PathVariable("eventId") Long eventId) {
+        var event = eventService.getEvent(eventId);
+        var location = event.getLocation();
+        return ResponseEntity.ok().body(location);
+    }
+
+    @PutMapping("/{eventId}/location")
+    public ResponseEntity<?> updateEventLocation(@PathVariable("eventId") Long eventId, @RequestParam("locationId") Long locationId) {
+        eventService.assignNewLocation(eventId, locationId);
+        return ResponseEntity.ok().body("Location updated successfully.");
+    }
+
 }

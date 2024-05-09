@@ -44,6 +44,18 @@ export type EventLocationType = {
   additionalInformation?: string | null;
 };
 
+
+export type EventPostType = {
+  id: number;
+  content: string;
+  organizerId: number;
+  event: EventType;
+  wasEdited: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  map(element: (post: any) => JSX.Element): any;
+};
+
 export type Page<T> = {
   content: T[]; // Array of items in the current page
   pageable: Pageable; // Information about pagination

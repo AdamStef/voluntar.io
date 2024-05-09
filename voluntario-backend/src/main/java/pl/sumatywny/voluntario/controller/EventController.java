@@ -105,13 +105,6 @@ public class EventController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{eventId}/posts")
-    public ResponseEntity<?> allPostsByEvent(@PathVariable("eventId") Long eventId) {
-        var event = eventService.getEvent(eventId);
-        var posts = postService.getAllPostsByEvent(event);
-        return ResponseEntity.ok().body(posts.stream().map(PostResponseDTO::mapToDto).toList());
-    }
-
     @GetMapping("/{eventId}/location")
     public ResponseEntity<?> getEventLocation(@PathVariable("eventId") Long eventId) {
         var event = eventService.getEvent(eventId);

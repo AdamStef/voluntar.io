@@ -19,10 +19,9 @@ import { cn } from '@/lib/utils';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import { useMapEvents } from 'react-leaflet/hooks';
 import 'leaflet/dist/leaflet.css';
-import {EventType} from '@/utils/types/types';
+import {EventFormType} from '@/utils/types/types';
 import {postEvent} from '@/utils/api/api';
 import { Spinner } from '../ui/Spinner';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for styles
 
 const locationSchema = z.object(
@@ -82,16 +81,16 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
         },
     });
 
-    const { register,
-            handleSubmit,
-            formState: { errors, isSubmitting } } = form;
+    const { formState: { errors, isSubmitting } } = form;
 
     const navigate = useNavigate();
 
-    const onSubmit = async (data: EventType) => {
-        const req: EventType = { ...data};
-        req.location.latitude = currentPos[0];
-        req.location.longitude = currentPos[1];
+    const onSubmit = async (data: EventFormType) => {
+        const req: EventFormType = { ...data};
+        if (req.location !== undefined) {
+            req.location.latitude = currentPos.lat;
+            req.location.longitude = currentPos.lng;
+        }
         console.log('Add event:  ' + JSON.stringify(req));
         try {
             await postEvent(req);
@@ -105,11 +104,11 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
         }
     };
 
-    const [currentPos, setCurrentPos] = useState([52, 20]);
+    const [currentPos, setCurrentPos] = useState({lat: 52, lng: 20});
     const LocationFinder = () => {
-        const map = useMapEvents({
+        useMapEvents({
             click(e) {
-                setCurrentPos([e.latlng.lat, e.latlng.lng])
+                setCurrentPos(e.latlng)
                 console.log(currentPos);
             },
         });
@@ -234,7 +233,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                         <FormItem className="hidden">
                             <FormLabel >Szerokość geograficzna</FormLabel>
                             <FormControl>
-                                <Input disabled placeholder="" type="text" {...field} value={currentPos[1]}  />
+                                <Input disabled placeholder="" type="text" {...field} value={currentPos.lat}  />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -248,7 +247,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
                         <FormItem className="hidden">
                             <FormLabel >Długość geograficzna</FormLabel>
                             <FormControl>
-                                <Input disabled placeholder="" type="number" {...field} value={currentPos[0]} />
+                                <Input disabled placeholder="" type="number" {...field} value={currentPos.lng} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

@@ -1,18 +1,17 @@
-import {render} from "react-dom";
 import {useState} from "react";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useMapEvents } from 'react-leaflet/hooks';
 import 'leaflet/dist/leaflet.css';
 
 function LocationMarker() {
-    const [position, setPosition] = useState(null)
+    const [position, setPosition] = useState({lat: 52, lng: 20})
     const map = useMapEvents({
         click() {
-            map.locate()
+            map.locate();
         },
         locationfound(e) {
-            setPosition(e.latlng)
-            map.flyTo(e.latlng, map.getZoom())
+            setPosition(e.latlng);
+            map.flyTo(e.latlng, map.getZoom());
         },
     })
 

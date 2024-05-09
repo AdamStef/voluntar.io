@@ -1,4 +1,4 @@
-import {EventLocationType, Role, UserType} from './types';
+import { Role } from './types';
 
 export type LoginCredentialsParams = {
   email: string;

@@ -1,15 +1,22 @@
 import { EventOrganizer } from './EventOrganizer.tsx';
 import {Spinner} from "@/components/ui/Spinner.tsx";
+import { EventType } from "@/utils/types/types.ts"
 
-export const EventListOrganizer = (props) => {
-    console.log(props.loading)
+type EventListOrganizerProps = {
+    loading: boolean;
+    eventData: EventType[];
+    // onChange: Promise<void>
+};
+
+export const EventListOrganizer:  React.FC<EventListOrganizerProps> = ({ loading, eventData }) => {
+    console.log(loading)
   return (
       <>
-          {props.loading ? (
+          {loading ? (
               <Spinner className="h-16 w-16" />
-          ) : props.eventData.length > 0 ? (
+          ) : eventData.length > 0 ? (
               <div className="flex flex-col gap-5">
-                  {props.eventData.map((event) => (
+                  {eventData.map((event) => (
                       <EventOrganizer key={event.id} event={event} />
                   ))}
               </div>

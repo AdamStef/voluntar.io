@@ -27,6 +27,8 @@ export const OrganizerHomePage = () => {
         fetchData();
     }, []);
 
+    // setInterval(fetchData, 1000);
+
     return (
         <div className="container flex flex-col gap-3 md:flex-row">
             <div className="flex w-3/4 flex-col">
@@ -37,12 +39,12 @@ export const OrganizerHomePage = () => {
                     </Button>
                 </div>
                 <div className="mt-2 items-center gap-6">
-                    <EventListOrganizer eventData={eventData} loading={loading} onChange={fetchData()}/>
+                    <EventListOrganizer eventData={eventData} loading={loading}/>
                 </div>
             </div>
             <div className="w-1/4">
                 <p className="text-center font-bold my-2 text-xl">Zapisani wolontariusze</p>
-                <ParticipantList eventData={eventData} loading={loading} onChange={fetchData()}/>
+                <ParticipantList eventData={eventData}/>
             </div>
         </div>
 

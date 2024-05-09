@@ -14,21 +14,55 @@ export type UserType = {
   gender: 'male' | 'female';
 };
 
+export type ParticipantType = {
+  id: string;
+  email: string;
+  role: Role;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  gender: 'male' | 'female';
+  eventId: number;
+  eventName: string;
+  eventStartDate: Date;
+  eventEndDate: Date;
+};
+
 export type NavbarItemType = {
   name: string;
   path: string;
 };
 
+
 export type EventType = {
   id: number;
   name: string;
   description: string;
-  organizer: UserType;
+  organizer?: UserType;
   numberOfVolunteersNeeded: number;
   participants: UserType[];
   startDate: Date;
   endDate: Date;
-  location?: EventLocationType;
+  location: EventLocationType;
+};
+
+export type EventFormType = {
+  name: string;
+  description: string;
+  numberOfVolunteersNeeded: number;
+  startDate: Date;
+  endDate: Date;
+  location: {
+    name: string;
+    city: string;
+    postalCode: string;
+    street: string;
+    number: string;
+    flatNumber?: string | null;
+    latitude?: number | null;
+    longitude?: number | null;
+    additionalInformation?: string | null;
+  }
 };
 
 export type EventLocationType = {

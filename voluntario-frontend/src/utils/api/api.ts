@@ -4,7 +4,7 @@ import {
   LoginCredentialsParams,
   RegisterUserParams,
 } from '../types/params';
-import { EventPostType, Page, EventType, UserType } from '../types/types';
+import {EventPostType, Page, EventType, UserType, EventFormType, EventLocationType} from '../types/types';
 import { isValidDateString } from '../helpers';
 
 const axiosClient = axios.create({
@@ -52,7 +52,7 @@ export const postRegisterUser = async (data: RegisterUserParams) =>
   axiosClient.post('/auth/register', data);
 
 // Events
-export const postEvent = async (data: EventType)=>
+export const postEvent = async (data: EventFormType)=>
   axiosClient.post('/events', data);
 
 export const postLocation = async (data: EventLocationType)=>

@@ -4,13 +4,19 @@ import { Button } from "@/components/ui/button.tsx";
 import { format } from "date-fns";
 import {removeParticipantFromEvent} from "@/utils/api/api.ts";
 import {useState} from "react";
+import { ParticipantType } from "@/utils/types/types.ts";
 
-export const Participant = (props) => {
+type ParticipantProps = {
+    participant: ParticipantType;
+};
+
+
+export const Participant: React.FC<ParticipantProps> = ({participant}) => {
     const [rejected, setRejected] = useState(false)
 
     function rejectVolunteer() {
         removeParticipantFromEvent(
-            {eventId: props.participant.eventId, participantId: props.participant.id}
+            {eventId: String(participant.eventId), participantId: participant.id}
         )
         setRejected(true);
     }
@@ -22,17 +28,17 @@ export const Participant = (props) => {
         <div className="flex">
             <Calendar className="h-11 w-11 ml-2 mt-2" />
             <div>
-                <p className="line-clamp-1 ml-2 mt-1.5 text-lg font-bold">{props.participant.eventName}</p>
-                <p className="ml-2 text-sm">{format(props.participant.eventStartDate, "dd.MM.yyyy")} - {format(props.participant.eventEndDate, "dd.MM.yyyy")}</p>
+                <p className="line-clamp-1 ml-2 mt-1.5 text-lg font-bold">{participant.eventName}</p>
+                <p className="ml-2 text-sm">{format(participant.eventStartDate, "dd.MM.yyyy")} - {format(participant.eventEndDate, "dd.MM.yyyy")}</p>
             </div>
         </div>
         <div className="relative bg-gray-400 w-72 mx-4 mt-3 h-48">
             <div className="h-28">
                 <img className="float-left border ml-2 mt-2" src={ManAvatar} width={95} height={95}/>
                 <div className="pl-2 h-28 flex flex-col justify-evenly">
-                    <p className="text-lg font-bold">{props.participant.firstName} {props.participant.lastName}</p>
-                    <p className="">Telefon: {props.participant.phoneNumber}</p>
-                    <p className="">E-mail: {props.participant.email}</p>
+                    <p className="text-lg font-bold">{participant.firstName} {participant.lastName}</p>
+                    <p className="">Telefon: {participant.phoneNumber}</p>
+                    <p className="">E-mail: {participant.email}</p>
                 </div>
             </div>
             {/*TODO: co jak nie informacje o nim*/}

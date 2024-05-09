@@ -1,5 +1,7 @@
 package pl.sumatywny.voluntario.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import pl.sumatywny.voluntario.model.event.Event;
@@ -11,6 +13,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
+    Page<Event> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<Event> findAll(Pageable pageable);
     List<Event> findAll();
 //    @Query("SELECT e FROM Event e JOIN FETCH e.location WHERE e.id = :id")
     Optional<Event> findById(Long id);

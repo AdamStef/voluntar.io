@@ -84,9 +84,12 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
   });
 
   React.useEffect(() => {
-    setCanJoin(event.participants.every((p) => p.id !== user?.id));
+    setCanJoin(
+      event.participants.every((p) => p.id !== user?.id) &&
+        event.participants.length < event.numberOfVolunteersNeeded,
+    );
     setCanLeave(event.participants.some((p) => p.id === user?.id));
-  }, [event.participants, user]);
+  }, [event.participants, user, event.numberOfVolunteersNeeded]);
 
   const handleAddParticipant = () => {
     if (!user || !canJoin) return;

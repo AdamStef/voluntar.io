@@ -4,7 +4,7 @@ import {
   LoginCredentialsParams,
   RegisterUserParams,
 } from '../types/params';
-import { EventPostType, EventType, UserType } from "../types/types";
+import { EventPostType, Page, EventType, UserType } from '../types/types';
 import { isValidDateString } from '../helpers';
 
 const axiosClient = axios.create({
@@ -52,8 +52,10 @@ export const postRegisterUser = async (data: RegisterUserParams) =>
   axiosClient.post('/auth/register', data);
 
 // Events
-export const getEvents = async () =>
-  axiosClient.get<EventType[]>('/events').then((res) => res.data);
+export const getEvents = async (page: number, search: string) =>
+  axiosClient
+    .get<Page<EventType>>(`/events?page=${page}&search=${search}`)
+    .then((res) => res.data);
 
 export const getEvent = async (id: string) =>
   axiosClient.get<EventType>(`/events/${id}`);

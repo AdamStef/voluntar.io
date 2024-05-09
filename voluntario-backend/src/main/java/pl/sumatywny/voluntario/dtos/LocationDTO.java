@@ -9,7 +9,7 @@ public class LocationDTO {
     private String postalCode;
     private String street;
     private String number;
-    private int flatNumber;
+    private String flatNumber;
     private double latitude;
     private double longitude;
     private String additionalInformation;

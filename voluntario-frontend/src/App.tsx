@@ -16,6 +16,9 @@ import { AccountType } from './components/AccountType';
 import RegisterVolunteerForm from './components/forms/RegisterVolunteerForm';
 import { RegisterOrganizationForm } from './components/forms/RegisterOrganizationForm';
 import { LandingPage } from './pages/LandingPage';
+import { LeaderboardPage } from './pages/LeaderboardPage';
+import { Provider } from 'react-redux';
+import { store } from './utils/context/store';
 
 const queryClient = new QueryClient();
 
@@ -23,7 +26,9 @@ function AppWithProviders({ children }: { children: ReactNode }) {
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>{children}</AuthProvider>
+        <Provider store={store}>
+          <AuthProvider>{children}</AuthProvider>
+        </Provider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </BrowserRouter>
@@ -51,6 +56,7 @@ function App() {
           <Route path="/events" element={<EventsListPage />} />
           <Route path="/events/:eventId" element={<EventDetailsPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

@@ -1,4 +1,3 @@
-
 export enum Role {
   ADMIN = 'admin',
   ORGANIZATION = 'organization',
@@ -39,7 +38,7 @@ export type EventLocationType = {
   postalCode: string;
   street: string;
   number: string;
-  flatNumber?: number| null;
+  flatNumber?: number | null;
   latitude?: number | null;
   longitude?: number | null;
   additionalInformation?: string | null;
@@ -56,3 +55,31 @@ export type EventPostType = {
   map(element: (post: any) => JSX.Element): any;
 };
 
+export type Page<T> = {
+  content: T[]; // Array of items in the current page
+  pageable: Pageable; // Information about pagination
+  totalPages: number; // Total number of pages
+  totalElements: number; // Total number of elements across all pages
+  last: boolean; // Whether this is the last page
+  first: boolean; // Whether this is the first page
+  size: number; // Number of items in the current page
+  number: number; // Current page number
+  sort: Sort; // Information about sorting
+  numberOfElements: number; // Number of items in the current page
+  empty: boolean; // Whether the page is empty
+};
+
+export type Pageable = {
+  sort: Sort;
+  offset: number;
+  pageNumber: number;
+  pageSize: number;
+  paged: boolean;
+  unpaged: boolean;
+};
+
+export type Sort = {
+  sorted: boolean;
+  unsorted: boolean;
+  empty: boolean;
+};

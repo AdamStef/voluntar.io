@@ -18,5 +18,5 @@ public class EventDTO {
 //    private List<User> participants;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private Long locationId;
+    private LocationDTO location;
 }

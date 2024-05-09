@@ -38,11 +38,12 @@ export type EventLocationType = {
   postalCode: string;
   street: string;
   number: string;
-  flatNumber?: number | null;
+  flatNumber?: string | null;
   latitude?: number | null;
   longitude?: number | null;
   additionalInformation?: string | null;
 };
+
 
 export type EventPostType = {
   id: number;

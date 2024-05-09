@@ -515,13 +515,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{basic_url}}/events/23",
+							"raw": "{{basic_url}}/events/2",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
 								"events",
-								"23"
+								"2"
 							]
 						}
 					},

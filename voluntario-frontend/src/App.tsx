@@ -14,7 +14,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { AccountType } from './components/AccountType';
 import RegisterVolunteerForm from './components/forms/RegisterVolunteerForm';
-import { RegisterOrganizationForm } from './components/forms/RegisterOrganizationForm';
+import RegisterOrganizationForm from './components/forms/RegisterOrganizationForm';
 import { LandingPage } from './pages/LandingPage';
 import { Provider } from 'react-redux';
 import { store } from './utils/context/store';

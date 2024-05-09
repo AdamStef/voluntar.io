@@ -3,6 +3,7 @@ import {
   AddParticipantParams as EventParticipantParams,
   LoginCredentialsParams,
   RegisterUserParams,
+  postRegisterOrganisationParams,
 } from '../types/params';
 import { EventType, Page, UserType } from '../types/types';
 import { isValidDateString } from '../helpers';
@@ -50,6 +51,9 @@ export const getAuthUser = async (config?: AxiosRequestConfig) =>
 
 export const postRegisterUser = async (data: RegisterUserParams) =>
   axiosClient.post('/auth/register', data);
+
+export const postRegisterOrganisation = async (data: postRegisterOrganisationParams, userID: Number) =>
+  axiosClient.post(`/organisations/registerOrganisation/${userID}`, data)
 
 // Events
 export const getEvents = async (page: number, search: string) =>

@@ -14,6 +14,19 @@ export type UserType = {
   gender: 'male' | 'female';
 };
 
+export type OrganisationType = {
+  id: string;
+  email: string;
+  role: Role;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  krs: string;
+  organisationName: string;
+  organisationDescription: string;
+  website: string;
+}
+
 export type NavbarItemType = {
   name: string;
   path: string;

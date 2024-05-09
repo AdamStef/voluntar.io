@@ -112,10 +112,17 @@ public class EventController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{eventId}/posts")
-    public ResponseEntity<?> allPostsByEvent(@PathVariable("eventId") Long eventId) {
+    @GetMapping("/{eventId}/location")
+    public ResponseEntity<?> getEventLocation(@PathVariable("eventId") Long eventId) {
         var event = eventService.getEvent(eventId);
-        var posts = postService.getAllPostsByEvent(event);
-        return ResponseEntity.ok().body(posts.stream().map(PostResponseDTO::mapToDto).toList());
+        var location = event.getLocation();
+        return ResponseEntity.ok().body(location);
     }
+
+    @PutMapping("/{eventId}/location")
+    public ResponseEntity<?> updateEventLocation(@PathVariable("eventId") Long eventId, @RequestParam("locationId") Long locationId) {
+        eventService.assignNewLocation(eventId, locationId);
+        return ResponseEntity.ok().body("Location updated successfully.");
+    }
+
 }

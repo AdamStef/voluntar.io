@@ -40,7 +40,7 @@ export const EventDetails = () => {
         activeIndex={activeIndex}
         setActiveIndex={setActiveIndex}
       />
-      <div className="flex w-full flex-col gap-2 md:flex-row md:items-start">
+      <div className="flex w-full flex-col-reverse gap-2 md:flex-row md:items-start">
         <div className="md:w-2/3">
           {activeIndex === 0 && <EventDetailsInformation event={event} />}
           {activeIndex === 1 && <EventDetailsDiscussion />}

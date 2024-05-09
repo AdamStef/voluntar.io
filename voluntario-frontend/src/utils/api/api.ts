@@ -4,7 +4,7 @@ import {
   LoginCredentialsParams,
   RegisterUserParams,
 } from '../types/params';
-import { EventType, UserType } from '../types/types';
+import { EventPostType, Page, EventType, UserType } from '../types/types';
 import { isValidDateString } from '../helpers';
 
 const axiosClient = axios.create({
@@ -93,3 +93,9 @@ export const removeParticipantFromEvent = async ({
 
 export const removeEvent = async (id: string) =>
     axiosClient.delete<EventType>(`/events/${id}`);
+
+export const getEventPosts = async (eventId: string) =>
+  axiosClient.get<EventPostType[]>(`/events/${eventId}/posts`);
+
+export const getUser = async (userId: string) =>
+  axiosClient.get<UserType>(`/users/${userId}`);

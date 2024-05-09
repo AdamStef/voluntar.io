@@ -363,7 +363,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"TEST1\",\r\n  \"description\": \"Lorem\",\r\n  \"numberOfVolunteersNeeded\": \"4\",\r\n  \"startDate\": \"2022-04-16T12:00:00\",\r\n  \"endDate\": \"2022-04-17T12:00:00\",\r\n  \"location\": {\r\n        \"name\": \"Example Location\",\r\n        \"city\": \"New York\",\r\n        \"postalCode\": \"10001\",\r\n        \"street\": \"Broadway\",\r\n        \"number\": \"123\",\r\n        \"flatNumber\": \"Apt 2B\",\r\n        \"latitude\": \"40.7128\",\r\n        \"longitude\": \"-74.0060\",\r\n        \"additionalInformation\": \"Near Times Square\"\r\n  }\r\n}",
+							"raw": "{\r\n  \"name\": \"TEST1\",\r\n  \"description\": \"Lorem\",\r\n  \"numberOfVolunteersNeeded\": \"4\",\r\n  \"startDate\": \"2022-04-16T12:00:00\",\r\n  \"endDate\": \"2022-04-17T12:00:00\",\r\n  \"location\": {\r\n        \"name\": \"Example Location\",\r\n        \"city\": \"New York\",\r\n        \"postalCode\": \"10001\",\r\n        \"street\": \"Broadway\",\r\n        \"number\": \"123\",\r\n        \"flatNumber\": \"Apt 2B\",\r\n        \"latitude\": 40.7128,\r\n        \"longitude\": -74.0060,\r\n        \"additionalInformation\": \"Near Times Square\"\r\n  }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -918,6 +918,150 @@
 							"path": [
 								"posts",
 								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Leaderboard",
+			"item": [
+				{
+					"name": "Get top scores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basic_url}}/scores",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"scores"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Organisation",
+			"item": [
+				{
+					"name": "CreateOrganisation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"organisationName\": \"Fundacja\",\r\n  \"organisationDescription\": \"Pomagamy wszystkim\",\r\n  \"address\": \"\",\r\n  \"organisationPage\": \"\",\r\n  \"krs\": \"0000135921\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basic_url}}/organisations/registerOrganisation/7",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"organisations",
+								"registerOrganisation",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllOrganisations",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basic_url}}/organisations",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"organisations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getOrganisation",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basic_url}}/organisations/15",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"organisations",
+								"15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUsersOrganisation",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basic_url}}/organisations/user",
+							"host": [
+								"{{basic_url}}"
+							],
+							"path": [
+								"organisations",
+								"user"
 							]
 						}
 					},

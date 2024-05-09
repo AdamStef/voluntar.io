@@ -28,7 +28,7 @@ export type EventType = {
   participants: UserType[];
   startDate: Date;
   endDate: Date;
-  location: EventLocationType;
+  location?: EventLocationType;
 };
 
 export type EventLocationType = {
@@ -42,6 +42,16 @@ export type EventLocationType = {
   latitude?: number | null;
   longitude?: number | null;
   additionalInformation?: string | null;
+};
+
+export type EventPostType = {
+  id: number;
+  content: string;
+  organizerId: number;
+  event: EventType;
+  wasEdited: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Page<T> = {

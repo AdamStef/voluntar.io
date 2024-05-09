@@ -27,8 +27,8 @@ public class Location {
     private String flatNumber;
 
     //Może się przyda do jakiejś integracji z mapą
-    private Double latitude;
-    private Double longitude;
+    private double latitude;
+    private double longitude;
 
     //Dodatkowe info, typu wejście od ulicy X
     private String additionalInformation;

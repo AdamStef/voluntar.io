@@ -27,8 +27,6 @@ export const OrganizerHomePage = () => {
         fetchData();
     }, []);
 
-    // setInterval(fetchData, 1000);
-
     return (
         <div className="container flex flex-col gap-3 md:flex-row">
             <div className="flex w-3/4 flex-col">

@@ -6,7 +6,6 @@ import { EventType, ParticipantType } from "@/utils/types/types.ts"
 
 type ParticipantListProps = {
     eventData: EventType[];
-    // onChange: Promise<void>
 };
 
 type Option = {

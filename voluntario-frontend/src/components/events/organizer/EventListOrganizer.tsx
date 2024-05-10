@@ -5,7 +5,6 @@ import { EventType } from "@/utils/types/types.ts"
 type EventListOrganizerProps = {
     loading: boolean;
     eventData: EventType[];
-    // onChange: Promise<void>
 };
 
 export const EventListOrganizer:  React.FC<EventListOrganizerProps> = ({ loading, eventData }) => {

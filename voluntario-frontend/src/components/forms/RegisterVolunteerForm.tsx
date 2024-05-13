@@ -57,7 +57,7 @@ const RegisterVolunteerForm: React.FC<Props> = ({ className }) => {
   const navigate = useNavigate();
 
   const onSubmit = async (data: RegisterFormSchema) => {
-    const req: RegisterUserParams = { ...data, role: Role.ORGANIZATION };
+    const req: RegisterUserParams = { ...data, role: Role.VOLUNTEER };
     console.log('Register user: ' + JSON.stringify(req));
     try {
       await postRegisterUser(req);

@@ -1,7 +1,7 @@
 export enum Role {
-  ADMIN = 'admin',
-  ORGANIZATION = 'organization',
-  VOLUNTEER = 'volunteer',
+  ADMIN = 'ADMIN',
+  ORGANIZATION = 'ORGANIZATION',
+  VOLUNTEER = 'VOLUNTEER',
 }
 
 export type UserType = {

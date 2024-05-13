@@ -8,7 +8,7 @@ import { Spinner } from '../ui/Spinner';
 import { postLogoutUser } from '@/utils/api/api';
 import { AxiosError } from 'axios';
 import { AuthContext } from '@/utils/context/AuthContext';
-
+import { Role } from '@/utils/types/types.ts'
 const navItems: NavbarItemType[] = [
   {
     name: 'Strona główna',
@@ -22,6 +22,21 @@ const navItems: NavbarItemType[] = [
     name: 'Ranking',
     path: '/leaderboard',
   },
+];
+
+const navOrganizerItems: NavbarItemType[] = [
+    {
+        name: 'Strona główna',
+        path: '/home',
+    },
+    {
+        name: 'Lista wydarzeń',
+        path: '/organizer',
+    },
+    {
+        name: 'Ranking',
+        path: '/leaderboard',
+    },
 ];
 
 // const navButtons: NavButtonType[] = [
@@ -139,9 +154,15 @@ const Navbar: React.FC = () => {
         {user != null ? (
           <>
             <ul className="mr-8 flex justify-between gap-8 text-lg text-secondary">
-              {navItems.map((item) => (
-                <NavbarItem key={item.name} name={item.name} path={item.path} />
-              ))}
+                {user.role == Role.VOLUNTEER ? (
+                    navItems.map((item) => (
+                        <NavbarItem key={item.name} name={item.name} path={item.path} />
+                    ))
+                ) : (
+                    navOrganizerItems.map((item) => (
+                        <NavbarItem key={item.name} name={item.name} path={item.path} />
+                    ))
+                )}
             </ul>
             <Button onClick={handleLogout} variant={'secondary'}>
               {isLoading ?? <Spinner className="mr-1 text-white" />}
@@ -196,14 +217,25 @@ const Navbar: React.FC = () => {
           {user != null ? (
             <>
               <ul className="flex flex-col divide-y">
-                {navItems.map((item) => (
-                  <MobileNavbarItem
-                    key={item.name}
-                    name={item.name}
-                    path={item.path}
-                    setShowNavbar={setShowNavbar}
-                  />
-                ))}
+                  {user.role == Role.VOLUNTEER ? (
+                      navItems.map((item) => (
+                          <MobileNavbarItem
+                              key={item.name}
+                              name={item.name}
+                              path={item.path}
+                              setShowNavbar={setShowNavbar}
+                          />
+                      ))
+                  ) : (
+                      navOrganizerItems.map((item) => (
+                          <MobileNavbarItem
+                              key={item.name}
+                              name={item.name}
+                              path={item.path}
+                              setShowNavbar={setShowNavbar}
+                          />
+                      ))
+                  )}
               </ul>
               <Button
                 onClick={handleLogout}

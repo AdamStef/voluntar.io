@@ -15,7 +15,7 @@ export type UserType = {
 };
 
 export type ParticipantType = {
-  id: string;
+  id: number;
   email: string;
   role: Role;
   firstName: string;

@@ -14,20 +14,6 @@ export type UserType = {
   gender: 'male' | 'female';
 };
 
-export type ParticipantType = {
-  id: number;
-  email: string;
-  role: Role;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  gender: 'male' | 'female';
-  eventId: number;
-  eventName: string;
-  eventStartDate: Date;
-  eventEndDate: Date;
-};
-
 export type NavbarItemType = {
   name: string;
   path: string;
@@ -43,6 +29,33 @@ export type EventType = {
   startDate: Date;
   endDate: Date;
   location: EventLocationType;
+};
+
+export type OrganisationType = {
+  id: string;
+  email: string;
+  role: Role;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  krs: string;
+  organisationName: string;
+  organisationDescription: string;
+  website: string;
+};
+
+export type ParticipantType = {
+  id: number;
+  email: string;
+  role: Role;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  gender: 'male' | 'female';
+  eventId: number;
+  eventName: string;
+  eventStartDate: Date;
+  eventEndDate: Date;
 };
 
 export type EventFormType = {

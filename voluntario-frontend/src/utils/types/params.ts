@@ -15,6 +15,14 @@ export type RegisterUserParams = {
   role: Role;
 };
 
+export type postRegisterOrganisationParams = {
+  krs: string;
+  organisationName: string;
+  organisationDescription: string;
+  address: string;
+  website: string;
+};
+
 export type AddParticipantParams = {
   eventId: string;
   participantId: number;

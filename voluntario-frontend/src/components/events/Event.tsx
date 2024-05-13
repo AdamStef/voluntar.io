@@ -19,7 +19,7 @@ export const Event: React.FC<EventProps> = ({ event, className }) => {
   return (
     <div
       className={cn(
-        'flex h-48 max-h-64 w-full justify-between gap-4 rounded-sm bg-secondary p-4 text-secondary-foreground',
+        'flex min-h-48 w-full flex-col justify-between gap-4 rounded-sm bg-secondary p-4 text-secondary-foreground md:flex-row',
         className,
       )}
     >

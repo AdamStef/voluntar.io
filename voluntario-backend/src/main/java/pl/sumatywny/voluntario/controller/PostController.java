@@ -9,6 +9,7 @@ import pl.sumatywny.voluntario.dtos.post.PostRequestDTO;
 import pl.sumatywny.voluntario.dtos.post.PostResponseDTO;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.EventService;
+import pl.sumatywny.voluntario.service.impl.OrganisationService;
 import pl.sumatywny.voluntario.service.impl.PostService;
 
 @RestController
@@ -18,6 +19,7 @@ public class PostController {
     private final PostService postService;
     private final AuthService authService;
     private final EventService eventService;
+    private final OrganisationService organisationService;
 
     @PostMapping("/events/{eventId}/posts")
     @PreAuthorize("hasRole('ORGANIZATION')")
@@ -25,8 +27,9 @@ public class PostController {
             @RequestBody PostRequestDTO postRequestDTO,
             @PathVariable("eventId") Long eventId) {
         var user = authService.getUserFromSession();
+        var organisation = organisationService.getUserOrganisation(user.getId());
         var event = eventService.getEvent(eventId);
-        var post = postService.createPost(postRequestDTO, user, event);
+        var post = postService.createPost(postRequestDTO, organisation, event);
         return ResponseEntity.ok().body(PostResponseDTO.mapToDto(post));
     }
 

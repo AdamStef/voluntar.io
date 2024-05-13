@@ -68,7 +68,7 @@ export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
             Liczba uczestników: {event.participants.length}/
             {event.numberOfVolunteersNeeded}
             <Progress
-              className=" bg-accent"
+              className="bg-accent"
               value={
                 (event.participants.length / event.numberOfVolunteersNeeded) *
                 100

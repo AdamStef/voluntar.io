@@ -32,7 +32,7 @@ export type EventType = {
 };
 
 export type OrganisationType = {
-  id: string;
+  id: number;
   email: string;
   role: Role;
   firstName: string;
@@ -93,7 +93,7 @@ export type EventLocationType = {
 export type EventPostType = {
   id: number;
   content: string;
-  organizerId: number;
+  organizer: OrganisationType;
   event: EventType;
   wasEdited: boolean;
   createdAt: Date;

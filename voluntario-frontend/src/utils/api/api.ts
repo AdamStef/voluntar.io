@@ -83,7 +83,7 @@ export const getAllEvents = async () =>
   axiosClient.get(`/events/all`).then((res) => res.data);
 
 export const getOrganizerEvents = async () =>
-  axiosClient.get(`/events/organizer`).then((res) => res.data);
+  axiosClient.get<EventType[]>(`/events/organizer`).then((res) => res.data);
 
 export const getEvent = async (id: string) =>
   axiosClient.get<EventType>(`/events/${id}`);

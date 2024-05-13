@@ -7,6 +7,7 @@ import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.exception.PermissionsException;
 import pl.sumatywny.voluntario.model.event.Event;
 import pl.sumatywny.voluntario.model.post.Post;
+import pl.sumatywny.voluntario.model.user.Organisation;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.PostRepository;
 
@@ -22,14 +23,10 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public Post createPost(PostRequestDTO postRequestDTO, User user, Event event) {
-        if (user.getRole().getRole() == Role.ROLE_VOLUNTEER) {
-            throw new PermissionsException("Volunteers cannot create events.");
-        }
-
+    public Post createPost(PostRequestDTO postRequestDTO, Organisation organisation, Event event) {
         Post post = Post.builder()
                 .content(postRequestDTO.getContent())
-                .organizer(user)
+                .organizer(organisation)
                 .wasEdited(false)
                 .event(event) //TODO: jakoś przekazywać z frontendu ten event
                 .build();

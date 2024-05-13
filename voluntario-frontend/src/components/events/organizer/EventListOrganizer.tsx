@@ -1,23 +1,31 @@
 import { EventOrganizer } from './EventOrganizer.tsx';
 import { Spinner } from '@/components/ui/Spinner.tsx';
-import { EventType } from '@/utils/types/types.ts';
+import { getOrganizerEvents } from '@/utils/api/api.ts';
+import { useQuery } from '@tanstack/react-query';
 
-type EventListOrganizerProps = {
-  loading: boolean;
-  eventData: EventType[];
-};
+export const EventListOrganizer = () => {
+  const {
+    data: events,
+    isError,
+    isPending,
+  } = useQuery({
+    queryKey: ['organizer', 'events'],
+    queryFn: getOrganizerEvents,
+  });
 
-export const EventListOrganizer: React.FC<EventListOrganizerProps> = ({
-  loading,
-  eventData,
-}) => {
+  if (isError) {
+    return <div>Wystąpił błąd podczas pobierania wydarzeń</div>;
+  }
+
+  if (!events) return null;
+
   return (
     <>
-      {loading ? (
+      {isPending ? (
         <Spinner className="h-16 w-16" />
-      ) : eventData.length > 0 ? (
+      ) : events.length > 0 ? (
         <div className="flex flex-col gap-5">
-          {eventData.map((event) => (
+          {events.map((event) => (
             <EventOrganizer key={event.id} event={event} />
           ))}
         </div>

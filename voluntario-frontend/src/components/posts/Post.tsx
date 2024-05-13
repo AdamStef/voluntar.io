@@ -42,8 +42,8 @@ export const Post = ({ post, refetch }: PostProps) => {
     <Panel>
       {/* TODO: zmienić na nazwę organizacji */}
       <div className="flex justify-between">
-        <H4>Organizator: {post.organizerId}</H4>
-        {user?.id === post.organizerId && (
+        <H4>Organizator: {post.organizer.organisationName}</H4>
+        {user?.id === post.organizer.id && (
           <Button onClick={handleDeletePost} variant="destructive">
             <Trash className="w-5 text-destructive-foreground" />
           </Button>

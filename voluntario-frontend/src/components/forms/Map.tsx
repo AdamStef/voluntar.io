@@ -30,6 +30,7 @@ function Map() {
         center={{ lat: 51.505, lng: -0.09 }}
         zoom={21}
         scrollWheelZoom={false}
+        className="z-10"
       >
         <>
           <TileLayer

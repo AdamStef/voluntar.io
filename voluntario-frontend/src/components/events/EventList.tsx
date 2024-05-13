@@ -99,7 +99,7 @@ export const EventList = () => {
           center={mapCenter}
           zoom={6}
           scrollWheelZoom={false}
-          className="h-full"
+          className="z-10 h-full"
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">'

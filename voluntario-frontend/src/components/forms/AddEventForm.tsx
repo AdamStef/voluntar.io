@@ -223,6 +223,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
             zoom={6}
             scrollWheelZoom={true}
             style={{ width: '100%', height: '405px' }}
+            className="z-10"
           >
             <>
               <TileLayer

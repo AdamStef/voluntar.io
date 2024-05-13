@@ -1,6 +1,6 @@
-import { EventType } from '@/utils/types/types';
+import { EventType, Role } from '@/utils/types/types';
 import { CalendarCheck } from 'lucide-react';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { H1 } from '../ui/typography/heading';
 import { getLocationString } from '@/utils/helpers';
 import { Button } from '../ui/button';
@@ -83,7 +83,7 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
     },
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCanJoin(
       event.participants.every((p) => p.id !== user?.id) &&
         event.participants.length < event.numberOfVolunteersNeeded,
@@ -140,19 +140,24 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
           >
             Dyskusja
           </TabButton>
-          {canJoin && (
-            <Button className="ml-10" onClick={handleAddParticipant}>
-              Dołącz
-            </Button>
-          )}
-          {canLeave && (
-            <Button
-              className="ml-10"
-              variant={'destructive'}
-              onClick={handleLeaveEvent}
-            >
-              Opuść
-            </Button>
+
+          {user?.role.toLowerCase() === Role.VOLUNTEER && (
+            <>
+              {canJoin && (
+                <Button className="ml-10" onClick={handleAddParticipant}>
+                  Dołącz
+                </Button>
+              )}
+              {canLeave && (
+                <Button
+                  className="ml-10"
+                  variant={'destructive'}
+                  onClick={handleLeaveEvent}
+                >
+                  Opuść
+                </Button>
+              )}
+            </>
           )}
         </div>
         {/* <Button className="">Dołącz</Button> */}

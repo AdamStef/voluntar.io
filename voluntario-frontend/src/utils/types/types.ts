@@ -33,7 +33,6 @@ export type NavbarItemType = {
   path: string;
 };
 
-
 export type EventType = {
   id: number;
   name: string;
@@ -62,7 +61,7 @@ export type EventFormType = {
     latitude?: number | null;
     longitude?: number | null;
     additionalInformation?: string | null;
-  }
+  };
 };
 
 export type EventLocationType = {

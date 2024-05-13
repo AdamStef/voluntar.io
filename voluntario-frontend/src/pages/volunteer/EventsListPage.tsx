@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { EventFilters } from '@/components/events/EventFilters';
 import { EventList } from '@/components/events/EventList';
-// import { PaginationComponent } from '@/components/events/PaginationComponent';
 import { EventSearchBox } from '@/components/events/EventSearchBox';
 import { Button } from '@/components/ui/button';
 import { useScreenSize } from '@/hooks/useScreenSize';
@@ -40,14 +39,7 @@ export const EventsListPage = () => {
           </div>
         )}
         <div className="basis-3/4">
-          {showMap ? (
-            <EventList />
-          ) : (
-            <>
-              <EventList />
-              {/*<PaginationComponent />*/}
-            </>
-          )}
+          {showMap ? <EventList /> : <EventList />}
         </div>
       </div>
     </div>

@@ -4,7 +4,14 @@ import {
   LoginCredentialsParams,
   RegisterUserParams,
 } from '../types/params';
-import {EventPostType, Page, EventType, UserType, EventFormType, EventLocationType} from '../types/types';
+import {
+  EventPostType,
+  Page,
+  EventType,
+  UserType,
+  EventFormType,
+  EventLocationType,
+} from '../types/types';
 import { isValidDateString } from '../helpers';
 
 const axiosClient = axios.create({
@@ -52,14 +59,14 @@ export const postRegisterUser = async (data: RegisterUserParams) =>
   axiosClient.post('/auth/register', data);
 
 // Events
-export const postEvent = async (data: EventFormType)=>
+export const postEvent = async (data: EventFormType) =>
   axiosClient.post('/events', data);
 
-export const postLocation = async (data: EventLocationType)=>
-    axiosClient.post('/locations', data);
+export const postLocation = async (data: EventLocationType) =>
+  axiosClient.post('/locations', data);
 
 export const getLocations = async () =>
-    axiosClient.get<EventLocationType[]>('/locations').then((res) => res.data);
+  axiosClient.get<EventLocationType[]>('/locations').then((res) => res.data);
 
 export const getEvents = async (page: number, search: string) =>
   axiosClient
@@ -67,14 +74,10 @@ export const getEvents = async (page: number, search: string) =>
     .then((res) => res.data);
 
 export const getAllEvents = async () =>
-    axiosClient
-        .get(`/events/all`)
-        .then((res) => res.data);
+  axiosClient.get(`/events/all`).then((res) => res.data);
 
 export const getOrganizerEvents = async () =>
-    axiosClient
-        .get(`/events/organizer`)
-        .then((res) => res.data);
+  axiosClient.get(`/events/organizer`).then((res) => res.data);
 
 export const getEvent = async (id: string) =>
   axiosClient.get<EventType>(`/events/${id}`);
@@ -92,7 +95,7 @@ export const removeParticipantFromEvent = async ({
   axiosClient.delete(`/events/${eventId}/participants/${participantId}`);
 
 export const removeEvent = async (id: string) =>
-    axiosClient.delete<EventType>(`/events/${id}`);
+  axiosClient.delete<EventType>(`/events/${id}`);
 
 export const getEventPosts = async (eventId: string) =>
   axiosClient.get<EventPostType[]>(`/events/${eventId}/posts`);

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { EventFilters } from '@/components/events/EventFilters';
 import { EventList } from '@/components/events/EventList';
-// import { PaginationComponent } from '@/components/events/PaginationComponent';
 import { EventSearchBox } from '@/components/events/EventSearchBox';
 import { Button } from '@/components/ui/button';
 import { useScreenSize } from '@/hooks/useScreenSize';
@@ -17,6 +16,12 @@ export const EventsListPage = () => {
 
   return (
     <div className="mb-8 h-full w-full">
+      {/* <Dialog>
+        <div className="flex justify-between">
+          <h1 className="text-2xl font-semibold">Wydarzenia</h1>
+          <Button variant={'outline'}>Dodaj wydarzenie</Button>
+        </div>
+      </Dialog> */}
       <EventSearchBox />
       <div className="container mt-6 flex flex-col gap-3 md:flex-row">
         {isSmall ? (
@@ -34,14 +39,7 @@ export const EventsListPage = () => {
           </div>
         )}
         <div className="basis-3/4">
-          {showMap ? (
-            <EventList />
-          ) : (
-            <>
-              <EventList />
-              {/*<PaginationComponent />*/}
-            </>
-          )}
+          {showMap ? <EventList /> : <EventList />}
         </div>
       </div>
     </div>

@@ -77,3 +77,6 @@ export const getEventPosts = async (eventId: string) =>
 
 export const getUser = async (userId: string) =>
   axiosClient.get<UserType>(`/users/${userId}`);
+
+export const postEventPost = async (eventId: string, content: string) =>
+  axiosClient.post<EventPostType>(`/events/${eventId}/posts`, { content });

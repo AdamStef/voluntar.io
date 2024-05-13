@@ -38,12 +38,13 @@ export const EventList = () => {
     setShowMap((prev) => !prev);
   };
 
-  if (isPending)
+  if (isPending) {
     return (
       <div className="flex justify-center">
         <Spinner className="h-24 w-24" />
       </div>
     );
+  }
 
   if (isError || data.content.length === 0)
     return <div>Nie znaleziono żadnych wydarzeń.</div>;
@@ -128,7 +129,9 @@ export const EventList = () => {
       {!showMap && (
         <div className="flex flex-col gap-5">
           {data.content.map((event) => (
-            <Event key={event.id} event={event} />
+            <div>
+              <Event key={event.id} event={event} />
+            </div>
           ))}
           <PaginationComponent />
         </div>

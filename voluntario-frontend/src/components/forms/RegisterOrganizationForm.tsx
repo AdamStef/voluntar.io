@@ -1,9 +1,3 @@
-/*
-export const RegisterOrganizationForm = () => {
-  return <div>RegisterOrganizationForm</div>;
-};
-*/
-
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -14,7 +8,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from "@/components/ui/textarea"
+import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RadioGroup } from '@radix-ui/react-radio-group';
 import { useForm } from 'react-hook-form';
@@ -41,7 +35,7 @@ const validationSchema = z
     organisationName: z.string(),
     organisationDescription: z.string(),
     address: z.string(),
-    website: z.string()
+    website: z.string(),
   })
   .refine((data) => data.password === data.passwordConfirmation, {
     message: 'Hasła nie są identyczne',
@@ -74,21 +68,23 @@ const RegisterOrganizationForm: React.FC<Props> = ({ className }) => {
   const navigate = useNavigate();
 
   const onSubmit = async (data: RegisterFormSchema) => {
-    const req: RegisterOrganisationParams = { ...data, role: Role.ORGANIZATION };
+    const req: RegisterOrganisationParams = {
+      ...data,
+      role: Role.ORGANIZATION,
+    };
     console.log('Register organisation: ' + JSON.stringify(req));
     try {
-      let userID: Number;
-      userID=NaN;
-      await postRegisterUser(req).then((res) => {
-        userID = res.data.id;
+      // TODO: Change this to use Promise.all
+      const userId = await postRegisterUser(req).then((res) => {
+        return res.data.id;
       });
-      await postRegisterOrganisation(data, userID)
+      await postRegisterOrganisation(data, userId);
       navigate('/login');
     } catch (error) {
       console.error(error);
       form.setError('root.serverError', {
         type: 'manual',
-        message: 'Something went wrong',
+        message: 'Coś poszło nie tak, spróbuj ponownie.',
       });
     }
   };

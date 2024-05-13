@@ -104,7 +104,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
     }
   };
 
-  const [currentPos, setCurrentPos] = useState({ lat: 52, lng: 20 });
+  const [currentPos, setCurrentPos] = useState({ lat: 52, lng: 19 });
   const LocationFinder = () => {
     useMapEvents({
       click(e) {
@@ -220,9 +220,9 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
           <p className="my-2 text-sm">Dokładna lokalizacja na mapie</p>
           <MapContainer
             center={currentPos}
-            zoom={15}
+            zoom={6}
             scrollWheelZoom={true}
-            style={{ width: '100%', height: '205px' }}
+            style={{ width: '100%', height: '405px' }}
           >
             <>
               <TileLayer

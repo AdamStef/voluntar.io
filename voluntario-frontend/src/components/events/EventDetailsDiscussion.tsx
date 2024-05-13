@@ -63,7 +63,7 @@ export const EventDetailsDiscussion = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      {user?.role.toLowerCase() === Role.ORGANIZATION && (
+      {user?.role === Role.ORGANIZATION && (
         <>
           <Input
             type="text"

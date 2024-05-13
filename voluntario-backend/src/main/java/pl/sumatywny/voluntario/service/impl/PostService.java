@@ -1,5 +1,6 @@
 package pl.sumatywny.voluntario.service.impl;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.dtos.post.PostRequestDTO;
 import pl.sumatywny.voluntario.enums.Role;
@@ -40,7 +41,7 @@ public class PostService {
     }
 
     public List<Post> getAllPosts() {
-        return postRepository.findAll();
+        return postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
     public List<Post> getAllPostsByOrganizer(User organizer) {
@@ -48,7 +49,7 @@ public class PostService {
     }
 
     public List<Post> getAllPostsByEvent(Event event) {
-        return postRepository.findAllByEvent(event);
+        return postRepository.findAllByEvent(event, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
     public void removePost(Long postID, User user) {

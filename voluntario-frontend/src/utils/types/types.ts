@@ -5,7 +5,7 @@ export enum Role {
 }
 
 export type UserType = {
-  id: string;
+  id: number;
   email: string;
   role: Role;
   firstName: string;
@@ -41,7 +41,7 @@ export type EventType = {
   participants: UserType[];
   startDate: Date;
   endDate: Date;
-  location: EventLocationType;
+  location?: EventLocationType;
 };
 
 export type EventLocationType = {
@@ -52,9 +52,19 @@ export type EventLocationType = {
   street: string;
   number: string;
   flatNumber?: string | null;
-  latitude?: string | null;
-  longitude?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   additionalInformation?: string | null;
+};
+
+export type EventPostType = {
+  id: number;
+  content: string;
+  organizerId: number;
+  event: EventType;
+  wasEdited: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Page<T> = {

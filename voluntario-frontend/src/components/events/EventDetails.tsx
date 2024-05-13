@@ -45,7 +45,7 @@ export const EventDetails = () => {
           {activeIndex === 0 && <EventDetailsInformation event={event} />}
           {activeIndex === 1 && <EventDetailsDiscussion />}
         </div>
-        <Panel className="md:w-1/3">
+        <Panel className="z-10 md:w-1/3">
           <H3 className="border-b border-secondary pb-2">
             Dokładna lokalizacja
           </H3>

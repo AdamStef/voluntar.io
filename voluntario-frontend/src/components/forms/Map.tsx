@@ -28,7 +28,7 @@ function Map() {
       <h2>Mapa</h2>
       <MapContainer
         center={{ lat: 51.505, lng: -0.09 }}
-        zoom={13}
+        zoom={21}
         scrollWheelZoom={false}
       >
         <>

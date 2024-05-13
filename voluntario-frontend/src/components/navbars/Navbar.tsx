@@ -136,7 +136,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="relative flex h-24 items-center justify-between shadow-md">
+    <nav className="relative z-50 flex h-24 items-center justify-between shadow-md">
       <Link to="/home">
         <div className="ml-4 flex w-1/4 items-center justify-between gap-2 md:ml-8">
           <Logo />

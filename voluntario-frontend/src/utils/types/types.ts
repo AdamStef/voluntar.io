@@ -5,7 +5,7 @@ export enum Role {
 }
 
 export type UserType = {
-  id: string;
+  id: number;
   email: string;
   role: Role;
   firstName: string;
@@ -15,7 +15,7 @@ export type UserType = {
 };
 
 export type ParticipantType = {
-  id: string;
+  id: number;
   email: string;
   role: Role;
   firstName: string;
@@ -32,7 +32,6 @@ export type NavbarItemType = {
   name: string;
   path: string;
 };
-
 
 export type EventType = {
   id: number;
@@ -62,7 +61,7 @@ export type EventFormType = {
     latitude?: number | null;
     longitude?: number | null;
     additionalInformation?: string | null;
-  }
+  };
 };
 
 export type EventLocationType = {

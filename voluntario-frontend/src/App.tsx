@@ -19,7 +19,7 @@ import { LandingPage } from './pages/LandingPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { Provider } from 'react-redux';
 import { store } from './utils/context/store';
-import {AddEventPage} from "@/pages/organizer/AddEventPage.tsx";
+import { AddEventPage } from '@/pages/organizer/AddEventPage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -50,16 +50,16 @@ function App() {
           <Route index element={<LandingPage />} />
         </Route>
 
-          {/* Authenticated routes */}
-          <Route element={<ProtectedRoute children={<Layout />} />}>
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/events" element={<EventsListPage />} />
-            <Route path="/events/:eventId" element={<EventDetailsPage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/organizer" element={<OrganizerHomePage />} />
-            <Route path="/addevent" element={<AddEventPage />} />
-            <Route path="/leaderboard" element={<LeaderboardPage />} />
-          </Route>
+        {/* Authenticated routes */}
+        <Route element={<ProtectedRoute children={<Layout />} />}>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/events" element={<EventsListPage />} />
+          <Route path="/events/:eventId" element={<EventDetailsPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/organizer" element={<OrganizerHomePage />} />
+          <Route path="/addevent" element={<AddEventPage />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
+        </Route>
 
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -20,6 +20,7 @@ import { LeaderboardPage } from './pages/LeaderboardPage';
 import { Provider } from 'react-redux';
 import { store } from './utils/context/store';
 import { AddEventPage } from '@/pages/organizer/AddEventPage.tsx';
+import RegisterOrganizationForm from './components/forms/RegisterOrganizationForm.tsx';
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />}>
           <Route index element={<AccountType />} />
           <Route path="volunteer" element={<RegisterVolunteerForm />} />
+          <Route path="organization" element={<RegisterOrganizationForm />} />
         </Route>
 
         <Route path="/login" element={<LoginPage />} />

@@ -3,6 +3,7 @@ import {
   AddParticipantParams as EventParticipantParams,
   LoginCredentialsParams,
   RegisterUserParams,
+  postRegisterOrganisationParams,
 } from '../types/params';
 import {
   EventPostType,
@@ -57,6 +58,11 @@ export const getAuthUser = async (config?: AxiosRequestConfig) =>
 
 export const postRegisterUser = async (data: RegisterUserParams) =>
   axiosClient.post('/auth/register', data);
+
+export const postRegisterOrganisation = async (
+  data: postRegisterOrganisationParams,
+  userID: number,
+) => axiosClient.post(`/organisations/registerOrganisation/${userID}`, data);
 
 // Events
 export const postEvent = async (data: EventFormType) =>

@@ -19,14 +19,6 @@ const navItems: NavbarItemType[] = [
     path: '/events',
   },
   {
-    name: 'Dodaj wydarzenie',
-    path: '/addevent',
-  },
-  {
-    name: 'Panel',
-    path: '/organizer',
-  },
-  {
     name: 'Ranking',
     path: '/leaderboard',
   },
@@ -38,8 +30,12 @@ const navOrganizerItems: NavbarItemType[] = [
         path: '/home',
     },
     {
-        name: 'Lista wydarzeń',
+        name: 'Panel',
         path: '/organizer',
+    },
+    {
+        name: 'Dodaj wydarzenie',
+        path: '/addevent',
     },
     {
         name: 'Ranking',

@@ -141,7 +141,7 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
             Dyskusja
           </TabButton>
 
-          {user?.role.toLowerCase() === Role.VOLUNTEER && (
+          {user?.role === Role.VOLUNTEER && (
             <>
               {canJoin && (
                 <Button className="ml-10" onClick={handleAddParticipant}>

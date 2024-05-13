@@ -17,5 +17,5 @@ export type RegisterUserParams = {
 
 export type AddParticipantParams = {
   eventId: string;
-  participantId: string;
+  participantId: number;
 };

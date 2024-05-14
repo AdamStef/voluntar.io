@@ -6,6 +6,7 @@ import { EventType } from '@/utils/types/types';
 import { getLocationString } from '@/utils/helpers';
 import { Panel } from '../ui/Panel';
 import { Progress } from '../ui/progress';
+import moment from 'moment';
 
 const Info: React.FC<{
   icon: React.ReactNode;
@@ -29,6 +30,10 @@ export const EventDetailsInformation: React.FC<
   EventDetailsInformationProps
 > = ({ event }) => {
   const numberOfParticipants = event.participants.length ?? 0;
+  const timeDiff = moment.duration(
+    moment(event.endDate).diff(moment(event.startDate)),
+  );
+
   return (
     <Panel className="flex flex-col gap-1">
       <H2>Szczegółowe informacje</H2>
@@ -51,7 +56,7 @@ export const EventDetailsInformation: React.FC<
         <p className="font-semibold">{getLocationString(event.location)}</p>
       </Info>
       <Info icon={<ClockIcon size={24} />} header="Czas trwania:">
-        <p className="font-semibold">50h</p>
+        <p className="font-semibold">{timeDiff.hours()}h</p>
       </Info>
       <div className="mt-4">
         <H4>Opis</H4>

@@ -7,8 +7,8 @@ import { ParticipantList } from '@/components/organizer/ParticipantList.tsx';
 export const OrganizerHomePage = () => {
   return (
     <div className="container mt-5 flex flex-col gap-3 md:flex-row">
-      <div className="m-4 flex w-3/4 flex-col">
-        <div className="relative flex items-center justify-between">
+      <div className="m-4 flex flex-col md:w-3/4">
+        <div className="flex items-center justify-between gap-2">
           <p className="my-3 text-left text-2xl font-bold">Twoje wydarzenia</p>
           <Button variant={'default'} className="w-40">
             <Link to={'/addevent'} className="">
@@ -17,11 +17,11 @@ export const OrganizerHomePage = () => {
             </Link>
           </Button>
         </div>
-        <div className="mt-4 items-center gap-6">
+        <div className="mt-4 items-center">
           <EventListOrganizer />
         </div>
       </div>
-      <div className="m-4 w-1/4">
+      <div className="m-4 md:w-1/4">
         <p className="my-2 text-center text-xl font-bold">
           Zapisani wolontariusze
         </p>

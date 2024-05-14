@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pl.sumatywny.voluntario.model.post.Post;
 import pl.sumatywny.voluntario.model.user.User;
 
 import java.time.LocalDateTime;
@@ -39,6 +40,9 @@ public class Event {
     private List<User> participants;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+
+//    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+//    private List<Post> posts;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Location location;

@@ -78,4 +78,8 @@ public class PostService {
         post.setWasEdited(true);
         return postRepository.save(post);
     }
+
+    public void removeAllPostsByEvent(Event event) {
+        postRepository.deleteByEventId(event.getId());
+    }
 }

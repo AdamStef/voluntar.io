@@ -2,6 +2,7 @@ package pl.sumatywny.voluntario.repository;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import pl.sumatywny.voluntario.model.event.Event;
 import pl.sumatywny.voluntario.model.post.Post;
@@ -13,4 +14,6 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByOrganizer(User organizer);
     List<Post> findAllByEvent(Event event, Sort sort);
+    @Query("delete from Post p where p.event.id = :id")
+    void deleteByEventId(Long id);
 }

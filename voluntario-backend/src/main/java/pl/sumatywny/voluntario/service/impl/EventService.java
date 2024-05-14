@@ -25,6 +25,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final LocationRepository locationRepository;
     private final LocationService locationService;
+    private final PostService postService;
 
     @Transactional
     public Event createEvent(EventDTO eventDTO, User user) {
@@ -97,11 +98,12 @@ public class EventService {
                 .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventId)));
     }
 
-
+    @Transactional
     public void removeEvent(Long eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventId)));
 
+        postService.removeAllPostsByEvent(event);
         eventRepository.delete(event);
     }
 

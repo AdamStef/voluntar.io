@@ -12,6 +12,7 @@ import {
   UserType,
   EventFormType,
   EventLocationType,
+  eventSchema,
 } from '../types/types';
 import { isValidDateString } from '../helpers';
 
@@ -78,6 +79,7 @@ export const getEvents = async (page: number, search: string) =>
   axiosClient
     .get<Page<EventType>>(`/events?page=${page}&search=${search}`)
     .then((res) => res.data);
+// .then((res) => res.data.content.map((event) => eventSchema.parse(event)));
 
 export const getAllEvents = async () =>
   axiosClient.get(`/events/all`).then((res) => res.data);

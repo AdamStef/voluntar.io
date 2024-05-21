@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { getLocationString } from '@/utils/helpers.ts';
 import { Progress } from '../../ui/progress.tsx';
 import { removeEvent } from '@/utils/api/api.ts';
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type EventProps = {
   event: EventType;
@@ -16,7 +16,7 @@ type EventProps = {
 };
 
 export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: removeEvent,
     onSuccess: () => {
@@ -32,6 +32,9 @@ export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
     // removeEvent(String(event.id));
     // setDeleted(true);
   }
+
+  // event.startDate = new Date(event.startDate);
+  // event.endDate = new Date(event.endDate);
 
   return (
     <div

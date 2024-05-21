@@ -28,7 +28,7 @@ public class PostService {
                 .content(postRequestDTO.getContent())
                 .organizer(organisation)
                 .wasEdited(false)
-                .event(event) //TODO: jakoś przekazywać z frontendu ten event
+                .event(event)
                 .build();
         return postRepository.save(post);
     }

@@ -9,14 +9,14 @@ import {
 } from '../ui/pagination';
 import { useAppDispatch, useAppSelector } from '@/utils/context/store';
 import { PagingSlice } from '@/utils/context/paging/pagingSlice';
-import { QueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const PaginationComponent = () => {
   const { currentPage, totalPages, isFirstPage, isLastPage } = useAppSelector(
     (state) => state.paging,
   );
   const dispatch = useAppDispatch();
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const changePage = (page: number) => {
     // console.log('Changing page to:', page);

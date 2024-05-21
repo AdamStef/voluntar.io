@@ -4,7 +4,7 @@ import { H4 } from '../ui/typography/heading';
 import { Trash } from 'lucide-react';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import { Button } from '../ui/button';
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deletePost } from '@/utils/api/api';
 import { useParams } from 'react-router-dom';
 
@@ -13,12 +13,13 @@ type PostProps = {
   refetch: () => void;
 };
 
-const queryClient = new QueryClient();
-
 export const Post = ({ post, refetch }: PostProps) => {
   const { user } = useAuthContext();
   const eventId = useParams().eventId;
+  const queryClient = useQueryClient();
   // const eventId = post.event.id;
+
+  console.log('Post:', post);
 
   const deletePostMutation = useMutation({
     mutationFn: deletePost,
@@ -40,10 +41,9 @@ export const Post = ({ post, refetch }: PostProps) => {
 
   return (
     <Panel>
-      {/* TODO: zmienić na nazwę organizacji */}
       <div className="flex justify-between">
-        <H4>Organizator: {post.organizer.organisationName}</H4>
-        {user?.id === post.organizer.id && (
+        <H4>{post.organization.organisationName}</H4>
+        {user?.id === post.organization.id && (
           <Button onClick={handleDeletePost} variant="destructive">
             <Trash className="w-5 text-destructive-foreground" />
           </Button>

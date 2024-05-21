@@ -19,6 +19,40 @@ export type NavbarItemType = {
   path: string;
 };
 
+// export const eventSchema = z.object({
+//   id: z.number(),
+//   name: z.string(),
+//   description: z.string(),
+//   numberOfVolunteersNeeded: z.number(),
+//   participants: z.array(
+//     z.object({
+//       id: z.number(),
+//       email: z.string(),
+//       role: z.nativeEnum(Role),
+//       firstName: z.string(),
+//       lastName: z.string(),
+//       phoneNumber: z.string(),
+//       gender: z.enum(['male', 'female']),
+//     }),
+//   ),
+//   startDate: z.coerce.date(),
+//   endDate: z.coerce.date(),
+//   location: z.object({
+//     id: z.number(),
+//     name: z.string(),
+//     city: z.string(),
+//     postalCode: z.string(),
+//     street: z.string(),
+//     number: z.string(),
+//     flatNumber: z.string().nullable(),
+//     latitude: z.number().nullable(),
+//     longitude: z.number().nullable(),
+//     additionalInformation: z.string().nullable(),
+//   }),
+// });
+
+// export type EventType = z.infer<typeof eventSchema>;
+
 export type EventType = {
   id: number;
   name: string;
@@ -93,7 +127,7 @@ export type EventLocationType = {
 export type EventPostType = {
   id: number;
   content: string;
-  organizer: OrganisationType;
+  organization: OrganisationType;
   event: EventType;
   wasEdited: boolean;
   createdAt: Date;

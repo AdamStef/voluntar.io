@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { removeParticipantFromEvent } from '@/utils/api/api.ts';
 import { useState } from 'react';
 import { ParticipantType } from '@/utils/types/types.ts';
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type ParticipantProps = {
   participant: ParticipantType;
@@ -13,7 +13,7 @@ type ParticipantProps = {
 
 export const Participant: React.FC<ParticipantProps> = ({ participant }) => {
   const [rejected, setRejected] = useState(false);
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
     mutationFn: removeParticipantFromEvent,

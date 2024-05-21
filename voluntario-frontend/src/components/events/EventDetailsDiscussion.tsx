@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { Post } from '../posts/Post';
 import { useState } from 'react';
 import { EventPostType, Role } from '@/utils/types/types';
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getEventPosts, postEventPost } from '@/utils/api/api';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
@@ -13,12 +13,11 @@ type EventDetailsDiscussionProps = {
   eventId: string;
 };
 
-const queryClient = new QueryClient();
-
 export const EventDetailsDiscussion = () => {
   const { eventId } = useParams() as EventDetailsDiscussionProps;
   const [newPostContent, setNewPostContent] = useState<string>('');
   const { user } = useAuthContext();
+  const queryClient = useQueryClient();
 
   const {
     data: posts,
@@ -48,7 +47,7 @@ export const EventDetailsDiscussion = () => {
         eventId,
         content: newPostContent,
       });
-      refetch();
+      // refetch();
       setNewPostContent('');
     } catch (error) {
       console.error('Błąd podczas wysyłania posta:', error);

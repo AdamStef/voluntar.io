@@ -6,7 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pl.sumatywny.voluntario.model.event.Event;
-import pl.sumatywny.voluntario.model.user.User;
+import pl.sumatywny.voluntario.model.user.Organization;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +23,7 @@ public class Post {
     private Long id;
     private StringBuilder content;
     @ManyToOne
-    private User organizer; //TODO: jak będzie klasa użytkownika organizatora to zamienić
+    private Organization organization;
     @ManyToOne
     private Event event;
     private boolean wasEdited;

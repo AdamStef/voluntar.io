@@ -65,7 +65,11 @@ public class SessionSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "api/auth/login", "/api/organisations/registerOrganisation/**").permitAll()
+                        .requestMatchers(
+                                "/api/auth/register",
+                                "api/auth/login",
+                                "/api/organizations/registerOrganization/**")
+                        .permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

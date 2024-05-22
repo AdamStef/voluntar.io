@@ -7,6 +7,7 @@ import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.exception.PermissionsException;
 import pl.sumatywny.voluntario.model.event.Event;
 import pl.sumatywny.voluntario.model.post.Post;
+import pl.sumatywny.voluntario.model.user.Organization;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.PostRepository;
 
@@ -22,16 +23,12 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    public Post createPost(PostRequestDTO postRequestDTO, User user, Event event) {
-        if (user.getRole().getRole() == Role.ROLE_VOLUNTEER) {
-            throw new PermissionsException("Volunteers cannot create events.");
-        }
-
+    public Post createPost(PostRequestDTO postRequestDTO, Organization organization, Event event) {
         Post post = Post.builder()
                 .content(postRequestDTO.getContent())
-                .organizer(user)
+                .organization(organization)
                 .wasEdited(false)
-                .event(event) //TODO: jakoś przekazywać z frontendu ten event
+                .event(event)
                 .build();
         return postRepository.save(post);
     }
@@ -44,8 +41,8 @@ public class PostService {
         return postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
-    public List<Post> getAllPostsByOrganizer(User organizer) {
-        return postRepository.findAllByOrganizer(organizer);
+    public List<Post> getAllPostsByOrganization(Organization organization) {
+        return postRepository.findAllByOrganization(organization);
     }
 
     public List<Post> getAllPostsByEvent(Event event) {
@@ -58,7 +55,7 @@ public class PostService {
         }
 
         Post post = postRepository.findById(postID).orElseThrow(() -> new NoSuchElementException("Post not found."));
-        if (!Objects.equals(user.getId(), post.getOrganizer().getId()) && user.getRole().getRole() != Role.ROLE_ADMIN) {
+        if (!Objects.equals(user.getId(), post.getOrganization().getId()) && user.getRole().getRole() != Role.ROLE_ADMIN) {
             System.out.println("nie masz uprawnien");
             throw new PermissionsException("You cannot remove this post.");
         }
@@ -73,12 +70,16 @@ public class PostService {
 
         Post post = postRepository.findById(postID).orElseThrow(() -> new NoSuchElementException("Post not found."));
 
-        if (!Objects.equals(user.getId(), post.getOrganizer().getId()) && user.getRole().getRole() != Role.ROLE_ADMIN) {
+        if (!Objects.equals(user.getId(), post.getOrganization().getId()) && user.getRole().getRole() != Role.ROLE_ADMIN) {
             throw new PermissionsException("You cannot edit this post.");
         }
 
         post.setContent(postRequestDTO.getContent());
         post.setWasEdited(true);
         return postRepository.save(post);
+    }
+
+    public void removeAllPostsByEvent(Event event) {
+        postRepository.deleteByEventId(event.getId());
     }
 }

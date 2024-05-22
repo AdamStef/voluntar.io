@@ -23,7 +23,7 @@ import { Spinner } from '../ui/Spinner';
 
 const validationSchema = z
   .object({
-    firstName: z.string(),
+    firstName: z.string({}),
     lastName: z.string(),
     phoneNumber: z.string(),
     email: z.string().email(),
@@ -66,7 +66,7 @@ const RegisterVolunteerForm: React.FC<Props> = ({ className }) => {
       console.error(error);
       form.setError('root.serverError', {
         type: 'manual',
-        message: 'Something went wrong',
+        message: 'Coś poszło nie tak, spróbuj ponownie.',
       });
     }
   };

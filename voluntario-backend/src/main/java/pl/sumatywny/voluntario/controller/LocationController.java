@@ -22,7 +22,7 @@ public class LocationController {
     @PostMapping()
     @PreAuthorize("hasRole('ORGANIZATION')")
     public ResponseEntity<?> createLocation(@RequestBody LocationDTO locationDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(locationService.createLocation(locationDTO, authService.getUserFromSession()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(locationService.createLocation(locationDTO));
     }
 
     @PutMapping("/{locationID}")

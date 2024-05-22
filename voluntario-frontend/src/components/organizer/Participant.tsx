@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { removeParticipantFromEvent } from '@/utils/api/api.ts';
 import { useState } from 'react';
 import { ParticipantType } from '@/utils/types/types.ts';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type ParticipantProps = {
   participant: ParticipantType;
@@ -12,13 +13,29 @@ type ParticipantProps = {
 
 export const Participant: React.FC<ParticipantProps> = ({ participant }) => {
   const [rejected, setRejected] = useState(false);
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: removeParticipantFromEvent,
+    onSuccess: () => {
+      console.log('Participant removed from event');
+      setRejected(true);
+      queryClient.refetchQueries({
+        queryKey: ['organizer', 'events'],
+      });
+    },
+  });
 
   function rejectVolunteer() {
-    removeParticipantFromEvent({
+    mutate({
       eventId: String(participant.eventId),
       participantId: participant.id,
     });
-    setRejected(true);
+    // removeParticipantFromEvent({
+    //   eventId: String(participant.eventId),
+    //   participantId: participant.id,
+    // });
+    // setRejected(true);
   }
 
   return (

@@ -15,10 +15,10 @@ export type RegisterUserParams = {
   role: Role;
 };
 
-export type postRegisterOrganisationParams = {
+export type RegisterOrganizationParams = {
   krs: string;
-  organisationName: string;
-  organisationDescription: string;
+  name: string;
+  description: string;
   address: string;
   website: string;
 };

@@ -2,23 +2,28 @@ import { useState } from 'react';
 import { Participant } from './Participant.tsx';
 import Select from 'react-select';
 import { format } from 'date-fns';
-import { EventType, ParticipantType } from '@/utils/types/types.ts';
+import { ParticipantType } from '@/utils/types/types.ts';
+import { useQuery } from '@tanstack/react-query';
+import { getOrganizerEvents } from '@/utils/api/api.ts';
 
-type ParticipantListProps = {
-  eventData: EventType[];
-};
+// type ParticipantListProps = {
+//   eventData: EventType[];
+// };
 
 type Option = {
   value: number;
   label: string;
 };
 
-export const ParticipantList: React.FC<ParticipantListProps> = ({
-  eventData,
-}) => {
+export const ParticipantList = () => {
   const [selectedOption, setSelectedOption] = useState<Option | null>({
     value: 0,
     label: '',
+  });
+
+  const { data: events, isError } = useQuery({
+    queryKey: ['organizer', 'events'],
+    queryFn: getOrganizerEvents,
   });
 
   const handleChange = (e: Option | null) => {
@@ -28,8 +33,8 @@ export const ParticipantList: React.FC<ParticipantListProps> = ({
   const combineParticipants = () => {
     const combinedParticipants: ParticipantType[] = [];
 
-    if (eventData && eventData.length > 0) {
-      eventData.forEach((event) => {
+    if (events && events.length > 0) {
+      events.forEach((event) => {
         event.participants.forEach((participant) => {
           const participantWithEventInfo = {
             ...participant,
@@ -57,13 +62,19 @@ export const ParticipantList: React.FC<ParticipantListProps> = ({
 
   const filteredParticipants = filterParticipants(selectedOption);
 
+  if (isError) {
+    return <div>Wystąpił błąd podczas pobierania wydarzeń</div>;
+  }
+
+  if (!events) return null;
+
   return (
     <>
       <div>
         <Select
           placeholder="Filtruj po wydarzeniu..."
           onChange={handleChange}
-          options={eventData.map((event) => ({
+          options={events.map((event) => ({
             value: event.id,
             label: `${event.name} - ${format(event.startDate, 'dd.MM.yyyy')}`,
           }))}

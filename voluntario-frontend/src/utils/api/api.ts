@@ -3,7 +3,7 @@ import {
   AddParticipantParams as EventParticipantParams,
   LoginCredentialsParams,
   RegisterUserParams,
-  postRegisterOrganisationParams,
+  RegisterOrganizationParams,
 } from '../types/params';
 import {
   EventPostType,
@@ -12,7 +12,7 @@ import {
   UserType,
   EventFormType,
   EventLocationType,
-  eventSchema,
+  // eventSchema,
 } from '../types/types';
 import { isValidDateString } from '../helpers';
 
@@ -60,10 +60,10 @@ export const getAuthUser = async (config?: AxiosRequestConfig) =>
 export const postRegisterUser = async (data: RegisterUserParams) =>
   axiosClient.post('/auth/register', data);
 
-export const postRegisterOrganisation = async (
-  data: postRegisterOrganisationParams,
+export const postRegisterOrganization = async (
+  data: RegisterOrganizationParams,
   userID: number,
-) => axiosClient.post(`/organisations/registerOrganisation/${userID}`, data);
+) => axiosClient.post(`/organizations/registerOrganization/${userID}`, data);
 
 // Events
 export const postEvent = async (data: EventFormType) =>
@@ -85,7 +85,7 @@ export const getAllEvents = async () =>
   axiosClient.get(`/events/all`).then((res) => res.data);
 
 export const getOrganizerEvents = async () =>
-  axiosClient.get<EventType[]>(`/events/organizer`).then((res) => res.data);
+  axiosClient.get<EventType[]>(`/events/organization`).then((res) => res.data);
 
 export const getEvent = async (id: string) =>
   axiosClient.get<EventType>(`/events/${id}`);

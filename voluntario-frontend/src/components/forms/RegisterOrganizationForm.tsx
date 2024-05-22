@@ -17,9 +17,9 @@ import { z } from 'zod';
 import { RadioGroupItem } from '../ui/radio-group';
 import React, { HTMLProps } from 'react';
 import { cn } from '@/lib/utils';
-import { RegisterUserParams as RegisterOrganisationParams } from '@/utils/types/params';
+import { RegisterUserParams as RegisterOrganizationParams } from '@/utils/types/params';
 import { Role } from '@/utils/types/types';
-import { postRegisterOrganisation, postRegisterUser } from '@/utils/api/api';
+import { postRegisterOrganization, postRegisterUser } from '@/utils/api/api';
 import { Spinner } from '../ui/Spinner';
 
 const validationSchema = z
@@ -32,8 +32,8 @@ const validationSchema = z
     passwordConfirmation: z.string().min(8),
     gender: z.enum(['MALE', 'FEMALE']),
     krs: z.string(),
-    organisationName: z.string(),
-    organisationDescription: z.string(),
+    name: z.string(),
+    description: z.string(),
     address: z.string(),
     website: z.string(),
   })
@@ -59,8 +59,8 @@ const RegisterOrganizationForm: React.FC<Props> = ({ className }) => {
       password: '',
       passwordConfirmation: '',
       krs: '',
-      organisationName: '',
-      organisationDescription: '',
+      name: '',
+      description: '',
       address: '',
       website: '',
     },
@@ -68,17 +68,17 @@ const RegisterOrganizationForm: React.FC<Props> = ({ className }) => {
   const navigate = useNavigate();
 
   const onSubmit = async (data: RegisterFormSchema) => {
-    const req: RegisterOrganisationParams = {
+    const req: RegisterOrganizationParams = {
       ...data,
       role: Role.ORGANIZATION,
     };
-    console.log('Register organisation: ' + JSON.stringify(req));
+    console.log('Register organization: ' + JSON.stringify(req));
     try {
       // TODO: Change this to use Promise.all
       const userId = await postRegisterUser(req).then((res) => {
         return res.data.id;
       });
-      await postRegisterOrganisation(data, userId);
+      await postRegisterOrganization(data, userId);
       navigate('/login');
     } catch (error) {
       console.error(error);
@@ -114,7 +114,7 @@ const RegisterOrganizationForm: React.FC<Props> = ({ className }) => {
         />
 
         <FormField
-          name="organisationName"
+          name="name"
           control={form.control}
           render={({ field }) => (
             <FormItem>
@@ -132,7 +132,7 @@ const RegisterOrganizationForm: React.FC<Props> = ({ className }) => {
         />
 
         <FormField
-          name="organisationDescription"
+          name="description"
           control={form.control}
           render={({ field }) => (
             <FormItem>

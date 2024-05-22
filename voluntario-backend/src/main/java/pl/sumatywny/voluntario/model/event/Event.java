@@ -1,12 +1,11 @@
 package pl.sumatywny.voluntario.model.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import pl.sumatywny.voluntario.model.post.Post;
+import pl.sumatywny.voluntario.model.user.Organization;
 import pl.sumatywny.voluntario.model.user.User;
 
 import java.time.LocalDateTime;
@@ -29,7 +28,7 @@ public class Event {
     private String name;
     private String description;
     @ManyToOne
-    private User organizer;
+    private Organization organization;
     private int numberOfVolunteersNeeded;
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(

@@ -57,7 +57,7 @@ export type EventType = {
   id: number;
   name: string;
   description: string;
-  organizer?: UserType;
+  organization?: OrganizationType;
   numberOfVolunteersNeeded: number;
   participants: UserType[];
   startDate: Date;
@@ -65,7 +65,7 @@ export type EventType = {
   location: EventLocationType;
 };
 
-export type OrganisationType = {
+export type OrganizationType = {
   id: number;
   email: string;
   role: Role;
@@ -73,8 +73,8 @@ export type OrganisationType = {
   lastName: string;
   phoneNumber: string;
   krs: string;
-  organisationName: string;
-  organisationDescription: string;
+  name: string;
+  description: string;
   website: string;
 };
 
@@ -127,7 +127,7 @@ export type EventLocationType = {
 export type EventPostType = {
   id: number;
   content: string;
-  organization: OrganisationType;
+  organization: OrganizationType;
   event: EventType;
   wasEdited: boolean;
   createdAt: Date;

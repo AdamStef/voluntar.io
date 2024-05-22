@@ -10,16 +10,16 @@ import lombok.*;
 @ToString
 @Getter
 @Setter
-public class Organisation {
+public class Organization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne
     private User user;
-    private String organisationName;
-    private String organisationDescription;
+    private String name;
+    private String description;
     private String krs;
     private String address;
-    private String organisationPage;
+    private String website;
 
 }

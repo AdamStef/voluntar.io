@@ -42,7 +42,7 @@ export const Post = ({ post, refetch }: PostProps) => {
   return (
     <Panel>
       <div className="flex justify-between">
-        <H4>{post.organization.organisationName}</H4>
+        <H4>{post.organization.name}</H4>
         {user?.id === post.organization.id && (
           <Button onClick={handleDeletePost} variant="destructive">
             <Trash className="w-5 text-destructive-foreground" />
@@ -51,7 +51,7 @@ export const Post = ({ post, refetch }: PostProps) => {
       </div>
       <p className="text-sm text-accent-foreground">
         {post.createdAt.toLocaleString()}
-        {post.wasEdited ? ' (edytowany)' : ''}
+        {post.wasEdited ?? ' (edytowany)'}
       </p>
       <p className="mt-5 leading-tight">{post.content}</p>
     </Panel>

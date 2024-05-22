@@ -48,7 +48,7 @@ export const EventDetailsInformation: React.FC<
         />
       </Info>
       <Info icon={<RiOrganizationChart size={24} />} header="Organizator: ">
-        <p className="font-semibold">Fundacja Lorem Ipsum</p>{' '}
+        <p className="font-semibold">{event.organization?.name}</p>{' '}
         {/* TODO: put organization */}
       </Info>
       <Info icon={<MapPin size={24} />} header="Lokalizacja: ">

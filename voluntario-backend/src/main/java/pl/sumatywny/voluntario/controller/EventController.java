@@ -9,12 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sumatywny.voluntario.config.roleAnnotations.IsOrganization;
 import pl.sumatywny.voluntario.dtos.EventDTO;
-import pl.sumatywny.voluntario.dtos.post.PostResponseDTO;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.EventService;
-import pl.sumatywny.voluntario.service.impl.PostService;
+import pl.sumatywny.voluntario.service.impl.OrganizationService;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,22 +21,15 @@ import pl.sumatywny.voluntario.service.impl.PostService;
 public class EventController {
     private final EventService eventService;
     private final AuthService authService;
-    private final PostService postService;
     private final UserService userService;
+    private final OrganizationService organizationService;
 
     @PostMapping()
     @IsOrganization
     public ResponseEntity<?> create(@RequestBody EventDTO eventDTO) {
         var user = authService.getUserFromSession();
-//            if (user.isEmpty()) {
-//                var response = ExceptionResponse.builder()
-//                        .errorCode(HttpStatus.UNAUTHORIZED.value())
-//                        .error("Unauthorized")
-//                        .errorDescription("User not found.")
-//                        .build();
-//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-//            }
-        var event = eventService.createEvent(eventDTO, user);
+        var organization = organizationService.getUserOrganization(user.getId());
+        var event = eventService.createEvent(eventDTO, organization);
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
@@ -94,11 +86,12 @@ public class EventController {
         return ResponseEntity.ok().body(eventService.getAllEvents());
     }
 
-    @GetMapping("/organizer")
+    @GetMapping("/organization")
 //    @PreAuthorize("hasRole('ORGANIZATION')")
-    public ResponseEntity<?> getOrganizerEvents() {
+    public ResponseEntity<?> getOrganizationEvents() {
         User user = authService.getUserFromSession();
-        return ResponseEntity.ok().body(eventService.getOrganizerEvents(user));
+        var organization = organizationService.getUserOrganization(user.getId());
+        return ResponseEntity.ok().body(eventService.getOrganizationEvents(organization));
     }
 
     @GetMapping("/{eventId}")

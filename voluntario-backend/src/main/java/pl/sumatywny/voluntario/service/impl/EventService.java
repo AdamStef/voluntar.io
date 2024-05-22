@@ -1,6 +1,5 @@
 package pl.sumatywny.voluntario.service.impl;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +10,7 @@ import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.exception.CouldNotSaveException;
 import pl.sumatywny.voluntario.model.event.Event;
 import pl.sumatywny.voluntario.model.event.Location;
+import pl.sumatywny.voluntario.model.user.Organization;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.EventRepository;
 import pl.sumatywny.voluntario.repository.LocationRepository;
@@ -28,14 +28,13 @@ public class EventService {
     private final PostService postService;
 
     @Transactional
-    public Event createEvent(EventDTO eventDTO, User user) {
-        Location location = locationService.createLocation(eventDTO.getLocation(), user);
+    public Event createEvent(EventDTO eventDTO, Organization user) {
+        Location location = locationService.createLocation(eventDTO.getLocation());
 
         Event event = Event.builder()
                 .name(eventDTO.getName())
                 .description(eventDTO.getDescription())
-                .organizer(user)
-                .organizer(user)
+                .organization(user)
 //                .location(eventDTO.getLocation())
                 .numberOfVolunteersNeeded(eventDTO.getNumberOfVolunteersNeeded())
                 .participants(new ArrayList<>())
@@ -82,8 +81,8 @@ public class EventService {
         return eventRepository.findAll();
     }
 
-    public List<Event> getOrganizerEvents(User user) {
-        return eventRepository.findAllByOrganizer_Id(user.getId());
+    public List<Event> getOrganizationEvents(Organization organization) {
+        return eventRepository.findAllByOrganization_Id(organization.getId());
     }
 
     public Page<Event> getAllEvents(String search, Pageable pageable) {

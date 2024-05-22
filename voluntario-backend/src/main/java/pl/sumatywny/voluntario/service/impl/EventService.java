@@ -12,6 +12,7 @@ import pl.sumatywny.voluntario.model.event.Event;
 import pl.sumatywny.voluntario.model.event.Location;
 import pl.sumatywny.voluntario.model.user.Organization;
 import pl.sumatywny.voluntario.model.user.User;
+import pl.sumatywny.voluntario.model.user.UserParticipation;
 import pl.sumatywny.voluntario.repository.EventRepository;
 import pl.sumatywny.voluntario.repository.LocationRepository;
 
@@ -37,7 +38,7 @@ public class EventService {
                 .organization(user)
 //                .location(eventDTO.getLocation())
                 .numberOfVolunteersNeeded(eventDTO.getNumberOfVolunteersNeeded())
-                .participants(new ArrayList<>())
+                .participations(new ArrayList<>())
                 .startDate(eventDTO.getStartDate())
                 .endDate(eventDTO.getEndDate())
                 .location(location)
@@ -52,29 +53,44 @@ public class EventService {
             throw new NoSuchElementException("Only volunteers can participate in events.");
         }
 
-        if (event.getParticipants().contains(user)) {
+        var participatingUsers = event.getParticipations().stream().map(UserParticipation::getUser).toList();
+        if (participatingUsers.contains(user)) {
             throw new IllegalStateException(String.format("User %d already in event %d.", user.getId(), event.getId()));
         }
 
-        if (event.getParticipants().size() >= event.getNumberOfVolunteersNeeded()) {
+        if (event.getParticipations().size() >= event.getNumberOfVolunteersNeeded()) {
             throw new IllegalStateException(String.format("Event %d is full.", event.getId()));
         }
 
-        event.getParticipants().add(user);
+        UserParticipation userParticipation = UserParticipation.builder()
+                .user(user)
+                .event(event)
+                .build();
+
+        event.getParticipations().add(userParticipation);
         return eventRepository.save(event);
     }
 
     @Transactional
     public Event removeParticipant(Event event, User user) {
-        if (event.getParticipants().remove(user)) {
+        var participatingUser = event.getParticipations().stream()
+                .filter(participation -> participation.getUser().getId().equals(user.getId()))
+                .findFirst()
+                .orElseThrow(() ->
+                        new NoSuchElementException(
+                                String.format("User %d not found in event %d.", user.getId(), event.getId())
+                        )
+                );
+
+        if (event.getParticipations().remove(participatingUser)) {
             return eventRepository.save(event);
         } else {
             throw new NoSuchElementException(String.format("User %d not found in event %d.", user.getId(), event.getId()));
         }
     }
 
-    public List<User> getAllParticipants(Event event) {
-        return event.getParticipants();
+    public List<User> getUsersParticipating(Event event) {
+        return event.getParticipations().stream().map(UserParticipation::getUser).toList();
     }
 
     public List<Event> getAllEvents() {

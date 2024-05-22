@@ -2,22 +2,18 @@ package pl.sumatywny.voluntario.model.post;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pl.sumatywny.voluntario.model.AuditingEntity;
 import pl.sumatywny.voluntario.model.event.Event;
 import pl.sumatywny.voluntario.model.user.Organization;
 
-import java.time.LocalDateTime;
-
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
 @Table(name = "posts")
 @Data
-@EntityListeners(AuditingEntityListener.class)
-public class Post {
+public class Post extends AuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,8 +23,4 @@ public class Post {
     @ManyToOne
     private Event event;
     private boolean wasEdited;
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 }

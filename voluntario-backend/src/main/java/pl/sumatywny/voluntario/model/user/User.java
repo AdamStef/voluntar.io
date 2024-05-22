@@ -6,14 +6,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pl.sumatywny.voluntario.enums.Gender;
+import pl.sumatywny.voluntario.model.AuditingEntity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @ToString
@@ -21,8 +20,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "users")
-@EntityListeners(AuditingEntityListener.class)
-public class User implements Serializable {
+public class User extends AuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +52,15 @@ public class User implements Serializable {
     @NotBlank(message = "Phone number cannot be empty")
     private String phoneNumber;
 
+//    @ManyToMany(mappedBy = "participants")
+//    private List<Event> events;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    private List<UserParticipation> participations;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Score score;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -66,12 +73,4 @@ public class User implements Serializable {
 
     @Column(nullable = false)
     private Boolean isBanned;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 }

@@ -52,7 +52,7 @@ public class EventController {
     @GetMapping("/{eventId}/participants")
     public ResponseEntity<?> allParticipants(@PathVariable("eventId") Long eventId) {
         var event = eventService.getEvent(eventId);
-        return ResponseEntity.ok().body(eventService.getAllParticipants(event));
+        return ResponseEntity.ok().body(eventService.getUsersParticipating(event));
     }
 
     @DeleteMapping("/{eventId}/participants/{participantId}")
@@ -113,9 +113,10 @@ public class EventController {
     }
 
     @PutMapping("/{eventId}/location")
-    public ResponseEntity<?> updateEventLocation(@PathVariable("eventId") Long eventId, @RequestParam("locationId") Long locationId) {
-        eventService.assignNewLocation(eventId, locationId);
-        return ResponseEntity.ok().body("Location updated successfully.");
+    public ResponseEntity<?> updateEventLocation(
+            @PathVariable("eventId") Long eventId,
+            @RequestParam("locationId") Long locationId) {
+        return ResponseEntity.ok().body(eventService.assignNewLocation(eventId, locationId));
     }
 
 }

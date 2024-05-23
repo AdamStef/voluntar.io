@@ -8,12 +8,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sumatywny.voluntario.config.roleAnnotations.IsOrganization;
-import pl.sumatywny.voluntario.dtos.EventDTO;
+import pl.sumatywny.voluntario.dtos.event.CompleteEventDTO;
+import pl.sumatywny.voluntario.dtos.event.EventRequestDTO;
+import pl.sumatywny.voluntario.dtos.user.UserEvaluationDTO;
+import pl.sumatywny.voluntario.mapper.EventResponseMapper;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.EventService;
 import pl.sumatywny.voluntario.service.impl.OrganizationService;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,18 +31,19 @@ public class EventController {
 
     @PostMapping()
     @IsOrganization
-    public ResponseEntity<?> create(@RequestBody EventDTO eventDTO) {
+    public ResponseEntity<?> create(@RequestBody EventRequestDTO eventRequestDTO) {
         var user = authService.getUserFromSession();
         var organization = organizationService.getUserOrganization(user.getId());
-        var event = eventService.createEvent(eventDTO, organization);
-        return ResponseEntity.status(HttpStatus.CREATED).body(event);
+        eventService.createEvent(eventRequestDTO, organization);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/{eventId}/participants")
     public ResponseEntity<?> addParticipant(@PathVariable("eventId") Long eventId) {
         var event = eventService.getEvent(eventId);
         var participant = authService.getUserFromSession();
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addParticipant(event, participant));
+        eventService.addParticipant(event, participant);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/{eventId}/participants/{participantId}")
@@ -46,7 +52,8 @@ public class EventController {
             @PathVariable("participantId") Long participantId) {
         var event = eventService.getEvent(eventId);
         var participant = userService.getUserById(participantId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addParticipant(event, participant));
+        eventService.addParticipant(event, participant);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{eventId}/participants")
@@ -71,32 +78,39 @@ public class EventController {
         }
 
         var event = eventService.getEvent(eventId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.removeParticipant(event, user));
+        eventService.removeParticipant(event, user);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping()
     public ResponseEntity<?> allEvents(
             @RequestParam(name = "search", required = false, defaultValue = "") String search,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok().body(eventService.getAllEvents(search, pageable));
+        return ResponseEntity
+                .ok()
+                .body(eventService.getAllEventsPageable(search, pageable).map(EventResponseMapper::mapToDTO));
     }
 
     @GetMapping("/all")
     public ResponseEntity<?> allEvents() {
-        return ResponseEntity.ok().body(eventService.getAllEvents());
-    }
-
-    @GetMapping("/organization")
-//    @PreAuthorize("hasRole('ORGANIZATION')")
-    public ResponseEntity<?> getOrganizationEvents() {
-        User user = authService.getUserFromSession();
-        var organization = organizationService.getUserOrganization(user.getId());
-        return ResponseEntity.ok().body(eventService.getOrganizationEvents(organization));
+        return ResponseEntity.ok().body(
+                eventService.getAllEvents()
+                        .stream()
+                        .map(EventResponseMapper::mapToDTO).toList()
+        );
     }
 
     @GetMapping("/{eventId}")
     public ResponseEntity<?> event(@PathVariable("eventId") Long eventId) {
-        return ResponseEntity.ok().body(eventService.getEvent(eventId));
+        var event = eventService.getEvent(eventId);
+        return ResponseEntity.ok().body(EventResponseMapper.mapToDTO(event));
+    }
+
+    @GetMapping("/organization")
+    public ResponseEntity<?> getOrganizationEvents() {
+        User user = authService.getUserFromSession();
+        var organization = organizationService.getUserOrganization(user.getId());
+        return ResponseEntity.ok().body(eventService.getOrganizationEvents(organization));
     }
 
     @DeleteMapping("/{eventId}")
@@ -119,4 +133,13 @@ public class EventController {
         return ResponseEntity.ok().body(eventService.assignNewLocation(eventId, locationId));
     }
 
+    @PostMapping("/{eventId}/complete")
+    public ResponseEntity<?> completeEvent(
+            @PathVariable("eventId") Long eventId,
+            @RequestBody List<UserEvaluationDTO> completeEventDTO
+    ) {
+        var event = eventService.getEvent(eventId);
+        eventService.completeEvent(event, completeEventDTO);
+        return ResponseEntity.ok().build();
+    }
 }

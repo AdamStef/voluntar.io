@@ -1,15 +1,14 @@
-package pl.sumatywny.voluntario.dtos;
+package pl.sumatywny.voluntario.dtos.event;
 
 
 import lombok.*;
-import pl.sumatywny.voluntario.model.user.User;
+import pl.sumatywny.voluntario.dtos.LocationDTO;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder
-public class EventDTO {
+public class EventRequestDTO {
     private Long id;
     private String name;
     private String description;

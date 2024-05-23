@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ScoreDTO {
     private Long userId;
-    private String username;
+    private String fullName;
     private int points;
     private double rating;
     private int numberOfCompletedEvents;

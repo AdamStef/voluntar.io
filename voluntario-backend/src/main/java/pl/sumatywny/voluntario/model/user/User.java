@@ -10,6 +10,7 @@ import pl.sumatywny.voluntario.enums.Gender;
 import pl.sumatywny.voluntario.model.AuditingEntity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -52,11 +53,8 @@ public class User extends AuditingEntity implements Serializable {
     @NotBlank(message = "Phone number cannot be empty")
     private String phoneNumber;
 
-//    @ManyToMany(mappedBy = "participants")
-//    private List<Event> events;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
-    private List<UserParticipation> participations;
+    private List<UserParticipation> participations = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     private Score score;

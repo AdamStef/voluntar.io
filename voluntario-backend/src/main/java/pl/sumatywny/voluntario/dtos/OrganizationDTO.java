@@ -8,6 +8,7 @@ import lombok.*;
 @ToString
 @Builder
 public class OrganizationDTO {
+    private Long id;
     private String name;
     private String description;
     private String krs;

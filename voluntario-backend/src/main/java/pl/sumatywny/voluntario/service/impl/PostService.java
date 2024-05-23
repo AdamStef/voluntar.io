@@ -46,7 +46,12 @@ public class PostService {
     }
 
     public List<Post> getAllPostsByEvent(Event event) {
-        return postRepository.findAllByEvent(event, Sort.by(Sort.Direction.DESC, "createdAt"));
+        var posts = postRepository.findAllByEvent(event, Sort.by(Sort.Direction.DESC, "createdAt"));
+        if (posts.isEmpty()) {
+            throw new NoSuchElementException("No posts found for this event.");
+        }
+
+        return posts;
     }
 
     public void removePost(Long postID, User user) {
@@ -70,7 +75,7 @@ public class PostService {
 
         Post post = postRepository.findById(postID).orElseThrow(() -> new NoSuchElementException("Post not found."));
 
-        if (!Objects.equals(user.getId(), post.getOrganization().getId()) && user.getRole().getRole() != Role.ROLE_ADMIN) {
+        if (!Objects.equals(user.getId(), post.getOrganization().getUser().getId())) {
             throw new PermissionsException("You cannot edit this post.");
         }
 

@@ -31,8 +31,8 @@ public class UserParticipation extends AuditingEntity {
 //    private boolean isRejected;
 //    private boolean isCompleted;
 //    private boolean isRated;
-//    private int rating;
-//    private String comment;
+    private int rating;
+    private String comment;
 //    private boolean isCommented;
 //    private boolean isCanceled;
 //    private boolean isResigned;

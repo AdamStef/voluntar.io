@@ -10,8 +10,10 @@ import pl.sumatywny.voluntario.model.user.UserParticipation;
 import pl.sumatywny.voluntario.model.user.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -31,16 +33,9 @@ public class Event extends AuditingEntity {
     @ManyToOne
     private Organization organization;
     private int numberOfVolunteersNeeded;
-//    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "events_participants",
-//            joinColumns = @JoinColumn(name = "events_id"),
-//            inverseJoinColumns = @JoinColumn(name = "users_id")
-//    )
-//    private List<User> participants;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.PERSIST)
-    private List<UserParticipation> participations;
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    private List<UserParticipation> participations = new ArrayList<>();
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -50,4 +45,6 @@ public class Event extends AuditingEntity {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Location location;
+
+    private Boolean isCompleted = false;
 }

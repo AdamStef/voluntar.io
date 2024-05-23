@@ -15,15 +15,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
 
-    @Query("""
-            SELECT
-             new pl.sumatywny.voluntario.dtos.user.ScoreDTO(
-             u.id, concat(u.firstName, ' ', u.lastName) , u.score.points, u.score.rating, size(u.participations))
-             FROM User u
-             INNER JOIN u.role r
-             WHERE r.role = 'ROLE_VOLUNTEER'
-             ORDER BY u.score.points DESC, u.score.rating DESC, size(u.participations) DESC
-             LIMIT :limit
-             """)
-    List<ScoreDTO> findTopScores(int limit);
+//    @Query("""
+//            SELECT
+//             new pl.sumatywny.voluntario.dtos.user.ScoreDTO(
+//             u.id, concat(u.firstName, ' ', u.lastName) , u.score.points, u.score.rating, size(u.participations))
+//             FROM User u
+//             INNER JOIN u.role r
+//             WHERE r.role = 'ROLE_VOLUNTEER'
+//             ORDER BY u.score.points DESC, u.score.rating DESC, size(u.participations) DESC
+//             LIMIT :limit
+//             """)
+//    List<ScoreDTO> findTopScores(int limit);
 }

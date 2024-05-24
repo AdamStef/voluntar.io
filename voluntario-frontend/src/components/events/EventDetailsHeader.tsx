@@ -58,6 +58,10 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
   activeIndex,
   setActiveIndex,
 }) => {
+  if (!event.participants) {
+    event.participants = [];
+  }
+
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
   const [canJoin, setCanJoin] = useState<boolean>(
@@ -84,11 +88,13 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
   });
 
   useEffect(() => {
-    setCanJoin(
-      event.participants.every((p) => p.userId !== user?.id) &&
-        event.participants.length < event.numberOfVolunteersNeeded,
-    );
-    setCanLeave(event.participants.some((p) => p.userId === user?.id));
+    if (event.participants) {
+      setCanJoin(
+        event.participants.every((p) => p.userId !== user?.id) &&
+          event.participants.length < event.numberOfVolunteersNeeded,
+      );
+      setCanLeave(event.participants.some((p) => p.userId === user?.id));
+    }
   }, [event.participants, user, event.numberOfVolunteersNeeded]);
 
   const handleAddParticipant = () => {

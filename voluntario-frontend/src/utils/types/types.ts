@@ -70,7 +70,7 @@ export type EventType = {
   name: string;
   description: string;
   organization: OrganizationType;
-  participants: UserParticipationType[];
+  participants: ParticipantType[];
   numberOfVolunteersNeeded: number;
   startDate: Date; // ISO 8601 string format
   endDate: Date; // ISO 8601 string format

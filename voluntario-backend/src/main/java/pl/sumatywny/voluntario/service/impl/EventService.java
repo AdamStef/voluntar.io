@@ -24,6 +24,7 @@ import pl.sumatywny.voluntario.repository.LocationRepository;
 import pl.sumatywny.voluntario.repository.UserParticipationRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -138,41 +139,22 @@ public class EventService {
         return eventRepository.findAll();
     }
 
+    @Transactional
     public List<EventResponseDTO> getAllEventsDTO() {
-        return eventRepository.findAllWithParticipants().stream().map(event -> EventResponseDTO.builder()
-                .id(event.getId())
-                .name(event.getName())
-                .description(event.getDescription())
-                .organization(OrganizationMapper.mapToDTO(event.getOrganization()))
-                .participants(event.getParticipations().stream().map(UserParticipationMapper::mapToDTO).toList())
-                .numberOfVolunteersNeeded(event.getNumberOfVolunteersNeeded())
-                .startDate(event.getStartDate())
-                .endDate(event.getEndDate())
-                .location(event.getLocation())
-                .isCompleted(event.getIsCompleted())
-                .build()).toList();
+        return eventRepository
+                .findAllWithParticipants()
+                .stream()
+                .map(this::getEventResponse)
+                .toList();
     }
 
     @Transactional
     public List<EventResponseDTO> getOrganizationEvents(Organization organization) {
-        return eventRepository.findAllByOrganizationId(organization.getId()).stream()
-                .map(event -> {
-                    var participants = userParticipationRepository.findByEventId(event.getId());
-                    return EventResponseDTO.builder()
-                            .id(event.getId())
-                            .name(event.getName())
-                            .description(event.getDescription())
-                            .organization(OrganizationMapper.mapToDTO(event.getOrganization()))
-                            .participants(participants.stream().map(UserParticipationMapper::mapToDTO).toList())
-//                            .numberOfVolunteers(participants.size())
-                            .numberOfVolunteersNeeded(event.getNumberOfVolunteersNeeded())
-                            .startDate(event.getStartDate())
-                            .endDate(event.getEndDate())
-                            .location(event.getLocation())
-                            .isCompleted(event.getIsCompleted())
-                            .build();
-                }
-        ).toList();
+        return eventRepository
+                .findAllByOrganizationId(organization.getId())
+                .stream()
+                .map(this::getEventResponse)
+                .toList();
     }
 
     public Page<Event> getAllEventsPageable(String search, Pageable pageable) {
@@ -189,25 +171,8 @@ public class EventService {
     public EventResponseDTO getEventDTO(Long eventId) {
         var event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventId)));
-        Hibernate.initialize(event.getOrganization());
-        return EventResponseDTO.builder()
-                .id(event.getId())
-                .name(event.getName())
-                .description(event.getDescription())
-                .organization(OrganizationMapper.mapToDTO(event.getOrganization()))
-                .participants(event.getParticipations().stream().map(UserParticipationMapper::mapToDTO).toList())
-                .numberOfVolunteersNeeded(event.getNumberOfVolunteersNeeded())
-                .startDate(event.getStartDate())
-                .endDate(event.getEndDate())
-                .location(event.getLocation())
-                .isCompleted(event.getIsCompleted())
-                .build();
-    }
-
-    private Location getEventLocation(Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventId)));
-        return event.getLocation();
+//        Hibernate.initialize(event.getOrganization());
+        return getEventResponse(event);
     }
 
     public Location assignNewLocation(Long eventId, Long locationId) {
@@ -223,7 +188,6 @@ public class EventService {
         }
         return location;
     }
-
 
     @Transactional
     public void completeEvent(Event event, List<UserEvaluationDTO> completeEventDTO) {
@@ -249,6 +213,33 @@ public class EventService {
 
     private boolean isUserVolunteer(User user) {
         return user.getRole().getRole() == Role.ROLE_VOLUNTEER;
+    }
+
+    private Location getEventLocation(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventId)));
+        return event.getLocation();
+    }
+
+    private EventResponseDTO getEventResponse(Event event) {
+        var participants = userParticipationRepository.findByEventId(event.getId());
+        return EventResponseDTO.builder()
+                .id(event.getId())
+                .name(event.getName())
+                .description(event.getDescription())
+                .organization(OrganizationMapper.mapToDTO(event.getOrganization()))
+                .participants(
+                        participants != null ?
+                                participants.stream().map(UserParticipationMapper::mapToDTO).toList()
+                        :
+                                new ArrayList<>()
+                )
+                .numberOfVolunteersNeeded(event.getNumberOfVolunteersNeeded())
+                .startDate(event.getStartDate())
+                .endDate(event.getEndDate())
+                .location(event.getLocation())
+                .isCompleted(event.getIsCompleted())
+                .build();
     }
 }
 

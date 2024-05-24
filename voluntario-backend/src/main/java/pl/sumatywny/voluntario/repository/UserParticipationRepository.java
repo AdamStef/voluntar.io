@@ -1,5 +1,6 @@
 package pl.sumatywny.voluntario.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import pl.sumatywny.voluntario.dtos.user.ScoreDTO;
@@ -26,6 +27,8 @@ public interface UserParticipationRepository extends JpaRepository<UserParticipa
 //    List<ScoreDTO> findTopScores(int limit);
 //    List<UserParticipation> findByUserId(Long userId);
     Optional<UserParticipation> findByUserIdAndEventId(Long userId, Long eventId);
+
+    @EntityGraph(attributePaths = {"user"})
     List<UserParticipation> findByEventId(Long eventId);
     List<UserParticipation> findByUserId(Long userId);
 

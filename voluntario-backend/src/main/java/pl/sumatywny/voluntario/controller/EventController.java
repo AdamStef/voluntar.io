@@ -58,8 +58,7 @@ public class EventController {
 
     @GetMapping("/{eventId}/participants")
     public ResponseEntity<?> allParticipants(@PathVariable("eventId") Long eventId) {
-        var event = eventService.getEvent(eventId);
-        return ResponseEntity.ok().body(eventService.getUsersParticipating(event));
+        return ResponseEntity.ok().body(eventService.getUsersParticipating(eventId));
     }
 
     @DeleteMapping("/{eventId}/participants/{participantId}")

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.dtos.event.EventRequestDTO;
 import pl.sumatywny.voluntario.dtos.event.EventResponseDTO;
+import pl.sumatywny.voluntario.dtos.user.ParticipatingUserDTO;
 import pl.sumatywny.voluntario.dtos.user.UserEvaluationDTO;
 import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.exception.CouldNotSaveException;
@@ -121,8 +122,16 @@ public class EventService {
         eventRepository.delete(event);
     }
 
-    public List<User> getUsersParticipating(Event event) {
-        return event.getParticipations().stream().map(UserParticipation::getUser).toList();
+    public List<ParticipatingUserDTO> getUsersParticipating(Long eventId) {
+        var participations = userParticipationRepository.findByEventId(eventId);
+        return participations.stream().map(UserParticipation::getUser).map(user -> ParticipatingUserDTO.builder()
+                .userId(user.getId())
+                .eventId(eventId)
+                .email(user.getEmail())
+                .name(user.getFirstName() + " " + user.getLastName())
+                .phoneNumber(user.getPhoneNumber())
+                .gender(user.getGender())
+                .build()).toList();
     }
 
     public List<Event> getAllEvents() {

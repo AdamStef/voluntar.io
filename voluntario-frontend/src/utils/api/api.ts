@@ -12,6 +12,7 @@ import {
   UserType,
   EventFormType,
   LocationType,
+  ParticipantType,
   // eventSchema,
 } from '../types/types';
 import { isValidDateString } from '../helpers';
@@ -101,6 +102,11 @@ export const removeParticipantFromEvent = async ({
   participantId,
 }: EventParticipantParams) =>
   axiosClient.delete(`/events/${eventId}/participants/${participantId}`);
+
+export const getEventParticipants = async (eventId: number) =>
+  axiosClient
+    .get<ParticipantType[]>(`/events/${eventId}/participants`)
+    .then((res) => res.data);
 
 export const removeEvent = async (id: string) =>
   axiosClient.delete<EventType>(`/events/${id}`);

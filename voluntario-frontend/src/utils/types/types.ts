@@ -108,17 +108,12 @@ export interface OrganizationType {
 }
 
 export type ParticipantType = {
-  id: number;
+  userId: number;
+  eventId: number;
   email: string;
-  role: Role;
-  firstName: string;
-  lastName: string;
+  name: string;
   phoneNumber: string;
   gender: 'male' | 'female';
-  eventId: number;
-  eventName: string;
-  eventStartDate: Date;
-  eventEndDate: Date;
 };
 
 export type EventFormType = {

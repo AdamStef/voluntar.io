@@ -46,29 +46,24 @@ export const EventListOrganizer = () => {
   console.log(groupedEventsByCompleted);
 
   return (
-    <>
-      <div className="flex flex-col gap-5">
-        {/* {events.map((event) => (
-          <EventOrganizer key={event.id} event={event} />
-        ))} */}
-        {groupedEventsByCompleted[Completed.notCompleted] && (
-          <>
-            <h2 className="text-xl">Niezakończone</h2>
-            {groupedEventsByCompleted[Completed.notCompleted].map((event) => (
-              <EventOrganizer key={event.id} event={event} />
-            ))}
-          </>
-        )}
-        <hr />
-        {groupedEventsByCompleted[Completed.completed] && (
-          <>
-            <h2 className="text-xl">Zakończone</h2>
-            {groupedEventsByCompleted[Completed.completed].map((event) => (
-              <EventOrganizer key={event.id} event={event} />
-            ))}
-          </>
-        )}
-      </div>
-    </>
+    <div className="flex flex-col gap-5">
+      {groupedEventsByCompleted[Completed.notCompleted] && (
+        <>
+          <h2 className="text-xl">Niezakończone</h2>
+          {groupedEventsByCompleted[Completed.notCompleted].map((event) => (
+            <EventOrganizer key={event.id} event={event} />
+          ))}
+        </>
+      )}
+      <hr />
+      {groupedEventsByCompleted[Completed.completed] && (
+        <>
+          <h2 className="text-xl">Zakończone</h2>
+          {groupedEventsByCompleted[Completed.completed].map((event) => (
+            <EventOrganizer key={event.id} event={event} />
+          ))}
+        </>
+      )}
+    </div>
   );
 };

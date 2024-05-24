@@ -13,6 +13,7 @@ import {
   EventFormType,
   LocationType,
   ParticipantType,
+  ScoreType,
   // eventSchema,
 } from '../types/types';
 import { isValidDateString } from '../helpers';
@@ -127,3 +128,7 @@ export const postEventPost = async ({
 
 export const deletePost = async (postId: number) =>
   axiosClient.delete(`/posts/${postId}`);
+
+// Leaderboard
+export const getLeaderboard = async (): Promise<Page<ScoreType>> =>
+  axiosClient.get<Page<ScoreType>>('/scores').then((res) => res.data);

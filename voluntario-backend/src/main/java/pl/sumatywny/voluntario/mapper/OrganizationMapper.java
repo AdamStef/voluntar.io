@@ -4,7 +4,7 @@ import pl.sumatywny.voluntario.dtos.OrganizationDTO;
 import pl.sumatywny.voluntario.model.user.Organization;
 
 public class OrganizationMapper {
-    public static OrganizationDTO map(Organization organization) {
+    public static OrganizationDTO mapToDTO(Organization organization) {
         return OrganizationDTO.builder()
                 .id(organization.getId())
                 .name(organization.getName())

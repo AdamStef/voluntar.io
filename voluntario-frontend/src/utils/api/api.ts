@@ -11,7 +11,7 @@ import {
   EventType,
   UserType,
   EventFormType,
-  EventLocationType,
+  LocationType,
   // eventSchema,
 } from '../types/types';
 import { isValidDateString } from '../helpers';
@@ -69,11 +69,11 @@ export const postRegisterOrganization = async (
 export const postEvent = async (data: EventFormType) =>
   axiosClient.post('/events', data);
 
-export const postLocation = async (data: EventLocationType) =>
+export const postLocation = async (data: LocationType) =>
   axiosClient.post('/locations', data);
 
 export const getLocations = async () =>
-  axiosClient.get<EventLocationType[]>('/locations').then((res) => res.data);
+  axiosClient.get<LocationType[]>('/locations').then((res) => res.data);
 
 export const getEvents = async (page: number, search: string) =>
   axiosClient

@@ -1,5 +1,6 @@
 package pl.sumatywny.voluntario.service.impl;
 
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.dtos.post.PostRequestDTO;
@@ -9,6 +10,7 @@ import pl.sumatywny.voluntario.model.event.Event;
 import pl.sumatywny.voluntario.model.post.Post;
 import pl.sumatywny.voluntario.model.user.Organization;
 import pl.sumatywny.voluntario.model.user.User;
+import pl.sumatywny.voluntario.repository.EventRepository;
 import pl.sumatywny.voluntario.repository.PostRepository;
 
 import java.util.List;
@@ -18,9 +20,11 @@ import java.util.Objects;
 @Service
 public class PostService {
     private final PostRepository postRepository;
+    private final EventRepository eventRepository;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, EventRepository eventRepository) {
         this.postRepository = postRepository;
+        this.eventRepository = eventRepository;
     }
 
     public Post createPost(PostRequestDTO postRequestDTO, Organization organization, Event event) {
@@ -45,12 +49,13 @@ public class PostService {
         return postRepository.findAllByOrganization(organization);
     }
 
-    public List<Post> getAllPostsByEvent(Event event) {
-        var posts = postRepository.findAllByEvent(event, Sort.by(Sort.Direction.DESC, "createdAt"));
-        if (posts.isEmpty()) {
-            throw new NoSuchElementException("No posts found for this event.");
-        }
+    public List<Post> getAllPostsByEvent(Long eventId) {
+        var posts = postRepository.findAllByEventId(eventId, Sort.by(Sort.Direction.DESC, "createdAt"));
+//        if (posts.isEmpty()) {
+//            throw new NoSuchElementException("No posts found for this event.");
+//        }
 
+        posts.sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
         return posts;
     }
 

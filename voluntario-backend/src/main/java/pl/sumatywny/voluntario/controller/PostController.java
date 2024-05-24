@@ -53,8 +53,8 @@ public class PostController {
 
     @GetMapping("/events/{eventId}/posts")
     public ResponseEntity<?> allPostsByEvent(@PathVariable("eventId") Long eventId) {
-        var event = eventService.getEvent(eventId);
-        var posts = postService.getAllPostsByEvent(event);
+//        var event = eventService.getEvent(eventId);
+        var posts = postService.getAllPostsByEvent(eventId);
         return ResponseEntity.ok().body(posts.stream().map(PostResponseDTO::mapToDto).toList());
     }
 

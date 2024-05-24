@@ -25,7 +25,7 @@ export const OrganizerHomePage = () => {
         <p className="my-2 text-center text-xl font-bold">
           Zapisani wolontariusze
         </p>
-        <ParticipantList />
+        {/* <ParticipantList />  TODO: FIX*/}
       </div>
     </div>
   );

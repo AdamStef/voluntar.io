@@ -5,7 +5,6 @@ import lombok.Data;
 import pl.sumatywny.voluntario.dtos.OrganizationDTO;
 import pl.sumatywny.voluntario.mapper.OrganizationMapper;
 import pl.sumatywny.voluntario.model.post.Post;
-import pl.sumatywny.voluntario.model.user.Organization;
 
 import java.time.LocalDateTime;
 
@@ -24,7 +23,7 @@ public class PostResponseDTO {
         return PostResponseDTO.builder()
                 .id(post.getId())
                 .content(post.getContent())
-                .organization(OrganizationMapper.map(post.getOrganization()))
+                .organization(OrganizationMapper.mapToDTO(post.getOrganization()))
                 .eventId(post.getEvent().getId())
                 .wasEdited(post.isWasEdited())
                 .createdAt(post.getCreatedAt())

@@ -72,8 +72,8 @@ export type EventType = {
   organization: OrganizationType;
   participants: ParticipantType[];
   numberOfVolunteersNeeded: number;
-  startDate: Date; // ISO 8601 string format
-  endDate: Date; // ISO 8601 string format
+  startDate: Date;
+  endDate: Date;
   location: LocationType;
   isCompleted: boolean;
 };
@@ -84,19 +84,6 @@ export type UserParticipationType = {
   rating: number;
   comment: string;
 };
-
-// export type OrganizationType = {
-//   id: number;
-//   email: string;
-//   role: Role;
-//   firstName: string;
-//   lastName: string;
-//   phoneNumber: string;
-//   krs: string;
-//   name: string;
-//   description: string;
-//   website: string;
-// };
 
 export interface OrganizationType {
   id: number;

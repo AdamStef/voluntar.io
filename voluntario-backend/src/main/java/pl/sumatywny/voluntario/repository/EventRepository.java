@@ -18,17 +18,19 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @EntityGraph(attributePaths = {"participations", "organization", "location"})
     Optional<Event> findById(Long id);
 
-    @Query("SELECT e FROM Event e JOIN FETCH e.organization WHERE e.organization.id = :id")
+    @Query("SELECT e FROM Event e JOIN FETCH e.organization WHERE e.organization.id = :id ORDER BY e.startDate ASC")
     List<Event> findAllByOrganizationId(Long id);
 
-    @Query("SELECT e FROM Event e LEFT JOIN FETCH e.participations")
+    @Query("SELECT e FROM Event e LEFT JOIN FETCH e.participations ORDER BY e.startDate ASC")
 //    @EntityGraph(attributePaths = {"participations", "organization", "location"})
     List<Event> findAllWithParticipants();
 
     @Query("""
             SELECT e FROM Event e LEFT JOIN FETCH e.participations
-                WHERE (CASE WHEN :name IS NULL OR :name = '' THEN true END)
-                OR lower(e.name) LIKE lower(concat('%', :name, '%'))
+                WHERE ((CASE WHEN :name IS NULL OR :name = '' THEN true END)
+                OR lower(e.name) LIKE lower(concat('%', :name, '%')))
+                AND e.startDate >= current_date
+                ORDER BY e.startDate ASC
             """)
     Page<Event> findAllByNameWithParticipantsPageable(String name, Pageable pageable);
 }

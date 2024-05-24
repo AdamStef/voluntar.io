@@ -7,9 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.dtos.event.EventRequestDTO;
+import pl.sumatywny.voluntario.dtos.event.EventResponseDTO;
+import pl.sumatywny.voluntario.dtos.user.ParticipatingUserDTO;
 import pl.sumatywny.voluntario.dtos.user.UserEvaluationDTO;
 import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.exception.CouldNotSaveException;
+import pl.sumatywny.voluntario.mapper.OrganizationMapper;
+import pl.sumatywny.voluntario.mapper.UserParticipationMapper;
 import pl.sumatywny.voluntario.model.event.Event;
 import pl.sumatywny.voluntario.model.event.Location;
 import pl.sumatywny.voluntario.model.user.Organization;
@@ -20,6 +24,7 @@ import pl.sumatywny.voluntario.repository.LocationRepository;
 import pl.sumatywny.voluntario.repository.UserParticipationRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -118,23 +123,42 @@ public class EventService {
         eventRepository.delete(event);
     }
 
-    public List<User> getUsersParticipating(Event event) {
-        return event.getParticipations().stream().map(UserParticipation::getUser).toList();
+    public List<ParticipatingUserDTO> getUsersParticipating(Long eventId) {
+        var participations = userParticipationRepository.findByEventId(eventId);
+        return participations.stream().map(UserParticipation::getUser).map(user -> ParticipatingUserDTO.builder()
+                .userId(user.getId())
+                .eventId(eventId)
+                .email(user.getEmail())
+                .name(user.getFirstName() + " " + user.getLastName())
+                .phoneNumber(user.getPhoneNumber())
+                .gender(user.getGender())
+                .build()).toList();
     }
 
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
     }
 
-    public List<Event> getOrganizationEvents(Organization organization) {
-        return eventRepository.findAllByOrganizationId(organization.getId());
+    @Transactional
+    public List<EventResponseDTO> getAllEventsDTO() {
+        return eventRepository
+                .findAllWithParticipants()
+                .stream()
+                .map(this::getEventResponse)
+                .toList();
+    }
+
+    @Transactional
+    public List<EventResponseDTO> getOrganizationEvents(Organization organization) {
+        return eventRepository
+                .findAllByOrganizationId(organization.getId())
+                .stream()
+                .map(this::getEventResponse)
+                .toList();
     }
 
     public Page<Event> getAllEventsPageable(String search, Pageable pageable) {
-        if (!search.isEmpty()) {
-            return eventRepository.findAllByNameContainingIgnoreCase(search, pageable);
-        }
-        return eventRepository.findAll(pageable);
+        return eventRepository.findAllByNameWithParticipantsPageable(search, pageable);
     }
 
     public Event getEvent(Long eventId) {
@@ -144,10 +168,11 @@ public class EventService {
         return event;
     }
 
-    private Location getEventLocation(Long eventId) {
-        Event event = eventRepository.findById(eventId)
+    public EventResponseDTO getEventDTO(Long eventId) {
+        var event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventId)));
-        return event.getLocation();
+//        Hibernate.initialize(event.getOrganization());
+        return getEventResponse(event);
     }
 
     public Location assignNewLocation(Long eventId, Long locationId) {
@@ -163,7 +188,6 @@ public class EventService {
         }
         return location;
     }
-
 
     @Transactional
     public void completeEvent(Event event, List<UserEvaluationDTO> completeEventDTO) {
@@ -189,6 +213,33 @@ public class EventService {
 
     private boolean isUserVolunteer(User user) {
         return user.getRole().getRole() == Role.ROLE_VOLUNTEER;
+    }
+
+    private Location getEventLocation(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventId)));
+        return event.getLocation();
+    }
+
+    private EventResponseDTO getEventResponse(Event event) {
+        var participants = userParticipationRepository.findByEventId(event.getId());
+        return EventResponseDTO.builder()
+                .id(event.getId())
+                .name(event.getName())
+                .description(event.getDescription())
+                .organization(OrganizationMapper.mapToDTO(event.getOrganization()))
+                .participants(
+                        participants != null ?
+                                participants.stream().map(UserParticipationMapper::mapToDTO).toList()
+                        :
+                                new ArrayList<>()
+                )
+                .numberOfVolunteersNeeded(event.getNumberOfVolunteersNeeded())
+                .startDate(event.getStartDate())
+                .endDate(event.getEndDate())
+                .location(event.getLocation())
+                .isCompleted(event.getIsCompleted())
+                .build();
     }
 }
 

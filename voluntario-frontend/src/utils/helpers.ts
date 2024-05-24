@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { EventLocationType, EventType } from './types/types';
+import { LocationType, EventType } from './types/types';
 import { LatLngTuple } from 'leaflet';
 // export function isValidDateString(dateString: unknown): boolean {
 //   // return typeof dateString === 'string' && !isNaN(Date.parse(dateString));
@@ -20,7 +20,7 @@ export function isValidDateString(dateString: unknown): boolean {
   return parsedDate.isValid;
 }
 
-export function getLocationString(location?: EventLocationType): string {
+export function getLocationString(location?: LocationType): string {
   if (!location) return 'Nieznana lokalizacja';
   return `${location.name}, ul ${location.street} ${location.number} ${location.city}`;
 }

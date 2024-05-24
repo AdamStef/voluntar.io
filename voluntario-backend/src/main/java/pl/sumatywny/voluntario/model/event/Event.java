@@ -30,7 +30,7 @@ public class Event extends AuditingEntity {
     private Long id;
     private String name;
     private String description;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Organization organization;
     private int numberOfVolunteersNeeded;
 
@@ -43,7 +43,7 @@ public class Event extends AuditingEntity {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<Post> posts;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Location location;
 
     private Boolean isCompleted = false;

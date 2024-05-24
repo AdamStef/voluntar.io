@@ -1,9 +1,6 @@
 package pl.sumatywny.voluntario.model.user;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import pl.sumatywny.voluntario.model.AuditingEntity;
 import pl.sumatywny.voluntario.model.event.Event;
@@ -21,8 +18,10 @@ public class UserParticipation extends AuditingEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne
+    @JoinColumn(name = "event_id")
     private Event event;
 //    private boolean isOrganizer;
 //    private boolean isParticipant;

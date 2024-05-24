@@ -58,13 +58,17 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
   activeIndex,
   setActiveIndex,
 }) => {
+  if (!event.participants) {
+    event.participants = [];
+  }
+
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
   const [canJoin, setCanJoin] = useState<boolean>(
-    event.participants.every((p) => p.id !== user?.id),
+    event.participants.every((p) => p.userId !== user?.id),
   );
   const [canLeave, setCanLeave] = useState<boolean>(
-    event.participants.some((p) => p.id === user?.id),
+    event.participants.some((p) => p.userId === user?.id),
   );
 
   const { mutate: addParticipantMutate } = useMutation({
@@ -84,11 +88,13 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
   });
 
   useEffect(() => {
-    setCanJoin(
-      event.participants.every((p) => p.id !== user?.id) &&
-        event.participants.length < event.numberOfVolunteersNeeded,
-    );
-    setCanLeave(event.participants.some((p) => p.id === user?.id));
+    if (event.participants) {
+      setCanJoin(
+        event.participants.every((p) => p.userId !== user?.id) &&
+          event.participants.length < event.numberOfVolunteersNeeded,
+      );
+      setCanLeave(event.participants.some((p) => p.userId === user?.id));
+    }
   }, [event.participants, user, event.numberOfVolunteersNeeded]);
 
   const handleAddParticipant = () => {

@@ -7,23 +7,26 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '../ui/pagination';
-import { Page } from '@/utils/types/types';
 
-interface PaginationProps<T> {
-  page: Page<T>;
+type Page = {
+  number: number;
+  totalPages: number;
+};
+
+interface PaginationProps {
+  page: Page;
   onPageChange: (page: number) => void;
 }
 
-export const PaginationComponent = <T,>({
+export const PaginationComponent = ({
   page,
   onPageChange,
-}: PaginationProps<T>) => {
-  const {
-    number: currentPage,
-    totalPages,
-    first: isFirstPage,
-    last: isLastPage,
-  } = page;
+}: PaginationProps) => {
+  const { number: currentPage, totalPages } = page;
+
+  const isFirstPage = currentPage === 0;
+  const isLastPage = currentPage === totalPages - 1;
+
   const displayCurrentPage = currentPage + 1;
 
   const changePage = (page: number) => {

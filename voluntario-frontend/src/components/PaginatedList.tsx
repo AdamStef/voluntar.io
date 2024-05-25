@@ -1,33 +1,33 @@
-import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { PaginationComponent } from './events/PaginationComponent';
-import { Page } from '@/utils/types/types';
 
-interface PaginatedListProps<T> {
-  page: Page<T>;
+type Page = {
+  number: number;
+  totalPages: number;
+};
+
+interface PaginatedListProps {
+  page: Page;
   changePage: (page: number) => void;
 }
 
-const PaginatedList = <T,>({ page, changePage }: PaginatedListProps<T>) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const query = new URLSearchParams(location.search);
-  const initialPage = parseInt(query.get('page') || '0');
-
-  useEffect(() => {
-    if (page.number !== initialPage) {
-      navigate(`?page=${initialPage}`);
-    }
-  }, [page.number, navigate, initialPage]);
+const PaginatedList = ({ page, changePage }: PaginatedListProps) => {
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handlePageChange = (newPage: number) => {
     changePage(newPage);
-    navigate(`?page=${newPage}`);
+    setSearchParams({ page: newPage.toLocaleString() });
   };
 
   return (
     <>
-      <PaginationComponent<T> page={page} onPageChange={handlePageChange} />
+      <PaginationComponent
+        page={{
+          number: Number(searchParams.get('page')) ?? 0,
+          totalPages: page.totalPages,
+        }}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

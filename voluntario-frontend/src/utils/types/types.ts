@@ -159,7 +159,7 @@ export type UserEvaluationType = {
   comment: string;
 };
 
-export type Page<T> = {
+export type Page<T = null> = {
   content: T[]; // Array of items in the current page
   pageable: Pageable; // Information about pagination
   totalPages: number; // Total number of pages

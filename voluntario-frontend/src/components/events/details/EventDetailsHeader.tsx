@@ -1,12 +1,12 @@
 import { EventType, Role } from '@/utils/types/types';
 import { CalendarCheck } from 'lucide-react';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { H1 } from '../ui/typography/heading';
+import { H1 } from '../../ui/typography/heading';
 import { getLocationString } from '@/utils/helpers';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Panel } from '../ui/Panel';
+import { Panel } from '../../ui/Panel';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import {
   addParticipantToEvent,
@@ -49,14 +49,14 @@ const TabButton: React.FC<TabButtonProps> = ({
 
 type EventDetailsHeaderProps = {
   event: EventType;
-  activeIndex: number;
-  setActiveIndex: (index: number) => void;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
 };
 
 export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
   event,
-  activeIndex,
-  setActiveIndex,
+  activeTab,
+  setActiveTab,
 }) => {
   if (!event.participants) {
     event.participants = [];
@@ -135,14 +135,14 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
       <div className="mb-1 flex justify-between">
         <div>
           <TabButton
-            isActive={activeIndex === 0}
-            onClick={() => setActiveIndex(0)}
+            isActive={activeTab === 'information'}
+            onClick={() => setActiveTab('information')}
           >
             Informacje
           </TabButton>
           <TabButton
-            isActive={activeIndex === 1}
-            onClick={() => setActiveIndex(1)}
+            isActive={activeTab === 'discussion'}
+            onClick={() => setActiveTab('discussion')}
           >
             Dyskusja
           </TabButton>

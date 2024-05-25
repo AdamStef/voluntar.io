@@ -1,15 +1,15 @@
 import { EventDetailsHeader } from './EventDetailsHeader';
 import { EventDetailsInformation } from './EventDetailsInformation';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { EventDetailsDiscussion } from './EventDetailsDiscussion';
-import { Panel } from '../ui/Panel';
+import { Panel } from '../../ui/Panel';
 import { useGetEvent } from '@/hooks/useGetEvents';
-import { useParams } from 'react-router-dom';
-import { Spinner } from '../ui/Spinner';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Spinner } from '../../ui/Spinner';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import { LatLngTuple } from 'leaflet';
 import { getEventPosition } from '@/utils/helpers';
-import { H3 } from '../ui/typography/heading';
+import { H3 } from '../../ui/typography/heading';
 
 type EventDetailsParams = {
   eventId: string;
@@ -18,7 +18,19 @@ type EventDetailsParams = {
 export const EventDetails = () => {
   const { eventId } = useParams() as EventDetailsParams;
   const { data: event, isError, error, isPending } = useGetEvent(eventId);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const setTab = (tab: string) => {
+    setSearchParams({ tab: tab });
+  };
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && tab !== 'information' && tab !== 'discussion') {
+      navigate('/events/' + eventId, { replace: true });
+    }
+  }, [eventId, searchParams, navigate]);
 
   if (isPending)
     return (
@@ -37,13 +49,18 @@ export const EventDetails = () => {
     <div className="flex flex-col gap-4">
       <EventDetailsHeader
         event={event}
-        activeIndex={activeIndex}
-        setActiveIndex={setActiveIndex}
+        activeTab={searchParams.get('tab') ?? 'information'}
+        setActiveTab={setTab}
       />
       <div className="flex w-full flex-col-reverse gap-2 md:flex-row md:items-start">
         <div className="md:w-2/3">
-          {activeIndex === 0 && <EventDetailsInformation event={event} />}
-          {activeIndex === 1 && <EventDetailsDiscussion />}
+          {(searchParams.get('tab') === 'information' ||
+            !searchParams.get('tab')) && (
+            <EventDetailsInformation event={event} />
+          )}
+          {searchParams.get('tab') === 'discussion' && (
+            <EventDetailsDiscussion />
+          )}
         </div>
         <Panel className="z-10 md:w-1/3">
           <H3 className="border-b border-secondary pb-2">

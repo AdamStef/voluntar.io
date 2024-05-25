@@ -1,11 +1,11 @@
 import { ClockIcon, MapPin } from 'lucide-react';
-import { H2, H4 } from '../ui/typography/heading';
+import { H2, H4 } from '../../ui/typography/heading';
 import { FaPeopleGroup } from 'react-icons/fa6';
 import { RiOrganizationChart } from 'react-icons/ri';
 import { EventType } from '@/utils/types/types';
 import { getLocationString } from '@/utils/helpers';
-import { Panel } from '../ui/Panel';
-import { Progress } from '../ui/progress';
+import { Panel } from '../../ui/Panel';
+import { Progress } from '../../ui/progress';
 import moment from 'moment';
 
 const Info: React.FC<{

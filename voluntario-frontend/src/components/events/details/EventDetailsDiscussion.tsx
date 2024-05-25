@@ -1,13 +1,13 @@
 import { useParams } from 'react-router-dom';
-import { Post } from '../posts/Post';
+import { Post } from '../../posts/Post';
 import { useState } from 'react';
 import { EventPostType, Role } from '@/utils/types/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getEventPosts, postEventPost } from '@/utils/api/api';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
+import { Input } from '../../ui/input';
+import { Button } from '../../ui/button';
 import { useAuthContext } from '@/hooks/useAuthContext';
-import { Spinner } from '../ui/Spinner';
+import { Spinner } from '../../ui/Spinner';
 
 type EventDetailsDiscussionProps = {
   eventId: string;

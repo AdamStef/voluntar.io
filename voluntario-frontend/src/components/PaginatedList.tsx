@@ -1,4 +1,3 @@
-// PaginatedList.tsx
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PaginationComponent } from './events/PaginationComponent';
@@ -12,15 +11,11 @@ interface PaginatedListProps<T> {
 const PaginatedList = <T,>({ page, changePage }: PaginatedListProps<T>) => {
   const navigate = useNavigate();
   const location = useLocation();
-  // const { page: initialPage } = useParams();
   const query = new URLSearchParams(location.search);
-  console.log('Query:', query.get('page'));
   const initialPage = parseInt(query.get('page') || '0');
-  // const [currentPage, setCurrentPage] = useState<number>(initialPage);
 
   useEffect(() => {
     if (page.number !== initialPage) {
-      console.log('Navigating to:', initialPage);
       navigate(`?page=${initialPage}`);
     }
   }, [page.number, navigate, initialPage]);
@@ -33,7 +28,6 @@ const PaginatedList = <T,>({ page, changePage }: PaginatedListProps<T>) => {
   return (
     <>
       <PaginationComponent<T> page={page} onPageChange={handlePageChange} />
-      {/* <Pagination currentPage={currentPage} onPageChange={handlePageChange} /> */}
     </>
   );
 };

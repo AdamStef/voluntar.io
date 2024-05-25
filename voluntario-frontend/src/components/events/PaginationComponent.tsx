@@ -27,7 +27,6 @@ export const PaginationComponent = <T,>({
   const displayCurrentPage = currentPage + 1;
 
   const changePage = (page: number) => {
-    console.log('Changing page to:', page);
     onPageChange(page);
     window.scrollTo(0, 0);
   };

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.sumatywny.voluntario.dtos.complaint.ComplaintRequestDTO;
 import pl.sumatywny.voluntario.dtos.complaint.ComplaintResponseDTO;
+import pl.sumatywny.voluntario.model.complaint.Status;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.ComplaintService;
 
@@ -34,7 +35,7 @@ public class ComplaintController {
     //    @IsAdmin
     @PostMapping("/claim/{complaintID}")
     public ResponseEntity<?> claimComplaint(@PathVariable("complaintID") Long complaintID) {
-        return ResponseEntity.ok().body(complaintService.claimComplaint(complaintID, authService.getUserFromSession().get().getId()));
+        return ResponseEntity.ok().body(complaintService.claimComplaint(complaintID, authService.getUserFromSession().getId()));
     }
 
     //    @IsAdmin
@@ -42,13 +43,28 @@ public class ComplaintController {
     public ResponseEntity<?> resolveComplaint(@PathVariable("complaintID") Long complaintID,
                                               @RequestBody ComplaintResponseDTO complaintResponseDTO) throws IllegalAccessException {
         return ResponseEntity.ok().body(complaintService.resolveComplaint(complaintID, complaintResponseDTO,
-                authService.getUserFromSession().get()));
+                authService.getUserFromSession()));
     }
 
-    //    @IsAdmin
     @PostMapping("/")
     public ResponseEntity<?> createComplaint(@RequestBody ComplaintRequestDTO complaintRequestDTO) {
-        return ResponseEntity.ok().body(complaintService.createComplaint(complaintRequestDTO, authService.getUserFromSession().get()));
+        return ResponseEntity.ok().body(complaintService.createComplaint(complaintRequestDTO, authService.getUserFromSession()));
+    }
+
+    @GetMapping("/resolved")
+    public ResponseEntity<?> getResolvedComplaints() {
+        complaintService.getComplaintsByStatus(Status.RESOLVED);
+        return ResponseEntity.ok().body(complaintService.getComplaintsByStatus(Status.RESOLVED));
+    }
+
+    @GetMapping("/toReview")
+    public ResponseEntity<?> getToReviewComplaints() {
+        return ResponseEntity.ok().body(complaintService.getComplaintsByStatus(Status.TO_REVIEW));
+    }
+
+    @GetMapping("/underReview")
+    public ResponseEntity<?> getUnderReviewComplaints() {
+        return ResponseEntity.ok().body(complaintService.getComplaintsByStatus(Status.UNDER_REVIEW));
     }
 
 

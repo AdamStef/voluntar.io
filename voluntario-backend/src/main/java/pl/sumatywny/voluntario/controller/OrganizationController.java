@@ -21,8 +21,8 @@ public class OrganizationController {
     @PostMapping("/registerOrganization/{userID}")
     public ResponseEntity<?> createOrganization(@RequestBody OrganizationDTO organizationDTO, @PathVariable("userID") Long userID) {
         var user = userService.getUserById(userID);
-        var organization = organizationService.createOrganization(organizationDTO, user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(organization);
+        organizationService.createOrganization(organizationDTO, user);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping()

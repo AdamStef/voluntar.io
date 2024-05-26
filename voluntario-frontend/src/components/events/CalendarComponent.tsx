@@ -2,24 +2,19 @@ import React, { useState, useEffect } from 'react';
 import Calendar, { CalendarProps } from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import classNames from 'classnames';
-import axios from 'axios';
-
-interface Event {
-  id: number;
-  title: string;
-  date: string;
-}
+import { getUserEvents } from '@/utils/api/api';
+import { EventType } from '@/utils/types/types';
 
 const CalendarComponent: React.FC = () => {
   const [date, setDate] = useState<Date | null>(new Date());
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<EventType[]>([]);
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('/api/organization');
-        console.log('Fetched events:', response.data); // debuuuuug
-        setEvents(response.data);
+        const eventsData = await getUserEvents();
+        console.log('Fetched events:', eventsData);
+        setEvents(eventsData);
       } catch (error) {
         console.error('Error fetching events:', error);
       }
@@ -46,18 +41,17 @@ const CalendarComponent: React.FC = () => {
     const hasEvent =
       Array.isArray(events) &&
       events.some((event) => {
-        const eventDate = new Date(event.date);
-        console.log('Checking date:', date, 'Event date:', eventDate); // debug dziki któremu sprawdzamy czy daty się zgadzają
+        const eventDate = new Date(event.startDate);
         return (
-          eventDate.getDate() === date.getDate() &&
-          eventDate.getMonth() === date.getMonth() &&
-          eventDate.getFullYear() === date.getFullYear()
+          date.getDate() === eventDate.getDate() &&
+          date.getMonth() === eventDate.getMonth() &&
+          date.getFullYear() === eventDate.getFullYear()
         );
       });
 
     return classNames({
       'bg-green-500 text-white': isToday,
-      'bg-blue-500 text-white': hasEvent,
+      'bg-blue-500 text-white': hasEvent && !isToday,
     });
   };
 

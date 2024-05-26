@@ -1,5 +1,6 @@
 import React from 'react';
 import CalendarComponent from '@/components/events/CalendarComponent';
+// import { EventList } from '@/components/events/EventList.tsx';
 import '@/components/organizer/ParticipantList.tsx';
 // import { EventListOrganizer } from '@/components/events/organizer/EventListOrganizer.tsx';
 
@@ -13,6 +14,9 @@ export const HomePage: React.FC = () => {
         <div className="mt-4 items-center">
           <CalendarComponent />
         </div>
+        {/* <div className="items-right mt-4">
+          <EventList />
+        </div> */}
         {/* <div className="mt-4 items-center">
           <EventListOrganizer />
         </div> */}

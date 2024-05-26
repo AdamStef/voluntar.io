@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { LocationType, EventType, EventStatus } from './types/types';
-import { Events, LatLngTuple } from 'leaflet';
+import { LatLngTuple } from 'leaflet';
 // export function isValidDateString(dateString: unknown): boolean {
 //   // return typeof dateString === 'string' && !isNaN(Date.parse(dateString));
 //   return (

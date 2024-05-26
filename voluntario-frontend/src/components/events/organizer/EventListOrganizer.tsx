@@ -1,18 +1,12 @@
 import { EventOrganizer } from './EventOrganizer.tsx';
-import { Spinner } from '@/components/ui/Spinner.tsx';
-import { getOrganizerEvents } from '@/utils/api/api.ts';
-import { EventStatus, EventType } from '@/utils/types/types.ts';
-import { useQuery } from '@tanstack/react-query';
+import { EventStatus } from '@/utils/types/types.ts';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion.tsx';
-
-interface GroupedEventsType {
-  [key: string]: EventType[];
-}
+import { GroupedEventsType } from '@/pages/organizer/OrganizerHomePage.tsx';
 
 const order = [
   EventStatus.NOT_COMPLETED,
@@ -21,43 +15,15 @@ const order = [
   EventStatus.CANCELED,
 ];
 
-export const EventListOrganizer = () => {
-  const {
-    data: events,
-    isError,
-    isPending,
-  } = useQuery({
-    queryKey: ['organizer', 'events'],
-    queryFn: getOrganizerEvents,
-  });
-
-  if (isPending) return <Spinner className="h-16 w-16" />;
-  if (isError) return <div>Wystąpił błąd podczas pobierania wydarzeń</div>;
-  if (!events || events.length == 0) return <p>Brak wydarzeń</p>;
-
-  const groupedEventsByCompleted: GroupedEventsType = events.reduce(
-    (acc, event) => {
-      const key =
-        EventStatus[event.status.toString() as keyof typeof EventStatus];
-      if (!acc[key]) {
-        acc[key] = [];
-      }
-
-      acc[key].push(event);
-
-      return acc;
-    },
-    {} as GroupedEventsType,
-  );
-
+export const EventListOrganizer = ({
+  eventsGroupedByStatus,
+}: {
+  eventsGroupedByStatus: GroupedEventsType;
+}) => {
   return (
-    <Accordion
-      type="multiple"
-      defaultValue={[EventStatus.NOT_COMPLETED]}
-      // collapsible
-    >
+    <Accordion type="multiple" defaultValue={[EventStatus.NOT_COMPLETED]}>
       {order.map((status) => {
-        const events = groupedEventsByCompleted[status];
+        const events = eventsGroupedByStatus[status];
         if (!events || events.length === 0) return null;
         return (
           <AccordionItem key={status} value={status}>

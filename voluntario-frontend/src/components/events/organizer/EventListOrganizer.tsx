@@ -1,17 +1,25 @@
 import { EventOrganizer } from './EventOrganizer.tsx';
 import { Spinner } from '@/components/ui/Spinner.tsx';
 import { getOrganizerEvents } from '@/utils/api/api.ts';
-import { EventType } from '@/utils/types/types.ts';
+import { EventStatus, EventType } from '@/utils/types/types.ts';
 import { useQuery } from '@tanstack/react-query';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion.tsx';
 
 interface GroupedEventsType {
   [key: string]: EventType[];
 }
 
-enum Completed {
-  completed = 'completed',
-  notCompleted = 'not completed',
-}
+const order = [
+  EventStatus.NOT_COMPLETED,
+  EventStatus.COMPLETED,
+  EventStatus.EVALUATED,
+  EventStatus.CANCELED,
+];
 
 export const EventListOrganizer = () => {
   const {
@@ -29,9 +37,8 @@ export const EventListOrganizer = () => {
 
   const groupedEventsByCompleted: GroupedEventsType = events.reduce(
     (acc, event) => {
-      const key = event.isCompleted
-        ? Completed.completed
-        : Completed.notCompleted;
+      const key =
+        EventStatus[event.status.toString() as keyof typeof EventStatus];
       if (!acc[key]) {
         acc[key] = [];
       }
@@ -43,27 +50,29 @@ export const EventListOrganizer = () => {
     {} as GroupedEventsType,
   );
 
-  console.log(groupedEventsByCompleted);
-
   return (
-    <div className="flex flex-col gap-5">
-      {groupedEventsByCompleted[Completed.notCompleted] && (
-        <>
-          <h2 className="text-xl">Niezakończone</h2>
-          {groupedEventsByCompleted[Completed.notCompleted].map((event) => (
-            <EventOrganizer key={event.id} event={event} />
-          ))}
-        </>
-      )}
-      <hr />
-      {groupedEventsByCompleted[Completed.completed] && (
-        <>
-          <h2 className="text-xl">Zakończone</h2>
-          {groupedEventsByCompleted[Completed.completed].map((event) => (
-            <EventOrganizer key={event.id} event={event} />
-          ))}
-        </>
-      )}
-    </div>
+    <Accordion
+      type="multiple"
+      defaultValue={[EventStatus.NOT_COMPLETED]}
+      // collapsible
+    >
+      {order.map((status) => {
+        const events = groupedEventsByCompleted[status];
+        if (!events || events.length === 0) return null;
+        return (
+          <AccordionItem key={status} value={status}>
+            <AccordionTrigger className="text-lg font-medium">
+              {status}
+            </AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-5">
+              {events &&
+                events.map((event) => (
+                  <EventOrganizer key={event.id} event={event} />
+                ))}
+            </AccordionContent>
+          </AccordionItem>
+        );
+      })}
+    </Accordion>
   );
 };

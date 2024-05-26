@@ -3,7 +3,6 @@ package pl.sumatywny.voluntario.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.dtos.user.ScoreDTO;
@@ -16,7 +15,6 @@ import pl.sumatywny.voluntario.repository.UserParticipationRepository;
 import pl.sumatywny.voluntario.repository.UserRepository;
 import pl.sumatywny.voluntario.service.UserService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -63,7 +61,7 @@ public class LeaderboardService {
         }
 
         var completedEventsSize = user.getParticipations().stream()
-                .filter(participation -> participation.getEvent().getIsCompleted())
+                .filter(participation -> participation.getEvent().getStatus().isFinished())
                 .count();
 
         score.setTotalPoints(score.getTotalPoints() + evaluation.getRating());
@@ -79,7 +77,7 @@ public class LeaderboardService {
         }
 
         var completedEvents = user.getParticipations().stream()
-                .filter(participation -> participation.getEvent().getIsCompleted())
+                .filter(participation -> participation.getEvent().getStatus().isFinished())
                 .toList();
 
         int points = completedEvents.stream()

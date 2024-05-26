@@ -12,6 +12,7 @@ import { getEventPosition } from '@/utils/helpers';
 import EventIcon from '@/assets/icons/event-marker-icon.svg';
 import { EventType } from '@/utils/types/types';
 import PaginatedList from '../PaginatedList';
+import { useSearchParams } from 'react-router-dom';
 
 const customMarkerIcon = new Icon({
   iconUrl: EventIcon,
@@ -19,7 +20,10 @@ const customMarkerIcon = new Icon({
 });
 
 export const EventList = () => {
-  const [page, setPage] = useState<number>(0);
+  const [searchParams] = useSearchParams();
+  const [page, setPage] = useState<number>(
+    Number(searchParams.get('page')) || 0,
+  );
   const [showMap, setShowMap] = useState(false);
   const search = selectSearch(useAppSelector((state) => state));
   const { data, isError, isPending } = useQuery({

@@ -40,7 +40,9 @@ export const Participants = () => {
         className="my-2"
       />
       {selectedOption != null ? (
-        <ParticipantList eventId={selectedOption.value} />
+        <ParticipantList
+          event={events.find((event) => event.id === selectedOption.value)!}
+        />
       ) : (
         <p>Nie wybrano wydarzenia</p>
       )}

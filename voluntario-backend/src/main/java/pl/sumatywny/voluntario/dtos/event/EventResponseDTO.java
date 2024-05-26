@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import pl.sumatywny.voluntario.dtos.OrganizationDTO;
 import pl.sumatywny.voluntario.dtos.user.UserParticipationDTO;
+import pl.sumatywny.voluntario.enums.EventStatus;
 import pl.sumatywny.voluntario.model.event.Location;
 
 import java.time.LocalDateTime;
@@ -23,5 +24,5 @@ public class EventResponseDTO {
     private LocalDateTime endDate;
 //    private List<PostResponseDTO> posts;
     private Location location;
-    private Boolean isCompleted;
+    private EventStatus status;
 }

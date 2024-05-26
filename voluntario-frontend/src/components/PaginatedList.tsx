@@ -19,6 +19,8 @@ const PaginatedList = ({ page, changePage }: PaginatedListProps) => {
     setSearchParams({ page: newPage.toLocaleString() });
   };
 
+  console.log('page', searchParams.get('page'));
+
   return (
     <>
       <PaginationComponent

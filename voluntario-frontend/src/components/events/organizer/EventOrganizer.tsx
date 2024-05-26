@@ -1,11 +1,15 @@
 import { cn } from '@/lib/utils.ts';
-import { EventType } from '@/utils/types/types.ts';
+import { EventStatus, EventType } from '@/utils/types/types.ts';
 import React from 'react';
 import { H3 } from '../../ui/typography/heading.tsx';
 import { Calendar, MapPin, Info } from 'lucide-react';
 import { Button } from '../../ui/button.tsx';
 import { Link } from 'react-router-dom';
-import { getLocationString } from '@/utils/helpers.ts';
+import {
+  getEnumValue,
+  getLocationString,
+  isEventFinished,
+} from '@/utils/helpers.ts';
 import { Progress } from '../../ui/progress.tsx';
 import { removeEvent } from '@/utils/api/api.ts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -29,8 +33,6 @@ export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
 
   function deleteEvent() {
     mutate(event.id.toString());
-    // removeEvent(String(event.id));
-    // setDeleted(true);
   }
 
   // event.startDate = new Date(event.startDate);
@@ -92,9 +94,16 @@ export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
         <Button asChild className="">
           <Link to={`/events/${event.id}`}>Zobacz więcej</Link>
         </Button>
-        <Button variant={'destructive'} className="" onClick={deleteEvent}>
-          Usuń wydarzenie
-        </Button>
+        {/* {`${getEnumValue(EventStatus, event.status)} ${isEventFinished(getEnumValue(EventStatus, event.status))}`} */}
+        {!isEventFinished(getEnumValue(EventStatus, event.status)) && (
+          <Button variant={'destructive'} className="" onClick={deleteEvent}>
+            Usuń wydarzenie
+          </Button>
+        )}
+        {/* {getEnumValue(EventStatus, event.status)} */}
+        {getEnumValue(EventStatus, event.status) == EventStatus.COMPLETED && (
+          <Button className="">Oceń uczestników</Button>
+        )}
       </div>
     </div>
   );

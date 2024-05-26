@@ -85,8 +85,7 @@ public class EventController {
     public ResponseEntity<?> allEvents(
             @RequestParam(name = "search", required = false, defaultValue = "") String search,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok()
-                .body(eventService.getAllEventsPageable(search, pageable).map(EventResponseMapper::mapToDTO));
+        return ResponseEntity.ok().body(eventService.getAllEventsPageable(search, pageable));
     }
 
     @GetMapping("/all")

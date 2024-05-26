@@ -1,3 +1,22 @@
-export const HomePage = () => {
-  return <div>HomePage</div>;
+import React from 'react';
+import CalendarComponent from '@/components/events/CalendarComponent';
+import '@/components/organizer/ParticipantList.tsx';
+// import { EventListOrganizer } from '@/components/events/organizer/EventListOrganizer.tsx';
+
+export const HomePage: React.FC = () => {
+  return (
+    <div className="container mt-5 flex flex-col gap-3 md:flex-row">
+      <div className="m-4 flex flex-col md:w-3/4">
+        <div className="flex items-center justify-between gap-2">
+          <p className="my-3 text-left text-2xl font-bold">Kalendarz</p>
+        </div>
+        <div className="mt-4 items-center">
+          <CalendarComponent />
+        </div>
+        {/* <div className="mt-4 items-center">
+          <EventListOrganizer />
+        </div> */}
+      </div>
+    </div>
+  );
 };

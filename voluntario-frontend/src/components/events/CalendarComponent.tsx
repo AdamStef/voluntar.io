@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Calendar, { CalendarProps } from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import classNames from 'classnames';
+import axios from 'axios';
 
 interface Event {
   id: number;
@@ -16,9 +17,9 @@ const CalendarComponent: React.FC = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('/api/organization'); // chyba ten endpoint
-        const data = await response.json();
-        setEvents(data);
+        const response = await axios.get('/api/organization');
+        console.log('Fetched events:', response.data); // debuuuuug
+        setEvents(response.data);
       } catch (error) {
         console.error('Error fetching events:', error);
       }
@@ -36,14 +37,27 @@ const CalendarComponent: React.FC = () => {
   };
 
   const tileClassName = ({ date }: { date: Date }) => {
-    const dateString = date.toISOString().split('T')[0];
-    const today = new Date().toISOString().split('T')[0];
+    const currentDate = new Date();
+    const isToday =
+      date.getDate() === currentDate.getDate() &&
+      date.getMonth() === currentDate.getMonth() &&
+      date.getFullYear() === currentDate.getFullYear();
+
+    const hasEvent =
+      Array.isArray(events) &&
+      events.some((event) => {
+        const eventDate = new Date(event.date);
+        console.log('Checking date:', date, 'Event date:', eventDate); // debug dziki któremu sprawdzamy czy daty się zgadzają
+        return (
+          eventDate.getDate() === date.getDate() &&
+          eventDate.getMonth() === date.getMonth() &&
+          eventDate.getFullYear() === date.getFullYear()
+        );
+      });
 
     return classNames({
-      'bg-green-500 text-white': dateString === today,
-      'bg-blue-500 text-white': events.some(
-        (event) => event.date === dateString,
-      ),
+      'bg-green-500 text-white': isToday,
+      'bg-blue-500 text-white': hasEvent,
     });
   };
 
@@ -54,7 +68,7 @@ const CalendarComponent: React.FC = () => {
         value={date}
         tileClassName={tileClassName}
       />
-      <p className="text-center mt-4">
+      <p className="mt-4 text-center">
         <span className="font-bold">Selected Date:</span> {date?.toDateString()}
       </p>
     </div>

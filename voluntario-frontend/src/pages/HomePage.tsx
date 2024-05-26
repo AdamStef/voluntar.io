@@ -1,3 +1,4 @@
+import UserEventsList from '@/components/events/UserEventList';
 import React from 'react';
 import CalendarComponent from '@/components/events/CalendarComponent';
 // import { EventList } from '@/components/events/EventList.tsx';
@@ -13,6 +14,9 @@ export const HomePage: React.FC = () => {
         </div>
         <div className="mt-4 items-center">
           <CalendarComponent />
+        </div>
+        <div className="app-container p-4">
+          <UserEventsList />
         </div>
         {/* <div className="items-right mt-4">
           <EventList />

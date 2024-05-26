@@ -51,7 +51,7 @@ const CalendarComponent: React.FC = () => {
 
     return classNames({
       'bg-green-500 text-white': isToday,
-      'bg-blue-500 text-white': hasEvent && !isToday,
+      'bg-red-500 text-white': hasEvent && !isToday,
     });
   };
 

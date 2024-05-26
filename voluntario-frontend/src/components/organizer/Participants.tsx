@@ -1,32 +1,20 @@
 import { useState } from 'react';
 import Select from 'react-select';
 import { format } from 'date-fns';
-import { useQuery } from '@tanstack/react-query';
-import { getOrganizerEvents } from '@/utils/api/api.ts';
 import { ParticipantList } from './ParticipantList.tsx';
+import { EventType } from '@/utils/types/types.ts';
 
 type Option = {
   value: number;
   label: string;
 };
 
-export const Participants = () => {
+export const Participants = ({ events }: { events: EventType[] }) => {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
-
-  const { data: events, isError } = useQuery({
-    queryKey: ['organizer', 'events'],
-    queryFn: getOrganizerEvents,
-  });
 
   const handleChange = (e: Option | null) => {
     setSelectedOption(e);
   };
-
-  if (isError) {
-    return <div>Wystąpił błąd podczas pobierania wydarzeń</div>;
-  }
-
-  if (!events) return null;
 
   return (
     <div>

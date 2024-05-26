@@ -16,7 +16,7 @@ public class EventResponseMapper {
                 .endDate(event.getEndDate())
 //                .posts(event.getPosts())
                 .location(event.getLocation())
-                .isCompleted(event.getIsCompleted())
+                .status(event.getStatus())
                 .build();
     }
 }

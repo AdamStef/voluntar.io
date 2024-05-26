@@ -27,7 +27,7 @@ public class ComplaintService {
     }
 
     public Complaint createComplaint(ComplaintRequestDTO complaintRequestDTO, User reporter) {
-        User reported = userRepository.findFirstById(complaintRequestDTO.getReportedID());
+        User reported = userRepository.findById(complaintRequestDTO.getReportedID()).get();
         Complaint complaint = Complaint.builder()
                 .reportDate(LocalDateTime.now())
                 .status(Status.TO_REVIEW)

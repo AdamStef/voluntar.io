@@ -1,4 +1,5 @@
 import UserEventsList from '@/components/events/UserEventList';
+import MapEvents from '@/components/events/MapEvents';
 import React from 'react';
 import CalendarComponent from '@/components/events/CalendarComponent';
 // import { EventList } from '@/components/events/EventList.tsx';
@@ -17,6 +18,9 @@ export const HomePage: React.FC = () => {
         </div>
         <div className="app-container p-4">
           <UserEventsList />
+        </div>
+        <div className="app-container p-4">
+          <MapEvents />
         </div>
         {/* <div className="items-right mt-4">
           <EventList />

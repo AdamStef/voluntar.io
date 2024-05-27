@@ -62,9 +62,9 @@ const CalendarComponent: React.FC = () => {
         value={date}
         tileClassName={tileClassName}
       />
-      <p className="mt-4 text-center">
+      {/* <p className="mt-4 text-center">
         <span className="font-bold">Selected Date:</span> {date?.toDateString()}
-      </p>
+      </p> */}
     </div>
   );
 };

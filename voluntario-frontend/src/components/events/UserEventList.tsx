@@ -23,7 +23,7 @@ const UserEventsList: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <p className="text-center">Ładowanie eventów...</p>;
+    return <p className="text-center">Ładowanie wydarzeń...</p>;
   }
 
   if (error) {
@@ -32,9 +32,9 @@ const UserEventsList: React.FC = () => {
 
   return (
     <div className="rounded-lg bg-gray-100 p-4">
-      <h2 className="mb-4 text-2xl font-bold">Twoje eventy</h2>
+      <h2 className="mb-4 text-2xl font-bold">Twoje wydarzenia</h2>
       {events.length === 0 ? (
-        <p className="text-center">Nie znaleziono eventów</p>
+        <p className="text-center">Nie znaleziono wydarzeń</p>
       ) : (
         <ul className="space-y-4">
           {events.map((event) => (
@@ -45,8 +45,9 @@ const UserEventsList: React.FC = () => {
               <h3 className="text-xl font-semibold">{event.name}</h3>
               <p className="mt-2 text-gray-600">{event.description}</p>
               <p className="mt-2 text-gray-500">
-                Rozpoczyna się: {new Date(event.startDate).toLocaleDateString()}{' '}
-                - Kończy się: {new Date(event.endDate).toLocaleDateString()}
+                Rozpoczyna się: {new Date(event.startDate).toLocaleString()}
+                <br />
+                Kończy się: {new Date(event.endDate).toLocaleString()}
               </p>
             </li>
           ))}

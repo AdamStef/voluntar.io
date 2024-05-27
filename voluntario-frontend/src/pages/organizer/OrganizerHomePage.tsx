@@ -3,8 +3,50 @@ import { EventListOrganizer } from '@/components/events/organizer/EventListOrgan
 import { Button } from '@/components/ui/button.tsx';
 import { Link } from 'react-router-dom';
 import { Participants } from '@/components/organizer/Participants.tsx';
+import { useQuery } from '@tanstack/react-query';
+import { getOrganizerEvents } from '@/utils/api/api';
+import { Spinner } from '@/components/ui/Spinner';
+import { EventStatus, EventType } from '@/utils/types/types';
+
+export interface GroupedEventsType {
+  [key: string]: EventType[];
+}
+
+const order = [
+  EventStatus.NOT_COMPLETED,
+  EventStatus.COMPLETED,
+  EventStatus.EVALUATED,
+  EventStatus.CANCELED,
+];
 
 export const OrganizerHomePage = () => {
+  const {
+    data: events,
+    isError,
+    isPending,
+  } = useQuery({
+    queryKey: ['organizer', 'events'],
+    queryFn: getOrganizerEvents,
+  });
+
+  if (isPending) return <Spinner className="h-16 w-16" />;
+  if (isError) return <div>Wystąpił błąd podczas pobierania wydarzeń</div>;
+  if (!events || events.length == 0) return <p>Brak wydarzeń</p>;
+
+  const eventsGroupedByStatus: GroupedEventsType = events
+    .sort((a, b) => a.startDate.getDate() - b.startDate.getDate())
+    .reduce((acc, event) => {
+      const key =
+        EventStatus[event.status.toString() as keyof typeof EventStatus];
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+
+      acc[key].push(event);
+
+      return acc;
+    }, {} as GroupedEventsType);
+
   return (
     <div className="container mt-5 flex flex-col gap-3 md:flex-row">
       <div className="m-4 flex flex-col md:w-2/3">
@@ -18,14 +60,19 @@ export const OrganizerHomePage = () => {
           </Button>
         </div>
         <div className="mt-4 items-center">
-          <EventListOrganizer />
+          <EventListOrganizer eventsGroupedByStatus={eventsGroupedByStatus} />
         </div>
       </div>
       <div className="m-4 md:w-1/3">
         <p className="my-2 text-center text-xl font-bold">
           Zapisani wolontariusze
         </p>
-        <Participants />
+        <Participants
+          events={order
+            .filter((status) => eventsGroupedByStatus[status])
+            .map((status) => eventsGroupedByStatus[status])
+            .flat()}
+        />
       </div>
     </div>
   );

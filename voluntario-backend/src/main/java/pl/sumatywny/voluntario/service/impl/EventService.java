@@ -10,6 +10,7 @@ import pl.sumatywny.voluntario.dtos.event.EventRequestDTO;
 import pl.sumatywny.voluntario.dtos.event.EventResponseDTO;
 import pl.sumatywny.voluntario.dtos.user.ParticipatingUserDTO;
 import pl.sumatywny.voluntario.dtos.user.UserEvaluationDTO;
+import pl.sumatywny.voluntario.enums.EventStatus;
 import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.exception.CouldNotSaveException;
 import pl.sumatywny.voluntario.mapper.OrganizationMapper;
@@ -42,7 +43,6 @@ public class EventService {
     @Transactional
     public void createEvent(EventRequestDTO eventRequestDTO, Organization organization) {
         Location location = locationService.createLocation(eventRequestDTO.getLocation());
-//        UserParticipation userParticipation = new UserParticipation();
 
         Event event = Event.builder()
                 .name(eventRequestDTO.getName())
@@ -53,23 +53,10 @@ public class EventService {
                 .endDate(eventRequestDTO.getEndDate())
                 .location(location)
 //                .participations(List.of(userParticipation))
-                .isCompleted(false)
+                .status(EventStatus.NOT_COMPLETED)
                 .build();
 
         eventRepository.save(event);
-
-//        var savedEvent = eventRepository.save(event);
-//        return EventResponseDTO.builder()
-//                .id(savedEvent.getId())
-//                .name(savedEvent.getName())
-//                .description(savedEvent.getDescription())
-////                .organization(savedEvent.getOrganization())
-//                .numberOfVolunteersNeeded(savedEvent.getNumberOfVolunteersNeeded())
-//                .startDate(savedEvent.getStartDate())
-//                .endDate(savedEvent.getEndDate())
-////                .location(savedEvent.getLocation())
-//                .isCompleted(savedEvent.getIsCompleted())
-//                .build();
     }
 
     @Transactional
@@ -82,7 +69,7 @@ public class EventService {
             throw new IllegalStateException("Cannot add participant to past event.");
         }
 
-        if (event.getIsCompleted()) {
+        if (!event.getStatus().equals(EventStatus.NOT_COMPLETED)) {
             throw new IllegalStateException("Cannot remove participant from completed event.");
         }
 
@@ -100,7 +87,7 @@ public class EventService {
 
     @Transactional
     public void removeParticipant(Event event, User user) {
-        if (event.getIsCompleted()) {
+        if (!event.getStatus().equals(EventStatus.NOT_COMPLETED)) {
             throw new IllegalStateException("Cannot remove participant from completed event.");
         }
 
@@ -157,8 +144,9 @@ public class EventService {
                 .toList();
     }
 
-    public Page<Event> getAllEventsPageable(String search, Pageable pageable) {
-        return eventRepository.findAllByNameWithParticipantsPageable(search, pageable);
+    public Page<EventResponseDTO> getAllEventsPageable(String search, Pageable pageable) {
+        var events = eventRepository.findAllByNameWithParticipantsPageable(search, pageable);
+        return events.map(this::getEventResponse);
     }
 
     public Event getEvent(Long eventId) {
@@ -191,11 +179,11 @@ public class EventService {
 
     @Transactional
     public void completeEvent(Event event, List<UserEvaluationDTO> completeEventDTO) {
-        if (event.getIsCompleted()) {
+        if (!event.getStatus().equals(EventStatus.NOT_COMPLETED)) {
             throw new IllegalStateException("Cannot complete already completed event.");
         }
 
-        event.setIsCompleted(true);
+        event.setStatus(EventStatus.COMPLETED);
         eventRepository.save(event);
 
         var participations = userParticipationRepository.findByEventId(event.getId());
@@ -238,7 +226,7 @@ public class EventService {
                 .startDate(event.getStartDate())
                 .endDate(event.getEndDate())
                 .location(event.getLocation())
-                .isCompleted(event.getIsCompleted())
+                .status(event.getStatus())
                 .build();
     }
 }

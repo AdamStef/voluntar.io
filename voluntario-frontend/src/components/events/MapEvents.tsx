@@ -74,7 +74,7 @@ const MapEvents: React.FC = () => {
         center={mapCenter}
         zoom={4}
         scrollWheelZoom={true}
-        className="h-full w-full"
+        className="z-10 h-full w-full"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

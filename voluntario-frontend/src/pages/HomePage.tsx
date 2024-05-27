@@ -6,7 +6,7 @@ import CalendarComponent from '@/components/events/CalendarComponent';
 export const HomePage: React.FC = () => {
   return (
     <div className="container mt-5 flex flex-col gap-3">
-      <div className="flex flex-row">
+      <div className="flex flex-col md:flex-row md:flex-wrap">
         <div className="m-4 flex-1">
           <p className="text-left text-2xl font-bold">Kalendarz</p>
           <div className="mt-4 h-[300px]">

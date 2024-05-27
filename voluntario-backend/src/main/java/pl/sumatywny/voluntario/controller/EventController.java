@@ -58,8 +58,7 @@ public class EventController {
 
     @GetMapping("/{eventId}/participants")
     public ResponseEntity<?> allParticipants(@PathVariable("eventId") Long eventId) {
-        var event = eventService.getEvent(eventId);
-        return ResponseEntity.ok().body(eventService.getUsersParticipating(event));
+        return ResponseEntity.ok().body(eventService.getUsersParticipating(eventId));
     }
 
     @DeleteMapping("/{eventId}/participants/{participantId}")
@@ -86,31 +85,29 @@ public class EventController {
     public ResponseEntity<?> allEvents(
             @RequestParam(name = "search", required = false, defaultValue = "") String search,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity
-                .ok()
+        return ResponseEntity.ok()
                 .body(eventService.getAllEventsPageable(search, pageable).map(EventResponseMapper::mapToDTO));
     }
 
     @GetMapping("/all")
     public ResponseEntity<?> allEvents() {
-        return ResponseEntity.ok().body(
-                eventService.getAllEvents()
-                        .stream()
-                        .map(EventResponseMapper::mapToDTO).toList()
-        );
+        return ResponseEntity.ok().body(eventService.getAllEventsDTO());
     }
 
     @GetMapping("/{eventId}")
     public ResponseEntity<?> event(@PathVariable("eventId") Long eventId) {
-        var event = eventService.getEvent(eventId);
-        return ResponseEntity.ok().body(EventResponseMapper.mapToDTO(event));
+        var event = eventService.getEventDTO(eventId);
+//        return ResponseEntity.ok().body(EventResponseMapper.mapToDTO(event));
+        return ResponseEntity.ok().body(event);
     }
 
     @GetMapping("/organization")
     public ResponseEntity<?> getOrganizationEvents() {
         User user = authService.getUserFromSession();
         var organization = organizationService.getUserOrganization(user.getId());
-        return ResponseEntity.ok().body(eventService.getOrganizationEvents(organization));
+        return ResponseEntity.ok().body(
+                eventService.getOrganizationEvents(organization)
+        );
     }
 
     @DeleteMapping("/{eventId}")

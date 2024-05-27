@@ -3,19 +3,15 @@ import { getEvents } from '@/utils/api/api';
 import { Event } from './Event';
 import { useQuery } from '@tanstack/react-query';
 import { Spinner } from '../ui/Spinner';
-import { useAppDispatch, useAppSelector } from '@/utils/context/store';
-import {
-  PagingSlice,
-  selectCurrentPage,
-} from '@/utils/context/paging/pagingSlice';
+import { useAppSelector } from '@/utils/context/store';
 import { selectSearch } from '@/utils/context/searchSlice';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { EventMini } from '@/components/events/EventMini.tsx';
 import { Icon, LatLngExpression } from 'leaflet';
-import { PaginationComponent } from '@/components/events/PaginationComponent.tsx';
 import { getEventPosition } from '@/utils/helpers';
 import EventIcon from '@/assets/icons/event-marker-icon.svg';
 import { EventType } from '@/utils/types/types';
+import PaginatedList from '../PaginatedList';
 
 const customMarkerIcon = new Icon({
   iconUrl: EventIcon,
@@ -23,16 +19,18 @@ const customMarkerIcon = new Icon({
 });
 
 export const EventList = () => {
-  const dispatch = useAppDispatch();
-  const page = selectCurrentPage(useAppSelector((state) => state)) - 1;
+  const [page, setPage] = useState<number>(0);
+  const [showMap, setShowMap] = useState(false);
   const search = selectSearch(useAppSelector((state) => state));
-  const { data, isError, isPending, isSuccess } = useQuery({
+  const { data, isError, isPending } = useQuery({
     queryKey: ['events', { page, search }],
     queryFn: () => getEvents(page, search),
     // initialData: {},
   });
 
-  const [showMap, setShowMap] = useState(false);
+  const handleChangePage = (page: number) => {
+    setPage(page);
+  };
 
   const toggleView = () => {
     setShowMap((prev) => !prev);
@@ -48,25 +46,6 @@ export const EventList = () => {
 
   if (isError || data.content.length === 0)
     return <div>Nie znaleziono żadnych wydarzeń.</div>;
-
-  if (isSuccess) {
-    dispatch({
-      type: PagingSlice.actions.setCurrentPage.type,
-      payload: data.number + 1,
-    });
-    dispatch({
-      type: PagingSlice.actions.setTotalPages.type,
-      payload: data.totalPages,
-    });
-    dispatch({
-      type: PagingSlice.actions.setIsFirstPage.type,
-      payload: data.first,
-    });
-    dispatch({
-      type: PagingSlice.actions.setIsLastPage.type,
-      payload: data.last,
-    });
-  }
 
   const findCenter = (events: EventType[]): LatLngExpression => {
     if (events.length === 0) {
@@ -129,11 +108,9 @@ export const EventList = () => {
       {!showMap && (
         <div className="flex flex-col gap-5">
           {data.content.map((event) => (
-            <div>
-              <Event key={event.id} event={event} />
-            </div>
+            <Event key={event.id} event={event} />
           ))}
-          <PaginationComponent />
+          <PaginatedList page={data} changePage={handleChangePage} />
         </div>
       )}
     </>

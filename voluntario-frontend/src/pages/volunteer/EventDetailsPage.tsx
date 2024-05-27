@@ -1,4 +1,4 @@
-import { EventDetails } from '@/components/events/EventDetails';
+import { EventDetails } from '@/components/events/details/EventDetails';
 
 export const EventDetailsPage = () => {
   return (

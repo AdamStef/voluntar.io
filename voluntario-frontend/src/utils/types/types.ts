@@ -53,43 +53,54 @@ export type NavbarItemType = {
 
 // export type EventType = z.infer<typeof eventSchema>;
 
+// export type EventType = {
+//   id: number;
+//   name: string;
+//   description: string;
+//   organization?: OrganizationType;
+//   numberOfVolunteersNeeded: number;
+//   participants: UserType[];
+//   startDate: Date;
+//   endDate: Date;
+//   location: LocationType;
+// };
+
 export type EventType = {
   id: number;
   name: string;
   description: string;
-  organization?: OrganizationType;
+  organization: OrganizationType;
+  participants: ParticipantType[];
   numberOfVolunteersNeeded: number;
-  participants: UserType[];
   startDate: Date;
   endDate: Date;
-  location: EventLocationType;
+  location: LocationType;
+  isCompleted: boolean;
 };
 
-export type OrganizationType = {
+export type UserParticipationType = {
+  userId: number;
+  eventId: number;
+  rating: number;
+  comment: string;
+};
+
+export interface OrganizationType {
   id: number;
-  email: string;
-  role: Role;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  krs: string;
   name: string;
   description: string;
+  krs: string;
+  address: string;
   website: string;
-};
+}
 
 export type ParticipantType = {
-  id: number;
+  userId: number;
+  eventId: number;
   email: string;
-  role: Role;
-  firstName: string;
-  lastName: string;
+  name: string;
   phoneNumber: string;
   gender: 'male' | 'female';
-  eventId: number;
-  eventName: string;
-  eventStartDate: Date;
-  eventEndDate: Date;
 };
 
 export type EventFormType = {
@@ -111,7 +122,7 @@ export type EventFormType = {
   };
 };
 
-export type EventLocationType = {
+export type LocationType = {
   id: number;
   name: string;
   city: string;
@@ -134,7 +145,21 @@ export type EventPostType = {
   updatedAt: Date;
 };
 
-export type Page<T> = {
+export type ScoreType = {
+  userId: number;
+  fullName: string;
+  points: number;
+  rating: number;
+  numberOfCompletedEvents: number;
+};
+
+export type UserEvaluationType = {
+  userId: number;
+  rating: number;
+  comment: string;
+};
+
+export type Page<T = null> = {
   content: T[]; // Array of items in the current page
   pageable: Pageable; // Information about pagination
   totalPages: number; // Total number of pages

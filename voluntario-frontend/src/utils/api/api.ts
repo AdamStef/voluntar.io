@@ -11,7 +11,9 @@ import {
   EventType,
   UserType,
   EventFormType,
-  EventLocationType,
+  LocationType,
+  ParticipantType,
+  ScoreType,
   // eventSchema,
 } from '../types/types';
 import { isValidDateString } from '../helpers';
@@ -69,11 +71,11 @@ export const postRegisterOrganization = async (
 export const postEvent = async (data: EventFormType) =>
   axiosClient.post('/events', data);
 
-export const postLocation = async (data: EventLocationType) =>
+export const postLocation = async (data: LocationType) =>
   axiosClient.post('/locations', data);
 
 export const getLocations = async () =>
-  axiosClient.get<EventLocationType[]>('/locations').then((res) => res.data);
+  axiosClient.get<LocationType[]>('/locations').then((res) => res.data);
 
 export const getEvents = async (page: number, search: string) =>
   axiosClient
@@ -102,6 +104,11 @@ export const removeParticipantFromEvent = async ({
 }: EventParticipantParams) =>
   axiosClient.delete(`/events/${eventId}/participants/${participantId}`);
 
+export const getEventParticipants = async (eventId: number) =>
+  axiosClient
+    .get<ParticipantType[]>(`/events/${eventId}/participants`)
+    .then((res) => res.data);
+
 export const removeEvent = async (id: string) =>
   axiosClient.delete<EventType>(`/events/${id}`);
 
@@ -121,3 +128,7 @@ export const postEventPost = async ({
 
 export const deletePost = async (postId: number) =>
   axiosClient.delete(`/posts/${postId}`);
+
+// Leaderboard
+export const getLeaderboard = async (): Promise<Page<ScoreType>> =>
+  axiosClient.get<Page<ScoreType>>('/scores').then((res) => res.data);

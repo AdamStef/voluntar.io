@@ -7,29 +7,30 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '../ui/pagination';
-import { useAppDispatch, useAppSelector } from '@/utils/context/store';
-import { PagingSlice } from '@/utils/context/paging/pagingSlice';
-import { useQueryClient } from '@tanstack/react-query';
 
-export const PaginationComponent = () => {
-  const { currentPage, totalPages, isFirstPage, isLastPage } = useAppSelector(
-    (state) => state.paging,
-  );
-  const dispatch = useAppDispatch();
-  const queryClient = useQueryClient();
+type Page = {
+  number: number;
+  totalPages: number;
+};
+
+interface PaginationProps {
+  page: Page;
+  onPageChange: (page: number) => void;
+}
+
+export const PaginationComponent = ({
+  page,
+  onPageChange,
+}: PaginationProps) => {
+  const { number: currentPage, totalPages } = page;
+
+  const isFirstPage = currentPage === 0;
+  const isLastPage = currentPage === totalPages - 1;
+
+  const displayCurrentPage = currentPage + 1;
 
   const changePage = (page: number) => {
-    // console.log('Changing page to:', page);
-    // console.log('Current page:', currentPage);
-    // console.log('Total pages:', totalPages);
-    // console.log('Is first page:', isFirstPage);
-    // console.log('Is last page:', isLastPage);
-
-    dispatch({
-      type: PagingSlice.actions.setCurrentPage.type,
-      payload: page,
-    });
-    queryClient.invalidateQueries({ queryKey: ['events'] });
+    onPageChange(page);
     window.scrollTo(0, 0);
   };
 
@@ -42,23 +43,23 @@ export const PaginationComponent = () => {
           </PaginationItem>
         )}
         {/* Render first page link */}
-        {currentPage > 2 && (
+        {displayCurrentPage > 2 && (
           <PaginationItem>
-            <PaginationLink onClick={() => changePage(1)}>{1}</PaginationLink>
+            <PaginationLink onClick={() => changePage(0)}>{1}</PaginationLink>
           </PaginationItem>
         )}
         {/* Render previous ellipsis */}
-        {currentPage > 3 && (
+        {displayCurrentPage > 3 && (
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>
         )}
 
         {/* Render previous page link */}
-        {currentPage > 1 && (
+        {displayCurrentPage > 1 && (
           <PaginationItem>
             <PaginationLink onClick={() => changePage(currentPage - 1)}>
-              {currentPage - 1}
+              {displayCurrentPage - 1}
             </PaginationLink>
           </PaginationItem>
         )}
@@ -66,27 +67,27 @@ export const PaginationComponent = () => {
         {/* Render current */}
         <PaginationItem>
           <PaginationLink className="bg-primary text-primary-foreground">
-            {currentPage}
+            {displayCurrentPage}
           </PaginationLink>
         </PaginationItem>
 
         {/* Render next page link */}
-        {currentPage < totalPages && (
+        {displayCurrentPage < totalPages && (
           <PaginationItem>
             <PaginationLink onClick={() => changePage(currentPage + 1)}>
-              {currentPage + 1}
+              {displayCurrentPage + 1}
             </PaginationLink>
           </PaginationItem>
         )}
 
         {/* Render next ellipsis */}
-        {currentPage < totalPages - 2 && (
+        {displayCurrentPage < totalPages - 2 && (
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>
         )}
         {/* Render last page link */}
-        {currentPage < totalPages - 1 && (
+        {displayCurrentPage < totalPages - 1 && (
           <PaginationItem>
             <PaginationLink onClick={() => changePage(totalPages)}>
               {totalPages}

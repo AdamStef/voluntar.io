@@ -56,15 +56,13 @@ const CalendarComponent: React.FC = () => {
   };
 
   return (
-    <div className="calendar-container">
+    <div className="calendar-container h-full w-full">
       <Calendar
         onChange={onChange}
         value={date}
         tileClassName={tileClassName}
+        className="h-full w-full"
       />
-      {/* <p className="mt-4 text-center">
-        <span className="font-bold">Selected Date:</span> {date?.toDateString()}
-      </p> */}
     </div>
   );
 };

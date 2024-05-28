@@ -23,6 +23,7 @@ import { AddEventPage } from '@/pages/organizer/AddEventPage.tsx';
 import { ComplaintsPage } from '@/pages/admin/ComplaintsPage.tsx';
 import RegisterOrganizationForm from './components/forms/RegisterOrganizationForm.tsx';
 import { AddComplainPage } from '@/pages/organizer/AddComplainPage.tsx';
+import { ShopManagementPage } from './pages/admin/ShopManagementPage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -64,6 +65,7 @@ function App() {
           <Route path="/addevent" element={<AddEventPage />} />
           <Route path="/complaints" element={<ComplaintsPage />} />
           <Route path="/addcomplain" element={<AddComplainPage />} />
+          <Route path="/shop" element={<ShopManagementPage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
         </Route>
 

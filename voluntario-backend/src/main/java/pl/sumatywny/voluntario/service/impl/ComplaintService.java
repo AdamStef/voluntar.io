@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ComplaintService {
@@ -26,7 +27,7 @@ public class ComplaintService {
         this.userRepository = userRepository;
     }
 
-    public Complaint createComplaint(ComplaintRequestDTO complaintRequestDTO, User reporter) {
+    public ComplaintResponseDTO createComplaint(ComplaintRequestDTO complaintRequestDTO, User reporter) {
         User reported = userRepository.findById(complaintRequestDTO.getReportedID()).get();
         Complaint complaint = Complaint.builder()
                 .reportDate(LocalDateTime.now())
@@ -36,7 +37,7 @@ public class ComplaintService {
                 .textComplaint(complaintRequestDTO.getText())
                 .build();
         complaintRepository.save(complaint);
-        return complaint;
+        return new ComplaintResponseDTO(complaint);
     }
 
     @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
@@ -64,27 +65,36 @@ public class ComplaintService {
         return "Complaint resolved";
     }
 
-    public List<Complaint> getComplaintsByStatus(Status status) {
-        return complaintRepository.getComplaintByStatus(status);
+    public List<ComplaintResponseDTO> getComplaintsByStatus(Status status) {
+        return complaintRepository.getComplaintByStatus(status).stream().map(ComplaintResponseDTO::new).collect(Collectors.toList());
     }
 
-    public Complaint getComplaint(Long complaintID) {
+    public ComplaintResponseDTO getComplaint(Long complaintID) {
         Optional<Complaint> complaint = complaintRepository.findById(complaintID);
         if (complaint.isEmpty()) {
             throw new NoSuchElementException("Complaint not found");
         }
-        return complaint.get();
+        return new ComplaintResponseDTO(complaint.get());
     }
 
-    public List<Complaint> getAllComplaints() {
-        return complaintRepository.findAll();
+    public List<ComplaintResponseDTO> getAllComplaints() {
+        return complaintRepository.findAll().stream().map(complaint -> {
+            ComplaintResponseDTO complaintResponseDTO = new ComplaintResponseDTO(complaint);
+            return complaintResponseDTO;
+        }).collect(Collectors.toList());
     }
 
-    public List<Complaint> allReporterComplaints(User reporter) {
-        return complaintRepository.getComplaintByReporter(reporter);
+    public List<ComplaintResponseDTO> allComplaintsByUser(User reporter) {
+        return complaintRepository.getComplaintByReporter(reporter).stream().map(complaint -> {
+            ComplaintResponseDTO complaintResponseDTO = new ComplaintResponseDTO(complaint);
+            return complaintResponseDTO;
+        }).collect(Collectors.toList());
     }
 
-    public List<Complaint> allReportedComplaints(User reported) {
-        return complaintRepository.getComplaintByReported(reported);
+    public List<ComplaintResponseDTO> allComplaintsOnUser(User reported) {
+        return complaintRepository.getComplaintByReported(reported).stream().map(complaint -> {
+            ComplaintResponseDTO complaintResponseDTO = new ComplaintResponseDTO(complaint);
+            return complaintResponseDTO;
+        }).collect(Collectors.toList());
     }
 }

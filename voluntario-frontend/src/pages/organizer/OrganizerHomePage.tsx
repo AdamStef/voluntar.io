@@ -47,6 +47,8 @@ export const OrganizerHomePage = () => {
       return acc;
     }, {} as GroupedEventsType);
 
+  console.log(events);
+
   return (
     <div className="container mt-5 flex flex-col gap-3 md:flex-row">
       <div className="m-4 flex flex-col md:w-2/3">

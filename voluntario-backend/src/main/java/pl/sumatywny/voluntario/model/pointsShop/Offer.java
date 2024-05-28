@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.annotations.Formula;
 
@@ -34,6 +35,10 @@ public class Offer {
 
     @NonNull
     private LocalDate endDate;
+
+    @NonNull
+    @Positive
+    private Integer pointsCost;
 
     @NonNull
     @Formula("(CASE WHEN end_date >= CURRENT_DATE THEN true ELSE false END)")

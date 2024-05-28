@@ -26,7 +26,6 @@ public abstract class PromoCode {
 
     @Id
     @NonNull
-    @Size(min = 3, max = 24)
     private String code;
 
     @NonNull
@@ -43,6 +42,9 @@ public abstract class PromoCode {
     @NonNull
     @Formula("(CASE WHEN expiration_date >= CURRENT_DATE THEN true ELSE false END)")
     private Boolean canBeUsed;
+
+    @NonNull
+    public Boolean isAssignedToUser;
 
     @PrePersist
     @PreUpdate

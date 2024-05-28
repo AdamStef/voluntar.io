@@ -21,10 +21,6 @@ public class PromoCodeDTO {
     private String promoCodeType;
 
     @NonNull
-    @Size(min = 3, max = 24)
-    private String code;
-
-    @NonNull
     @Positive
     private BigDecimal discount;
 

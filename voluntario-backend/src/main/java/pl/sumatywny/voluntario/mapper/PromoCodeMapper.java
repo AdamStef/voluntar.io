@@ -1,6 +1,7 @@
 package pl.sumatywny.voluntario.mapper;
 
 
+import org.apache.commons.lang3.RandomStringUtils;
 import pl.sumatywny.voluntario.dtos.pointsShop.PromoCodeDTO;
 import pl.sumatywny.voluntario.model.pointsShop.promoCodes.PromoCode;
 import pl.sumatywny.voluntario.model.pointsShop.promoCodes.PromoCodePercentage;
@@ -11,12 +12,12 @@ public class PromoCodeMapper {
         PromoCode promoCode;
         if (promoCodeDTO.getPromoCodeType().equals("percentage")) {
             promoCode = new PromoCodePercentage(promoCodeDTO.getDiscount());
-            promoCode.setCode(promoCodeDTO.getCode().toUpperCase());
+            promoCode.setCode(RandomStringUtils.randomAlphabetic(10));
             promoCode.setRemainingUses(promoCodeDTO.getMaxUsages());
             promoCode.setExpirationDate(promoCodeDTO.getExpirationDate());
         } else if (promoCodeDTO.getPromoCodeType().equals("value")) {
             promoCode = new PromoCodeValue(promoCodeDTO.getDiscount());
-            promoCode.setCode(promoCodeDTO.getCode());
+            promoCode.setCode(RandomStringUtils.randomAlphabetic(10));
             promoCode.setRemainingUses(promoCodeDTO.getMaxUsages());
             promoCode.setExpirationDate(promoCodeDTO.getExpirationDate());
         } else {

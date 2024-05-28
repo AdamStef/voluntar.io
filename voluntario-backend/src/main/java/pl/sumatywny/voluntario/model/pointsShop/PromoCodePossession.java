@@ -18,7 +18,7 @@ public class PromoCodePossession {
     private Long id;
 
     @NonNull
-    @ManyToOne
+    @OneToOne
     private PromoCode promoCode;
 
     @NonNull

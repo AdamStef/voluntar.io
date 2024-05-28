@@ -5,6 +5,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { Layout } from './pages/Layout';
 import { Dashboard } from './pages/Dashboard';
 import { NotFound } from './pages/NotFound';
+import { OrganizerHomePage } from './pages/organizer/OrganizerHomePage.tsx';
 import { EventsListPage } from './pages/volunteer/EventsListPage';
 import { EventDetailsPage } from './pages/volunteer/EventDetailsPage';
 import { HomePage } from './pages/HomePage';
@@ -14,10 +15,12 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { AccountType } from './components/AccountType';
 import RegisterVolunteerForm from './components/forms/RegisterVolunteerForm';
-import { RegisterOrganizationForm } from './components/forms/RegisterOrganizationForm';
 import { LandingPage } from './pages/LandingPage';
+import { LeaderboardPage } from './pages/LeaderboardPage';
 import { Provider } from 'react-redux';
 import { store } from './utils/context/store';
+import { AddEventPage } from '@/pages/organizer/AddEventPage.tsx';
+import RegisterOrganizationForm from './components/forms/RegisterOrganizationForm.tsx';
 
 const queryClient = new QueryClient();
 
@@ -55,6 +58,9 @@ function App() {
           <Route path="/events" element={<EventsListPage />} />
           <Route path="/events/:eventId" element={<EventDetailsPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/organizer" element={<OrganizerHomePage />} />
+          <Route path="/addevent" element={<AddEventPage />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

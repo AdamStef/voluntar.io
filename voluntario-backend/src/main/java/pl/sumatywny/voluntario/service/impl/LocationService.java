@@ -20,11 +20,7 @@ public class LocationService {
         this.locationRepository = locationRepository;
     }
 
-    public Location createLocation(LocationDTO locationDTO, User user) {
-        if (user.getRole().getRole() == Role.ROLE_VOLUNTEER) {
-            throw new PermissionsException("Volunteers cannot create events.");
-        }
-
+    public Location createLocation(LocationDTO locationDTO) {
         Location location = Location.builder()
                 .name(locationDTO.getName())
                 .city(locationDTO.getCity())

@@ -14,12 +14,12 @@ type EventProps = {
 };
 
 export const Event: React.FC<EventProps> = ({ event, className }) => {
-  const numberOfParticipants = event.participants.length ?? 0;
+  const numberOfParticipants = event.participants?.length ?? 0;
 
   return (
     <div
       className={cn(
-        'flex h-48 max-h-64 w-full justify-between gap-4 rounded-sm bg-secondary p-4 text-secondary-foreground',
+        'flex min-h-48 w-full flex-col justify-between gap-4 rounded-sm bg-secondary p-4 text-secondary-foreground md:flex-row',
         className,
       )}
     >
@@ -53,7 +53,7 @@ export const Event: React.FC<EventProps> = ({ event, className }) => {
         Liczba uczestników: {numberOfParticipants}/
         {event.numberOfVolunteersNeeded}
         <Progress
-          className=" bg-accent"
+          className="bg-accent"
           value={(numberOfParticipants / event.numberOfVolunteersNeeded) * 100}
         />
       </div>

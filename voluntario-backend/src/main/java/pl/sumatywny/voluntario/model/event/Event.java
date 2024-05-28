@@ -1,16 +1,20 @@
 package pl.sumatywny.voluntario.model.event;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pl.sumatywny.voluntario.enums.EventStatus;
+import pl.sumatywny.voluntario.model.post.Post;
+import pl.sumatywny.voluntario.model.user.Organization;
+import pl.sumatywny.voluntario.model.AuditingEntity;
+import pl.sumatywny.voluntario.model.user.UserParticipation;
 import pl.sumatywny.voluntario.model.user.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -21,35 +25,28 @@ import java.util.List;
 @Data
 @ToString
 @EntityListeners(AuditingEntityListener.class)
-public class Event {
+public class Event extends AuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
-    @ManyToOne
-    private User organizer;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Organization organization;
     private int numberOfVolunteersNeeded;
-    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "events_participants",
-            joinColumns = @JoinColumn(name = "events_id"),
-            inverseJoinColumns = @JoinColumn(name = "users_id")
-    )
-    private List<User> participants;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    private List<UserParticipation> participations = new ArrayList<>();
+
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    private List<Post> posts;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Location location;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-//
-//    @Version
-//    @JsonIgnore
-//    private Long version;
+    @Enumerated(EnumType.STRING)
+    private EventStatus status = EventStatus.NOT_COMPLETED;
 }

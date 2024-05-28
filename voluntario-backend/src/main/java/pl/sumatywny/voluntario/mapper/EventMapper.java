@@ -1,13 +1,13 @@
 package pl.sumatywny.voluntario.mapper;
 
 import org.springframework.stereotype.Service;
-import pl.sumatywny.voluntario.dtos.EventDTO;
+import pl.sumatywny.voluntario.dtos.event.EventRequestDTO;
 import pl.sumatywny.voluntario.model.event.Event;
 
 @Service
 public class EventMapper {
-    public EventDTO toEventDTO(Event event) {
-        return EventDTO.builder()
+    public EventRequestDTO toEventDTO(Event event) {
+        return EventRequestDTO.builder()
                 .id(event.getId())
                 .name(event.getName())
                 .description(event.getDescription())

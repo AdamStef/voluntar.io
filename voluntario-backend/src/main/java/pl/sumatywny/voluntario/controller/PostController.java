@@ -9,44 +9,56 @@ import pl.sumatywny.voluntario.dtos.post.PostRequestDTO;
 import pl.sumatywny.voluntario.dtos.post.PostResponseDTO;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.EventService;
+import pl.sumatywny.voluntario.service.impl.OrganizationService;
 import pl.sumatywny.voluntario.service.impl.PostService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/posts")
+@RequestMapping("/api")
 public class PostController {
     private final PostService postService;
     private final AuthService authService;
     private final EventService eventService;
+    private final OrganizationService organizationService;
 
-    @PostMapping
+    @PostMapping("/events/{eventId}/posts")
     @PreAuthorize("hasRole('ORGANIZATION')")
-    public ResponseEntity<?> createPost(@RequestBody PostRequestDTO postRequestDTO) {
+    public ResponseEntity<?> createPost(
+            @RequestBody PostRequestDTO postRequestDTO,
+            @PathVariable("eventId") Long eventId) {
         var user = authService.getUserFromSession();
-        var event = eventService.getEvent(postRequestDTO.getEventId());
-        var post = postService.createPost(postRequestDTO, user, event);
+        var organization = organizationService.getUserOrganization(user.getId());
+        var event = eventService.getEvent(eventId);
+        var post = postService.createPost(postRequestDTO, organization, event);
         return ResponseEntity.ok().body(PostResponseDTO.mapToDto(post));
     }
 
-    @PutMapping("/{postId}")
+    @PutMapping("/posts/{postId}")
     public ResponseEntity<?> editPost(@PathVariable("postId") Long postId, @RequestBody PostRequestDTO postRequestDTO) {
         var user = authService.getUserFromSession();
         var post = postService.editPost(postId, postRequestDTO, user);
         return ResponseEntity.ok().body(PostResponseDTO.mapToDto(post));
     }
 
-    @GetMapping("/{postId}")
+    @GetMapping("/posts/{postId}")
     public ResponseEntity<?> getPost(@PathVariable("postId") Long postId) {
         var post = postService.getPost(postId);
         return ResponseEntity.ok().body(PostResponseDTO.mapToDto(post));
     }
 
-    @GetMapping
+    @GetMapping("/posts")
     public ResponseEntity<?> getAllPosts() {
         return ResponseEntity.ok().body(postService.getAllPosts().stream().map(PostResponseDTO::mapToDto).toList());
     }
 
-    @DeleteMapping("/{postId}")
+    @GetMapping("/events/{eventId}/posts")
+    public ResponseEntity<?> allPostsByEvent(@PathVariable("eventId") Long eventId) {
+//        var event = eventService.getEvent(eventId);
+        var posts = postService.getAllPostsByEvent(eventId);
+        return ResponseEntity.ok().body(posts.stream().map(PostResponseDTO::mapToDto).toList());
+    }
+
+    @DeleteMapping("/posts/{postId}")
     public ResponseEntity<?> removePost(@PathVariable("postId") Long postId) {
         postService.removePost(postId, authService.getUserFromSession());
         return ResponseEntity.noContent().build();

@@ -7,10 +7,11 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
-public class OrganisationDTO {
-    private String organisationName;
-    private String organisationDescription;
+public class OrganizationDTO {
+    private Long id;
+    private String name;
+    private String description;
     private String krs;
     private String address;
-    private String organisationPage;
+    private String website;
 }

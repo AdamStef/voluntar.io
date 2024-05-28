@@ -3,8 +3,19 @@ import {
   AddParticipantParams as EventParticipantParams,
   LoginCredentialsParams,
   RegisterUserParams,
+  RegisterOrganizationParams,
 } from '../types/params';
-import { EventType, Page, UserType } from '../types/types';
+import {
+  EventPostType,
+  Page,
+  EventType,
+  UserType,
+  EventFormType,
+  LocationType,
+  ParticipantType,
+  ScoreType,
+  // eventSchema,
+} from '../types/types';
 import { isValidDateString } from '../helpers';
 
 const axiosClient = axios.create({
@@ -51,11 +62,32 @@ export const getAuthUser = async (config?: AxiosRequestConfig) =>
 export const postRegisterUser = async (data: RegisterUserParams) =>
   axiosClient.post('/auth/register', data);
 
+export const postRegisterOrganization = async (
+  data: RegisterOrganizationParams,
+  userID: number,
+) => axiosClient.post(`/organizations/registerOrganization/${userID}`, data);
+
 // Events
+export const postEvent = async (data: EventFormType) =>
+  axiosClient.post('/events', data);
+
+export const postLocation = async (data: LocationType) =>
+  axiosClient.post('/locations', data);
+
+export const getLocations = async () =>
+  axiosClient.get<LocationType[]>('/locations').then((res) => res.data);
+
 export const getEvents = async (page: number, search: string) =>
   axiosClient
     .get<Page<EventType>>(`/events?page=${page}&search=${search}`)
     .then((res) => res.data);
+// .then((res) => res.data.content.map((event) => eventSchema.parse(event)));
+
+export const getAllEvents = async () =>
+  axiosClient.get(`/events/all`).then((res) => res.data);
+
+export const getOrganizerEvents = async () =>
+  axiosClient.get<EventType[]>(`/events/organization`).then((res) => res.data);
 
 export const getEvent = async (id: string) =>
   axiosClient.get<EventType>(`/events/${id}`);
@@ -71,3 +103,32 @@ export const removeParticipantFromEvent = async ({
   participantId,
 }: EventParticipantParams) =>
   axiosClient.delete(`/events/${eventId}/participants/${participantId}`);
+
+export const getEventParticipants = async (eventId: number) =>
+  axiosClient
+    .get<ParticipantType[]>(`/events/${eventId}/participants`)
+    .then((res) => res.data);
+
+export const removeEvent = async (id: string) =>
+  axiosClient.delete<EventType>(`/events/${id}`);
+
+export const getEventPosts = async (eventId: string) =>
+  axiosClient.get<EventPostType[]>(`/events/${eventId}/posts`);
+
+export const getUser = async (userId: string) =>
+  axiosClient.get<UserType>(`/users/${userId}`);
+
+export const postEventPost = async ({
+  eventId,
+  content,
+}: {
+  eventId: string;
+  content: string;
+}) => axiosClient.post<EventPostType>(`/events/${eventId}/posts`, { content });
+
+export const deletePost = async (postId: number) =>
+  axiosClient.delete(`/posts/${postId}`);
+
+// Leaderboard
+export const getLeaderboard = async (): Promise<Page<ScoreType>> =>
+  axiosClient.get<Page<ScoreType>>('/scores').then((res) => res.data);

@@ -1,12 +1,12 @@
-import { EventType } from '@/utils/types/types';
+import { EventType, Role } from '@/utils/types/types';
 import { CalendarCheck } from 'lucide-react';
-import React, { ReactNode, useState } from 'react';
-import { H1 } from '../ui/typography/heading';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { H1 } from '../../ui/typography/heading';
 import { getLocationString } from '@/utils/helpers';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { Panel } from '../ui/Panel';
+import { Panel } from '../../ui/Panel';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import {
   addParticipantToEvent,
@@ -49,22 +49,26 @@ const TabButton: React.FC<TabButtonProps> = ({
 
 type EventDetailsHeaderProps = {
   event: EventType;
-  activeIndex: number;
-  setActiveIndex: (index: number) => void;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
 };
 
 export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
   event,
-  activeIndex,
-  setActiveIndex,
+  activeTab,
+  setActiveTab,
 }) => {
+  if (!event.participants) {
+    event.participants = [];
+  }
+
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
   const [canJoin, setCanJoin] = useState<boolean>(
-    event.participants.every((p) => p.id !== user?.id),
+    event.participants.every((p) => p.userId !== user?.id),
   );
   const [canLeave, setCanLeave] = useState<boolean>(
-    event.participants.some((p) => p.id === user?.id),
+    event.participants.some((p) => p.userId === user?.id),
   );
 
   const { mutate: addParticipantMutate } = useMutation({
@@ -83,12 +87,14 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
     },
   });
 
-  React.useEffect(() => {
-    setCanJoin(
-      event.participants.every((p) => p.id !== user?.id) &&
-        event.participants.length < event.numberOfVolunteersNeeded,
-    );
-    setCanLeave(event.participants.some((p) => p.id === user?.id));
+  useEffect(() => {
+    if (event.participants) {
+      setCanJoin(
+        event.participants.every((p) => p.userId !== user?.id) &&
+          event.participants.length < event.numberOfVolunteersNeeded,
+      );
+      setCanLeave(event.participants.some((p) => p.userId === user?.id));
+    }
   }, [event.participants, user, event.numberOfVolunteersNeeded]);
 
   const handleAddParticipant = () => {
@@ -129,30 +135,35 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
       <div className="mb-1 flex justify-between">
         <div>
           <TabButton
-            isActive={activeIndex === 0}
-            onClick={() => setActiveIndex(0)}
+            isActive={activeTab === 'information'}
+            onClick={() => setActiveTab('information')}
           >
             Informacje
           </TabButton>
           <TabButton
-            isActive={activeIndex === 1}
-            onClick={() => setActiveIndex(1)}
+            isActive={activeTab === 'discussion'}
+            onClick={() => setActiveTab('discussion')}
           >
             Dyskusja
           </TabButton>
-          {canJoin && (
-            <Button className="ml-10" onClick={handleAddParticipant}>
-              Dołącz
-            </Button>
-          )}
-          {canLeave && (
-            <Button
-              className="ml-10"
-              variant={'destructive'}
-              onClick={handleLeaveEvent}
-            >
-              Opuść
-            </Button>
+
+          {user?.role === Role.VOLUNTEER && (
+            <>
+              {canJoin && (
+                <Button className="ml-10" onClick={handleAddParticipant}>
+                  Dołącz
+                </Button>
+              )}
+              {canLeave && (
+                <Button
+                  className="ml-10"
+                  variant={'destructive'}
+                  onClick={handleLeaveEvent}
+                >
+                  Opuść
+                </Button>
+              )}
+            </>
           )}
         </div>
         {/* <Button className="">Dołącz</Button> */}

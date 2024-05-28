@@ -53,10 +53,10 @@ public class User extends AuditingEntity implements Serializable {
     @NotBlank(message = "Phone number cannot be empty")
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<UserParticipation> participations = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private Score score;
 
     @Column(nullable = false)

@@ -22,7 +22,7 @@ import { store } from './utils/context/store';
 import { AddEventPage } from '@/pages/organizer/AddEventPage.tsx';
 import { AdminPage } from '@/pages/admin/AdminPage.tsx';
 import RegisterOrganizationForm from './components/forms/RegisterOrganizationForm.tsx';
-import {AddComplainPage} from "@/pages/organizer/AddComplainPage.tsx";
+import { AddComplainPage } from '@/pages/organizer/AddComplainPage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -63,7 +63,7 @@ function App() {
           <Route path="/organizer" element={<OrganizerHomePage />} />
           <Route path="/addevent" element={<AddEventPage />} />
           <Route path="/admin" element={<AdminPage />} />
-          <Route path="/addcomplain" element={<AddComplainPage/>} />
+          <Route path="/addcomplain" element={<AddComplainPage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
         </Route>
 

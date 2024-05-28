@@ -11,8 +11,6 @@ import java.util.List;
 public interface PromoCodeRepository extends JpaRepository<PromoCode, String> {
     PromoCode findFirstByCode(String code);
 
-    List<PromoCode> findAll();
-
     @Query("SELECT p FROM PromoCode p WHERE p.offer.id = ?1")
     List<PromoCode> findAllByOfferId(Long offerId);
 

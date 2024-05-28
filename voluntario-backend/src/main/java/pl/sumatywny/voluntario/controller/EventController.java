@@ -93,6 +93,7 @@ public class EventController {
         return ResponseEntity.ok().body(eventService.getAllEventsDTO());
     }
 
+
     @GetMapping("/{eventId}")
     public ResponseEntity<?> event(@PathVariable("eventId") Long eventId) {
         var event = eventService.getEventDTO(eventId);
@@ -138,4 +139,10 @@ public class EventController {
         eventService.completeEvent(event, completeEventDTO);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/user")
+    public ResponseEntity<?> getUsersEvents() {
+        var user = authService.getUserFromSession();
+        return ResponseEntity.ok().body(eventService.getUserEvents(user));
+    }
+
 }

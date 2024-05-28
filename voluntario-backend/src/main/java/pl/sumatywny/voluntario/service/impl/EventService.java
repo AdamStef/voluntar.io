@@ -229,5 +229,13 @@ public class EventService {
                 .status(event.getStatus())
                 .build();
     }
+
+    public List<EventResponseDTO> getUserEvents(User user) {
+        return userParticipationRepository.findByUserId(user.getId())
+                .stream()
+                .map(UserParticipation::getEvent)
+                .map(this::getEventResponse)
+                .toList();
+    }
 }
 

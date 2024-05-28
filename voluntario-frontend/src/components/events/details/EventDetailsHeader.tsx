@@ -115,6 +115,7 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
       eventId: event.id.toString(),
       participantId: user.id,
     });
+    console.log(event.id.toString(), user.id);
   };
 
   const handleLeaveEvent = () => {

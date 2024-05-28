@@ -28,7 +28,7 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-toast": "^1.1.5",
     "@reduxjs/toolkit": "^2.2.3",
-    "@tanstack/react-query": "^5.32.0",
+    "@tanstack/react-query": "^5.39.0",
     "@tanstack/react-query-devtools": "^5.32.0",
     "@types/leaflet": "^1.9.12",
     "@types/react-redux": "^7.1.33",

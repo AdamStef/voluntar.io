@@ -40,7 +40,7 @@ export const Leaderboard = () => {
             <TableCell>
               <div className="flex items-center gap-2">
                 <FaStar color="gold" size={24} />
-                <p>{user.points}</p>
+                <p>{user.rating}</p>
               </div>
             </TableCell>
             <TableCell>{user.points}</TableCell>

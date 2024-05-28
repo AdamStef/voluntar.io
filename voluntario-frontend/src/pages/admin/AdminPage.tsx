@@ -1,8 +1,6 @@
 import { Complaint } from '@/components/admin/Complaint.tsx'
-import {UserType, Role, ComplaintType, ComplaintStatusType} from '@/utils/types/types.ts'
-import { UnconfirmedOrganizationsList } from "@/components/admin/UnconfirmedOrganizationsList.tsx";
 import { useQuery } from "@tanstack/react-query";
-import {getComplaints, getOrganizerEvents, getToReviewComplaints} from "@/utils/api/api.ts";
+import {getComplaints} from "@/utils/api/api.ts";
 import {Spinner} from "@/components/ui/Spinner.tsx";
 
 export const AdminPage = () => {

@@ -82,7 +82,17 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
                         <p>Uwagi:</p>
                         <p>{complaint.textComplaint}</p>
                     </div>
+                    {/*wyslana odpowiedz??*/}
+                    { responseSent &&
+                    <div>
+                        <br/>
+                        <p>Wysłana odpowiedź:</p>
+                        <p>{complaint.response}</p>
+                    </div>
+                    }
                 </div>
+
+
                 {/* buttons */}
                 <div className="flex justify-end mt-4">
                     {
@@ -91,7 +101,6 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
                                 Wysłano odpowiedź
                             </Button>
                     }
-
                     {
                         !responseSent && !showInput && (<>
                         { !claimed &&
@@ -100,13 +109,16 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
                         </Button>
                         }
                         { claimed &&
+                            <>
                         <Button className="mx-3 w-48 bg-gray-600 hover:bg-gray-600">
                             Potwierdzono otrzymanie
                         </Button>
-                        }
-                        <Button className="mx-3 w-32 bg-green-600 hover:bg-red-800" onClick={openResponse}>
-                            Wyślij odpowiedź
+                        <Button className="mx-3 w-32 bg-green-600 hover:bg-green-800" onClick={openResponse}>
+                        Wyślij odpowiedź
                         </Button>
+                            </>
+                        }
+
                         </>)
                     }
 
@@ -116,8 +128,6 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
                             &lt;
                         </Button>
                     }
-
-
                     {/*<Button className="mx-3 w-24 bg-gray-600 hover:bg-gray-800" onClick={banVolunteer}>*/}
                     {/*    Banuj*/}
                     {/*</Button>*/}
@@ -132,11 +142,10 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
                                       className="border-2 my-3 w-80 h-32 p-1"/>
                             <br/>
                         </label>
-                        <Button onClick={submitResolveComplaint}>Submit</Button>
+                        <Button onClick={submitResolveComplaint}>Wyślij</Button>
                     </form>
                 }
             </div>
         </div>
-
     )
 }

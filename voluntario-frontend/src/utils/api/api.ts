@@ -16,8 +16,7 @@ import {
   LocationType,
   ParticipantType,
   ScoreType,
-  EventStatus,
-  ComplaintPostType
+  EventStatus, ComplaintPostType,
   // EventStatus,
   // eventSchema,
 } from '../types/types';

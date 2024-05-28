@@ -82,10 +82,10 @@ export type ComplaintType = {
   version?: number
 }
 
-// export type ComplaintPostType = {
-//   reportedID: number,
-//   text: string,
-// }
+export type ComplaintPostType = {
+  reportedID: number,
+  text: string,
+}
 
 export type EventFormType = {
   name: string;

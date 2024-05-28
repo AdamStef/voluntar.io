@@ -5,6 +5,8 @@ import Select from "react-select";
 import {format} from "date-fns";
 import {ChangeEvent, useState} from "react";
 import {Button} from "@/components/ui/button.tsx";
+import {ComplaintPostType} from "@/utils/types/types.ts";
+import {useNavigate} from "react-router-dom";
 
 type Option = {
     value: number;
@@ -13,6 +15,7 @@ type Option = {
 
 export const AddComplainPage = () => {
 
+    const navigate = useNavigate();
     const [description, setDescription] = useState('');
     const [selectedEvent, setSelectedEvent] = useState<Option | null>(null);
     const [selectedParticipant, setSelectedParticipant] = useState<Option | null>(null);
@@ -21,7 +24,12 @@ export const AddComplainPage = () => {
         data: participants,
     } = useQuery({
         queryKey: ['organizer', 'events', selectedEvent?.value],
-        queryFn: () => getEventParticipants(selectedEvent?.value),
+        queryFn: () => {
+            if (!selectedEvent?.value) {
+                return Promise.reject(new Error('Event not selected'));
+            }
+            return getEventParticipants(selectedEvent.value);
+        },
         enabled: !!selectedEvent, // Only run this query if an organizer is selected
     });
 
@@ -47,11 +55,17 @@ export const AddComplainPage = () => {
 
     const handleSubmit = () => {
         if (selectedParticipant) {
-            const complaint = {
+            const complaintToSend: ComplaintPostType = {
                 reportedID: selectedParticipant.value,
                 text: description
             }
-            postComplaintMutate(complaint);
+            postComplaintMutate(complaintToSend);
+            if (selectedEvent) {
+                navigate(`/events/${selectedEvent.value}`);
+            }
+            else {
+                navigate('/organizer');
+            }
         }
         else {
             alert("Nie wybrałeś wolontariusza.");
@@ -83,6 +97,7 @@ export const AddComplainPage = () => {
                           value: event.id,
                           label: `${event.name} - ${format(event.startDate, 'dd.MM.yyyy')}`,
                       }))}
+                      noOptionsMessage={() => "Brak wydarzeń"}
                       className="my-2 mx-auto w-80"
                   />
               </div>
@@ -99,6 +114,7 @@ export const AddComplainPage = () => {
                               }))
                               : []
                       }
+                      noOptionsMessage={() => "Brak wolontariuszy"}
                       className="my-2 mx-auto w-80"
                   />
               </div>
@@ -112,7 +128,9 @@ export const AddComplainPage = () => {
                      className="border-2 my-3 w-80 h-32 p-1"/>
               <br/>
           </label>
-          <Button onClick={handleSubmit}>Dodaj skargę</Button>
+          <Button onClick={handleSubmit}>
+              Dodaj skargę
+          </Button>
       </form>
   </div>
       </div>

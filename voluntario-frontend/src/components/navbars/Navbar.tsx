@@ -9,6 +9,7 @@ import { postLogoutUser } from '@/utils/api/api';
 import { AxiosError } from 'axios';
 import { AuthContext } from '@/utils/context/AuthContext';
 import { Role } from '@/utils/types/types.ts';
+import { cn } from '@/lib/utils';
 
 const navItems: NavbarItemType[] = [
   {
@@ -75,11 +76,14 @@ type MobileNavbarItemProps = {
 
 const NavbarItem: React.FC<NavbarItemType> = ({ name, path }) => {
   return (
-    <li key={name} className="cursor-pointer hover:text-primary">
+    <li key={name}>
       <NavLink
         to={path}
         className={({ isActive }) => {
-          return isActive ? 'text-primary' : 'text-secondary';
+          return cn(
+            'cursor-pointer py-2 text-center align-middle hover:text-primary',
+            isActive ? 'text-primary' : 'text-secondary',
+          );
         }}
       >
         {name}

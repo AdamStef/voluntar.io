@@ -33,6 +33,8 @@ export const OrganizerHomePage = () => {
   if (isError) return <div>Wystąpił błąd podczas pobierania wydarzeń</div>;
   if (!events || events.length == 0) return <p>Brak wydarzeń</p>;
 
+  console.log(events);
+
   const eventsGroupedByStatus: GroupedEventsType = events
     .sort((a, b) => a.startDate.getDate() - b.startDate.getDate())
     .reduce((acc, event) => {

@@ -1,47 +1,37 @@
 import ManAvatar from "@/assets/man_avatar.png";
-import {CalendarCheck} from "lucide-react";
+import {Flag} from "lucide-react";
 import {Button} from "@/components/ui/button.tsx";
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-// import {useMutation} from "@tanstack/react-query/build/modern";
-import {removeEvent, removeParticipantFromEvent, resolveComplaint, claimComplaint} from "@/utils/api/api.ts";
-import {UserType} from "@/utils/types/types.ts";
-import {useState} from "react";
-import {StatusType} from "@/utils/types/types.ts";
-// import {useQueryClient} from "@tanstack/react-query/build/modern/index";
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {resolveComplaint, claimComplaint} from "@/utils/api/api.ts";
+import {ChangeEvent, useState} from "react";
+import {ComplaintStatusType} from "@/utils/types/types.ts";
 
 type ComplaintProps = {
-    complaint: ComplaintTestType;
+    complaint: any
 };
-
-type ComplaintTestType = {
-    id: string,
-    event: string,
-    description: string,
-    volunteer: UserType,
-    status: StatusType
-}
-
 
 export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
 
+    const queryClient = useQueryClient();
+
     const [showInput, setShowInput] = useState(false);
-    const [response, setResponse] = useState('');
-    const [responseSent, setResponseSent] = useState(false);
-    const [claimed, setClaimed] = useState(complaint.status !== StatusType.TO_REVIEW);
+    const [responseToSend, setResponseToSend] = useState('');
+    const [responseSent, setResponseSent] = useState(complaint.status === ComplaintStatusType.RESOLVED);
+    const [claimed, setClaimed] = useState(complaint.status !== ComplaintStatusType.TO_REVIEW);
 
     const { mutate: claimComplaintMutate } = useMutation({
         mutationFn: claimComplaint,
         onSuccess: () => {
-            console.log('claimed');
-            // TODO: co tu?
+            console.log("claimed");
+            queryClient.invalidateQueries({ queryKey: ['complaints'] });
         },
     });
 
     const { mutate: resolveComplaintMutate } = useMutation({
         mutationFn: resolveComplaint,
         onSuccess: () => {
-            console.log('claimed');
-            // TODO: co tu?
+            console.log("resolved");
+            queryClient.invalidateQueries({ queryKey: ['complaints'] });
         },
     });
 
@@ -51,26 +41,24 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
     }
 
     const submitResolveComplaint = () => {
+        const newComplaint = {...complaint, response: responseToSend, resolveDate: Date()}
+        console.log(complaint.id, newComplaint);
+        resolveComplaintMutate({
+            complaintId:complaint.id,
+            response: {...complaint, response: responseToSend, resolveDate: new Date().toISOString()}
+        });
         setShowInput(false);
         setResponseSent(true);
-        const response: string = "xd";
-        resolveComplaintMutate({complaintId: complaint.id, response: response});
     }
 
-    const openResponse = () => {
-        setShowInput(true);
-    }
+    const openResponse = () => { setShowInput(true); }
 
-    const closeResponse = () => {
-        setShowInput(false);
-    }
+    const closeResponse = () => { setShowInput(false); }
 
-    const handleResponseChange = (e) => {
-        setResponse(e.target.value);
-    };
+    const handleResponseChange = (e: ChangeEvent<HTMLTextAreaElement>) => { setResponseToSend(e.target.value); };
 
     return (
-        <div className="relative flex flex-col md:flex-row h-auto md:w-2/3 w-full bg-gray-400 my-4">
+        <div className="relative flex flex-col md:flex-row h-auto bg-gray-400 my-4">
             {/* volunteer */}
             <div className="w-full md:w-1/4 my-2 mx-2 flex flex-col items-center">
                 <img
@@ -80,25 +68,24 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
                     height={95}
                     alt="Avatar"
                 />
-                <div className="font-bold">{complaint.volunteer.firstName} {complaint.volunteer.lastName}</div>
-                {/* <div className="w-20 mx-auto">Wiek: {complaint.volunteer.age}</div> */}
+                <div className="font-bold">{complaint.reported.firstName} {complaint.reported.lastName}</div>
+                 {/*<div className="w-20 mx-auto">Wiek: {complaint.volunteer.age}</div>*/}
             </div>
             {/* right */}
             <div className="flex-1 my-2 mx-4 flex flex-col justify-between">
                 <div>
-                    <div className="flex items-center mb-4">
-                        <CalendarCheck className="h-10 w-10"/>
-                        <p className="font-bold text-xl ml-3">{complaint.event}</p>
+                    <div className="flex mb-4">
+                        <Flag className="h-8 w-8"/>
+                        <p className="font-bold text-xl w-fit ml-3">Od: {complaint.reporter.firstName} {complaint.reporter.lastName}</p>
                     </div>
                     <div>
                         <p>Uwagi:</p>
-                        <p>{complaint.description}</p>
+                        <p>{complaint.textComplaint}</p>
                     </div>
                 </div>
                 {/* buttons */}
                 <div className="flex justify-end mt-4">
                     {
-                        // todo: onclick
                         responseSent &&
                             <Button className="mx-3 w-40 bg-gray-600 hover:bg-green-800">
                                 Wysłano odpowiedź
@@ -141,7 +128,7 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
                         <label>
                             Odpowiedź na skargę:
                             <br/>
-                            <textarea value={response} onChange={handleResponseChange}
+                            <textarea value={responseToSend} onChange={handleResponseChange}
                                       className="border-2 my-3 w-80 h-32 p-1"/>
                             <br/>
                         </label>

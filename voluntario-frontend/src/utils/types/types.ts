@@ -64,7 +64,7 @@ export type ParticipantType = {
   gender: 'male' | 'female';
 };
 
-export enum StatusType {
+export enum ComplaintStatusType {
   RESOLVED = "RESOLVED", TO_REVIEW = "TO_REVIEW", UNDER_REVIEW = "UNDER_REVIEW"
 }
 
@@ -76,16 +76,16 @@ export type ComplaintType = {
   reportDate: Date,
   claimDate: Date,
   resolveDate: Date,
-  status: StatusType,
+  status: ComplaintStatusType,
   response: string,
-  adminID: number,
-  version: number
+  adminID?: number,
+  version?: number
 }
 
-export type ComplaintPostType = {
-  reportedId: number,
-  text: string,
-}
+// export type ComplaintPostType = {
+//   reportedID: number,
+//   text: string,
+// }
 
 export type EventFormType = {
   name: string;

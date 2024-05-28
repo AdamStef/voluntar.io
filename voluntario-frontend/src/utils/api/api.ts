@@ -12,11 +12,12 @@ import {
   EventType,
   UserType,
   EventFormType,
-  EventLocationType, ComplaintType,
+  ComplaintType,
   LocationType,
   ParticipantType,
-  ScoreType, ComplaintFormType,
+  ScoreType,
   EventStatus,
+  ComplaintPostType
   // EventStatus,
   // eventSchema,
 } from '../types/types';
@@ -190,10 +191,10 @@ export const getToReviewComplaints = async () =>
 export const getResolvedComplaints = async () =>
     axiosClient.get<ComplaintType[]>('/complaints/resolved').then((res) => res.data);
 
-export const postComplaint = async (data: ComplaintFormType) =>
+export const postComplaint = async (data: ComplaintPostType) =>
     axiosClient.post('/complaints/', data);
 
-export const resolveComplaint = async ({complaintId, response}: { complaintId: string; response: string; }) =>
+export const resolveComplaint = async ({ complaintId, response }: { complaintId: number, response: ComplaintType }) =>
     axiosClient.post(`/complaints/resolve/${complaintId}`, response);
 
 export const claimComplaint = async (complaintId: string) =>

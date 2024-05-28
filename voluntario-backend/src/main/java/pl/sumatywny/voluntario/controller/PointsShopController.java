@@ -52,12 +52,12 @@ public class PointsShopController {
         return ResponseEntity.ok(pointsShopService.findAllOffers());
     }
 
-    @GetMapping("/offers")
-    public ResponseEntity<?> getOffersBySponsor(@RequestParam("sponsor-id") Long sponsorId) {
+    @GetMapping("/offers/sponsor/{sponsorID}")
+    public ResponseEntity<?> getOffersBySponsor(@PathVariable("sponsorID") Long sponsorId) {
         return ResponseEntity.ok(pointsShopService.findAllOffersBySponsorId(sponsorId));
     }
 
-    @GetMapping("/offers")
+    @GetMapping("/offers/active")
     public ResponseEntity<?> getActiveOffers(@RequestParam("active") Boolean active) {
         return ResponseEntity.ok(pointsShopService.findAllActiveOffers());
     }

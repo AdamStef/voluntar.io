@@ -19,7 +19,6 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @DiscriminatorColumn(name = "promo-code_type",
         discriminatorType = DiscriminatorType.STRING)
 public abstract class PromoCode {

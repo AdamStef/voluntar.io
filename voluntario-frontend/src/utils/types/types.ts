@@ -65,6 +65,13 @@ export type NavbarItemType = {
 //   location: LocationType;
 // };
 
+export enum EventStatus {
+  NOT_COMPLETED = 'Niezakończone',
+  COMPLETED = 'Zakończone',
+  EVALUATED = 'Ocenione',
+  CANCELED = 'Anulowane',
+}
+
 export type EventType = {
   id: number;
   name: string;
@@ -75,7 +82,7 @@ export type EventType = {
   startDate: Date;
   endDate: Date;
   location: LocationType;
-  isCompleted: boolean;
+  status: EventStatus;
 };
 
 export type UserParticipationType = {

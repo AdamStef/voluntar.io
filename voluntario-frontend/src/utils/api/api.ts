@@ -4,6 +4,7 @@ import {
   LoginCredentialsParams,
   RegisterUserParams,
   RegisterOrganizationParams,
+  EvaluateUserParams,
 } from '../types/params';
 import {
   EventPostType,
@@ -14,6 +15,8 @@ import {
   LocationType,
   ParticipantType,
   ScoreType,
+  EventStatus,
+  // EventStatus,
   // eventSchema,
 } from '../types/types';
 import { isValidDateString } from '../helpers';
@@ -77,17 +80,43 @@ export const postLocation = async (data: LocationType) =>
 export const getLocations = async () =>
   axiosClient.get<LocationType[]>('/locations').then((res) => res.data);
 
-export const getEvents = async (page: number, search: string) =>
+// export const getEvents = async (page: number, search: string) =>
+//   axiosClient
+//     .get<Page<EventType>>(`/events?page=${page}&search=${search}`)
+//     .then((res) => res.data);
+// .then((res) => res.data.content.map((event) => eventSchema.parse(event)));
+
+export const getEvents = async (
+  page: number,
+  search: string,
+  // status?: EventStatus,
+) =>
   axiosClient
     .get<Page<EventType>>(`/events?page=${page}&search=${search}`)
     .then((res) => res.data);
-// .then((res) => res.data.content.map((event) => eventSchema.parse(event)));
+// ${status != undefined && '&status=' + status}
 
-export const getAllEvents = async () =>
-  axiosClient.get(`/events/all`).then((res) => res.data);
+export const getEventsByStatus = async (
+  page: number,
+  search: string,
+  status: EventStatus,
+) =>
+  axiosClient
+    .get<
+      Page<EventType>
+    >(`/events?page=${page}&search=${search}&status=${status}`)
+    .then((res) => res.data);
+
+export const getAllEvents = async (search: string, status: EventStatus) =>
+  axiosClient
+    .get<EventType[]>(`/events/all?search=${search}&status=${status}`)
+    .then((res) => res.data);
 
 export const getOrganizerEvents = async () =>
   axiosClient.get<EventType[]>(`/events/organization`).then((res) => res.data);
+
+export const getUserEvents = async () =>
+  axiosClient.get<EventType[]>(`/events/user`).then((res) => res.data);
 
 export const getEvent = async (id: string) =>
   axiosClient.get<EventType>(`/events/${id}`);
@@ -111,6 +140,21 @@ export const getEventParticipants = async (eventId: number) =>
 
 export const removeEvent = async (id: string) =>
   axiosClient.delete<EventType>(`/events/${id}`);
+
+export const postCompleteEvent = async (id: string) =>
+  axiosClient.post(`/events/${id}/complete`);
+
+export const postUserEvaluation = async ({
+  userId,
+  eventId,
+  rating,
+  comment,
+}: EvaluateUserParams) =>
+  axiosClient.post(`/events/${eventId}/evaluation`, {
+    userId,
+    rating,
+    comment,
+  });
 
 export const getEventPosts = async (eventId: string) =>
   axiosClient.get<EventPostType[]>(`/events/${eventId}/posts`);

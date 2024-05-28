@@ -27,3 +27,10 @@ export type AddParticipantParams = {
   eventId: string;
   participantId: number;
 };
+
+export type EvaluateUserParams = {
+  userId: number;
+  eventId: number;
+  rating: number;
+  comment: string;
+};

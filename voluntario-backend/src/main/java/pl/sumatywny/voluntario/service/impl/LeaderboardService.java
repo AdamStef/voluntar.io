@@ -2,6 +2,7 @@ package pl.sumatywny.voluntario.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,8 @@ import pl.sumatywny.voluntario.repository.UserParticipationRepository;
 import pl.sumatywny.voluntario.repository.UserRepository;
 import pl.sumatywny.voluntario.service.UserService;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -41,7 +42,11 @@ public class LeaderboardService {
 
     @Transactional
     public Page<ScoreDTO> getScores(Pageable pageable) {
-        return scoreRepository.findAll(pageable).map(score -> {
+        return scoreRepository.findAll(pageable)
+//                PageRequest.of(pageable.getPageNumber(),
+//                        pageable.getPageSize(),
+//                        Sort.by(Sort.Direction.DESC, "totalPoints", "overallRating", "COUNT(p)")))
+                .map(score -> {
             var participationsCount = userParticipationRepository.countByUserId(score.getUser().getId());
             return ScoreDTO.builder()
                     .userId(score.getUser().getId())
@@ -53,8 +58,12 @@ public class LeaderboardService {
         });
     }
 
-    public void addScore(User user, UserEvaluationDTO evaluation) {
-        var score = user.getScore();
+    @Transactional
+    public void addScore(UserEvaluationDTO evaluation) {
+        var user = userRepository.findById(evaluation.getUserId())
+                .orElseThrow(() -> new NoSuchElementException("User not found."));
+
+        var score = scoreRepository.findByUserId(user.getId()).orElse(null);
         if (score == null) {
             score = new Score();
             score.setUser(user);
@@ -62,14 +71,14 @@ public class LeaderboardService {
             score.setOverallRating(0.0);
         }
 
-        var completedEventsSize = user.getParticipations().stream()
-                .filter(participation -> participation.getEvent().getIsCompleted())
-                .count();
+//        var completedEventsSize = user.getParticipations().stream()
+//                .filter(participation -> participation.getEvent().getStatus().isFinished())
+//                .count();
 
         score.setTotalPoints(score.getTotalPoints() + evaluation.getRating());
-        score.setOverallRating(score.getTotalPoints() / (double) completedEventsSize);
-        user.setScore(score);
-        userRepository.save(user);
+        score.setOverallRating(score.getTotalPoints() / 5.0);
+        score.setUser(user);
+        scoreRepository.save(score);
     }
 
     public ScoreDTO getUserScore(Long userId) {
@@ -79,7 +88,7 @@ public class LeaderboardService {
         }
 
         var completedEvents = user.getParticipations().stream()
-                .filter(participation -> participation.getEvent().getIsCompleted())
+                .filter(participation -> participation.getEvent().getStatus().isFinished())
                 .toList();
 
         int points = completedEvents.stream()

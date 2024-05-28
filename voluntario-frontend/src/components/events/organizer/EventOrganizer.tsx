@@ -1,13 +1,17 @@
 import { cn } from '@/lib/utils.ts';
-import { EventType } from '@/utils/types/types.ts';
+import { EventStatus, EventType } from '@/utils/types/types.ts';
 import React from 'react';
 import { H3 } from '../../ui/typography/heading.tsx';
 import { Calendar, MapPin, Info } from 'lucide-react';
 import { Button } from '../../ui/button.tsx';
 import { Link } from 'react-router-dom';
-import { getLocationString } from '@/utils/helpers.ts';
+import {
+  getEnumValue,
+  getLocationString,
+  isEventFinished,
+} from '@/utils/helpers.ts';
 import { Progress } from '../../ui/progress.tsx';
-import { removeEvent } from '@/utils/api/api.ts';
+import { postCompleteEvent, removeEvent } from '@/utils/api/api.ts';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type EventProps = {
@@ -17,7 +21,7 @@ type EventProps = {
 
 export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
+  const { mutate: removeEventMutate } = useMutation({
     mutationFn: removeEvent,
     onSuccess: () => {
       console.log('Event removed');
@@ -27,10 +31,23 @@ export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
     },
   });
 
+  const { mutate: completeEventMutate } = useMutation({
+    mutationFn: postCompleteEvent,
+    onSuccess: (_, variable) => {
+      console.log('Event completed', variable);
+      queryClient.refetchQueries({
+        queryKey: ['organizer', 'events'],
+      });
+    },
+  });
+
   function deleteEvent() {
-    mutate(event.id.toString());
-    // removeEvent(String(event.id));
-    // setDeleted(true);
+    removeEventMutate(event.id.toString());
+  }
+
+  function completeEvent() {
+    console.log('completeEvent', event.id);
+    completeEventMutate(event.id.toString());
   }
 
   // event.startDate = new Date(event.startDate);
@@ -92,9 +109,19 @@ export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
         <Button asChild className="">
           <Link to={`/events/${event.id}`}>Zobacz więcej</Link>
         </Button>
-        <Button variant={'destructive'} className="" onClick={deleteEvent}>
-          Usuń wydarzenie
-        </Button>
+        {/* {`${getEnumValue(EventStatus, event.status)} ${isEventFinished(getEnumValue(EventStatus, event.status))}`} */}
+        {!isEventFinished(getEnumValue(EventStatus, event.status)) && (
+          <Button variant={'destructive'} onClick={deleteEvent}>
+            Usuń wydarzenie
+          </Button>
+        )}
+        {/* {getEnumValue(EventStatus, event.status)} */}
+        {getEnumValue(EventStatus, event.status) ==
+          EventStatus.NOT_COMPLETED && (
+          <Button variant={'outline'} onClick={completeEvent}>
+            Zakończ wydarzenie
+          </Button>
+        )}
       </div>
     </div>
   );

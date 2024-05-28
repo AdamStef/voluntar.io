@@ -17,6 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 @Service
 public class ComplaintService {
     private final ComplaintRepository complaintRepository;
@@ -65,6 +66,7 @@ public class ComplaintService {
         return "Complaint resolved";
     }
 
+
     public List<ComplaintResponseDTO> getComplaintsByStatus(Status status) {
         return complaintRepository.getComplaintByStatus(status).stream().map(ComplaintResponseDTO::new).collect(Collectors.toList());
     }
@@ -74,6 +76,7 @@ public class ComplaintService {
         if (complaint.isEmpty()) {
             throw new NoSuchElementException("Complaint not found");
         }
+
         return new ComplaintResponseDTO(complaint.get());
     }
 

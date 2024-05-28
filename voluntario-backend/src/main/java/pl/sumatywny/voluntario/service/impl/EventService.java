@@ -10,6 +10,7 @@ import pl.sumatywny.voluntario.dtos.event.EventRequestDTO;
 import pl.sumatywny.voluntario.dtos.event.EventResponseDTO;
 import pl.sumatywny.voluntario.dtos.user.ParticipatingUserDTO;
 import pl.sumatywny.voluntario.dtos.user.UserEvaluationDTO;
+import pl.sumatywny.voluntario.enums.EventStatus;
 import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.exception.CouldNotSaveException;
 import pl.sumatywny.voluntario.mapper.OrganizationMapper;
@@ -22,6 +23,7 @@ import pl.sumatywny.voluntario.model.user.UserParticipation;
 import pl.sumatywny.voluntario.repository.EventRepository;
 import pl.sumatywny.voluntario.repository.LocationRepository;
 import pl.sumatywny.voluntario.repository.UserParticipationRepository;
+import pl.sumatywny.voluntario.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,11 +40,11 @@ public class EventService {
     private final LocationService locationService;
     private final PostService postService;
     private final LeaderboardService leaderboardService;
+    private final UserRepository userRepository;
 
     @Transactional
     public void createEvent(EventRequestDTO eventRequestDTO, Organization organization) {
         Location location = locationService.createLocation(eventRequestDTO.getLocation());
-//        UserParticipation userParticipation = new UserParticipation();
 
         Event event = Event.builder()
                 .name(eventRequestDTO.getName())
@@ -53,23 +55,10 @@ public class EventService {
                 .endDate(eventRequestDTO.getEndDate())
                 .location(location)
 //                .participations(List.of(userParticipation))
-                .isCompleted(false)
+                .status(EventStatus.NOT_COMPLETED)
                 .build();
 
         eventRepository.save(event);
-
-//        var savedEvent = eventRepository.save(event);
-//        return EventResponseDTO.builder()
-//                .id(savedEvent.getId())
-//                .name(savedEvent.getName())
-//                .description(savedEvent.getDescription())
-////                .organization(savedEvent.getOrganization())
-//                .numberOfVolunteersNeeded(savedEvent.getNumberOfVolunteersNeeded())
-//                .startDate(savedEvent.getStartDate())
-//                .endDate(savedEvent.getEndDate())
-////                .location(savedEvent.getLocation())
-//                .isCompleted(savedEvent.getIsCompleted())
-//                .build();
     }
 
     @Transactional
@@ -82,7 +71,7 @@ public class EventService {
             throw new IllegalStateException("Cannot add participant to past event.");
         }
 
-        if (event.getIsCompleted()) {
+        if (!event.getStatus().equals(EventStatus.NOT_COMPLETED)) {
             throw new IllegalStateException("Cannot remove participant from completed event.");
         }
 
@@ -100,7 +89,7 @@ public class EventService {
 
     @Transactional
     public void removeParticipant(Event event, User user) {
-        if (event.getIsCompleted()) {
+        if (!event.getStatus().equals(EventStatus.NOT_COMPLETED)) {
             throw new IllegalStateException("Cannot remove participant from completed event.");
         }
 
@@ -140,10 +129,20 @@ public class EventService {
     }
 
     @Transactional
-    public List<EventResponseDTO> getAllEventsDTO() {
+    public List<EventResponseDTO> getAllEventsDTO(String search, String status) {
         return eventRepository
                 .findAllWithParticipants()
                 .stream()
+                .filter(event -> search.isBlank() || event.getName().contains(search))
+                .filter(event -> status.isBlank() || event.getStatus().equals(EventStatus.fromString(status)))
+                .map(this::getEventResponse)
+                .toList();
+    }
+
+    public List<EventResponseDTO> getUserEvents(User user) {
+        return userParticipationRepository.findByUserId(user.getId())
+                .stream()
+                .map(UserParticipation::getEvent)
                 .map(this::getEventResponse)
                 .toList();
     }
@@ -157,8 +156,14 @@ public class EventService {
                 .toList();
     }
 
-    public Page<Event> getAllEventsPageable(String search, Pageable pageable) {
-        return eventRepository.findAllByNameWithParticipantsPageable(search, pageable);
+    public Page<EventResponseDTO> getAllEventsPageable(String search, Pageable pageable) {
+        var events = eventRepository.findAllByNameWithParticipantsPageable(search, pageable);
+        return events.map(this::getEventResponse);
+    }
+
+    public Page<EventResponseDTO> getAllEventsByStatusPageable(String search, String status, Pageable pageable) {
+        var events = eventRepository.findAllByNameAndStatusWithParticipantsPageable(search, EventStatus.fromString(status), pageable);
+        return events.map(this::getEventResponse);
     }
 
     public Event getEvent(Long eventId) {
@@ -191,24 +196,55 @@ public class EventService {
 
     @Transactional
     public void completeEvent(Event event, List<UserEvaluationDTO> completeEventDTO) {
-        if (event.getIsCompleted()) {
+        if (!event.getStatus().equals(EventStatus.NOT_COMPLETED)) {
             throw new IllegalStateException("Cannot complete already completed event.");
         }
 
-        event.setIsCompleted(true);
+        event.setStatus(EventStatus.COMPLETED);
         eventRepository.save(event);
 
-        var participations = userParticipationRepository.findByEventId(event.getId());
-        participations.forEach(userParticipation -> {
-            var evaluation = completeEventDTO.stream()
-                    .filter(e -> e.getUserId().equals(userParticipation.getUser().getId()))
-                    .findFirst()
-                    .orElseThrow(() -> new NoSuchElementException("User not found"));
+//        var participations = userParticipationRepository.findByEventId(event.getId());
+//        participations.forEach(userParticipation -> {
+//            var evaluation = completeEventDTO.stream()
+//                    .filter(e -> e.getUserId().equals(userParticipation.getUser().getId()))
+//                    .findFirst()
+//                    .orElseThrow(() -> new NoSuchElementException("User not found"));
+//
+//            userParticipation.setRating(evaluation.getRating());
+//            userParticipation.setComment(evaluation.getComment());
+//            leaderboardService.addScore(userParticipation.getUser(), evaluation);
+//        });
+    }
 
-            userParticipation.setRating(evaluation.getRating());
-            userParticipation.setComment(evaluation.getComment());
-            leaderboardService.addScore(userParticipation.getUser(), evaluation);
-        });
+    @Transactional
+    public void evaluateUser(Long eventId, UserEvaluationDTO evaluation) {
+        if (evaluation.getRating() < 1 || evaluation.getRating() > 5) {
+            throw new IllegalArgumentException("Rating must be between 1 and 5.");
+        }
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventId)));
+        if (!event.getStatus().equals(EventStatus.COMPLETED)) {
+            throw new IllegalStateException("Cannot evaluate user in not completed event.");
+        }
+
+        var participation = userParticipationRepository.findByUserIdAndEventId(evaluation.getUserId(), eventId)
+                .orElseThrow(() -> new NoSuchElementException("User not found in event."));
+
+        if (participation.getRating() > 0) {
+            throw new IllegalStateException("User already evaluated.");
+        }
+
+        participation.setRating(evaluation.getRating());
+        participation.setComment(evaluation.getComment());
+        userParticipationRepository.save(participation);
+
+        if (event.getParticipations().stream().noneMatch(p -> p.getRating() == 0)) {
+            event.setStatus(EventStatus.EVALUATED);
+            eventRepository.save(event);
+        }
+
+        leaderboardService.addScore(evaluation);
     }
 
     private boolean isUserVolunteer(User user) {
@@ -231,14 +267,14 @@ public class EventService {
                 .participants(
                         participants != null ?
                                 participants.stream().map(UserParticipationMapper::mapToDTO).toList()
-                        :
+                                :
                                 new ArrayList<>()
                 )
                 .numberOfVolunteersNeeded(event.getNumberOfVolunteersNeeded())
                 .startDate(event.getStartDate())
                 .endDate(event.getEndDate())
                 .location(event.getLocation())
-                .isCompleted(event.getIsCompleted())
+                .status(event.getStatus())
                 .build();
     }
 }

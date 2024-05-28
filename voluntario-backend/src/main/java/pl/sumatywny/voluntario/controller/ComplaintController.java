@@ -22,6 +22,7 @@ public class ComplaintController {
         this.complaintService = complaintService;
         this.authService = authService;
         this.userService = userService;
+
     }
 
     //    @IsAdmin
@@ -87,6 +88,5 @@ public class ComplaintController {
             return ResponseEntity.ok().body(complaintService.allComplaintsByUser(userService.getUserById(userID)));
         }
     }
-
 
 }

@@ -1,29 +1,27 @@
 import { useState } from 'react';
-import { EventFilters } from '@/components/events/EventFilters';
 import { EventList } from '@/components/events/EventList';
 import { EventSearchBox } from '@/components/events/EventSearchBox';
-import { Button } from '@/components/ui/button';
-import { useScreenSize } from '@/hooks/useScreenSize';
-import { Filter } from 'lucide-react';
+import { EventListMap } from '@/components/events/EventListMap';
+import { Switch } from '@/components/ui/switch';
 
 export const EventsListPage = () => {
-  const { isSmall } = useScreenSize();
   const [showMap, setShowMap] = useState(false);
-
-  const toggleView = () => {
-    setShowMap((prev) => !prev);
-  };
-
   return (
     <div className="mb-8 h-full w-full">
-      {/* <Dialog>
-        <div className="flex justify-between">
-          <h1 className="text-2xl font-semibold">Wydarzenia</h1>
-          <Button variant={'outline'}>Dodaj wydarzenie</Button>
-        </div>
-      </Dialog> */}
       <EventSearchBox />
-      <div className="container mt-6 flex flex-col gap-3 md:flex-row">
+      <div className="container mt-6 flex w-2/3 flex-col gap-3">
+        <div className="flex gap-2">
+          Pokaż mapę
+          <Switch checked={showMap} onCheckedChange={setShowMap} />
+        </div>
+        {showMap ? <EventListMap /> : <EventList />}
+      </div>
+    </div>
+  );
+};
+
+{
+  /* <div className="container mt-6 flex flex-col gap-3 md:flex-row">
         {isSmall ? (
           <Button variant={'outline'} asChild onClick={toggleView}>
             <div className="flex justify-center gap-1">
@@ -42,6 +40,5 @@ export const EventsListPage = () => {
           {showMap ? <EventList /> : <EventList />}
         </div>
       </div>
-    </div>
-  );
-};
+    </div> */
+}

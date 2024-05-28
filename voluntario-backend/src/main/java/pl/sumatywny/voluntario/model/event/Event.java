@@ -3,6 +3,7 @@ package pl.sumatywny.voluntario.model.event;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pl.sumatywny.voluntario.enums.EventStatus;
 import pl.sumatywny.voluntario.model.post.Post;
 import pl.sumatywny.voluntario.model.user.Organization;
 import pl.sumatywny.voluntario.model.AuditingEntity;
@@ -46,5 +47,6 @@ public class Event extends AuditingEntity {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Location location;
 
-    private Boolean isCompleted = false;
+    @Enumerated(EnumType.STRING)
+    private EventStatus status = EventStatus.NOT_COMPLETED;
 }

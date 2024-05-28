@@ -3,6 +3,7 @@ package pl.sumatywny.voluntario.model.user;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.lang.Nullable;
 
@@ -23,7 +24,7 @@ public class Score {
     @Max(value = 5, message = "Rating must be between 0 and 5")
     private double overallRating;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     private User user;
 
 

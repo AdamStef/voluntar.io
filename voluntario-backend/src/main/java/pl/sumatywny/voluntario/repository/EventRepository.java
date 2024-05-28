@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import pl.sumatywny.voluntario.enums.EventStatus;
 import pl.sumatywny.voluntario.model.event.Event;
 
 import java.util.List;
@@ -33,4 +34,14 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                 ORDER BY e.startDate ASC
             """)
     Page<Event> findAllByNameWithParticipantsPageable(String name, Pageable pageable);
+
+    @Query("""
+            SELECT e FROM Event e LEFT JOIN FETCH e.participations
+                WHERE ((CASE WHEN :name IS NULL OR :name = '' THEN true END)
+                OR lower(e.name) LIKE lower(concat('%', :name, '%')))
+                AND e.startDate >= current_date
+                AND e.status = :status
+                ORDER BY e.startDate ASC
+            """)
+    Page<Event> findAllByNameAndStatusWithParticipantsPageable(String name, EventStatus status, Pageable pageable);
 }

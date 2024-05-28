@@ -82,16 +82,25 @@ public class EventController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> allEvents(
+    public ResponseEntity<?> pagedEvents(
             @RequestParam(name = "search", required = false, defaultValue = "") String search,
-            @PageableDefault(sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok().body(eventService.getAllEventsPageable(search, pageable));
+            @RequestParam(name = "status", required = false, defaultValue = "") String status,
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable
+    ) {
+        if (status.isBlank()) {
+            return ResponseEntity.ok().body(eventService.getAllEventsPageable(search, pageable));
+        }
+        return ResponseEntity.ok().body(eventService.getAllEventsByStatusPageable(search, status, pageable));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> allEvents() {
-        return ResponseEntity.ok().body(eventService.getAllEventsDTO());
+    public ResponseEntity<?> allEvents(
+            @RequestParam(name = "search", required = false, defaultValue = "") String search,
+            @RequestParam(name = "status", required = false, defaultValue = "") String status
+    ) {
+        return ResponseEntity.ok().body(eventService.getAllEventsDTO(search, status));
     }
+
 
     @GetMapping("/{eventId}")
     public ResponseEntity<?> event(@PathVariable("eventId") Long eventId) {
@@ -132,10 +141,25 @@ public class EventController {
     @PostMapping("/{eventId}/complete")
     public ResponseEntity<?> completeEvent(
             @PathVariable("eventId") Long eventId,
-            @RequestBody List<UserEvaluationDTO> completeEventDTO
+            @RequestBody(required = false) List<UserEvaluationDTO> completeEventDTO
     ) {
         var event = eventService.getEvent(eventId);
         eventService.completeEvent(event, completeEventDTO);
         return ResponseEntity.ok().build();
+    }
+  
+    @PostMapping("/{eventId}/evaluation")
+    public ResponseEntity<?> evaluateUser(
+            @PathVariable("eventId") Long eventId,
+            @RequestBody UserEvaluationDTO userEvaluationDTO
+    ) {
+        eventService.evaluateUser(eventId, userEvaluationDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> getUserEvents() {
+        User user = authService.getUserFromSession();
+        return ResponseEntity.ok().body(eventService.getUserEvents(user));
     }
 }

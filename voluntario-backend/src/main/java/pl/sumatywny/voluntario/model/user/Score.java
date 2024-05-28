@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Data
-@Entity(name = "scores")
+@Entity
+@Table(name = "scores")
 public class Score {
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -23,6 +25,30 @@ public class Score {
 
     @OneToOne(fetch = FetchType.EAGER)
     private User user;
+
+
+    @Min(value=0)
+    private int purchasePoints;
+
+    @Transient
+    private int previousTotalPoints;
+
+    @PrePersist
+    public void prePersist() {
+        this.previousTotalPoints = this.totalPoints;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        if (this.totalPoints != this.previousTotalPoints) {
+            int difference = this.totalPoints - this.previousTotalPoints;
+            this.purchasePoints += difference;
+            this.previousTotalPoints = this.totalPoints;
+        }
+    }
+
+
+
 
 
 }

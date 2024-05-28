@@ -52,7 +52,7 @@ public class PointsShopController {
         return ResponseEntity.ok(pointsShopService.findAllOffers());
     }
 
-    @GetMapping("/offers/sponsor/{sponsorID}")
+    @GetMapping("/offers/sponsors/{sponsorID}")
     public ResponseEntity<?> getOffersBySponsor(@PathVariable("sponsorID") Long sponsorId) {
         return ResponseEntity.ok(pointsShopService.findAllOffersBySponsorId(sponsorId));
     }
@@ -77,10 +77,14 @@ public class PointsShopController {
     @GetMapping("/my-promo-codes")
     public ResponseEntity<?> getMyPromoCodes(@RequestParam(value = "active", required=false) Boolean active) {
         var user = authService.getUserFromSession();
-        if(active) {
-            return ResponseEntity.ok(pointsShopService.findAllUsersPromoCodes(user.getId(), active));
+        if(active == null || !active) {
+            System.out.println("test");
+            return ResponseEntity.ok(pointsShopService.findAllUsersPromoCodes(user.getId(), false));
         }
-        return ResponseEntity.ok(pointsShopService.findAllUsersPromoCodes(user.getId(), false));
+        else {
+            return ResponseEntity.ok(pointsShopService.findAllUsersPromoCodes(user.getId(), active));
+
+        }
     }
 
     @GetMapping("/my-promo-codes/{promoCode}")

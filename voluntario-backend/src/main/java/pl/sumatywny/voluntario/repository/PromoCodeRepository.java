@@ -17,6 +17,6 @@ public interface PromoCodeRepository extends JpaRepository<PromoCode, String> {
     List<PromoCode> findAllByOfferId(Long offerId);
 
     @Query("SELECT p FROM PromoCode p WHERE p.offer.id = ?1 and p.canBeUsed = true and p.isAssignedToUser = false")
-    PromoCode findFirstAssignablePromoCodeByOfferId(Long offerId);
+    List<PromoCode> findFirstAssignablePromoCodeByOfferId(Long offerId);
 
 }

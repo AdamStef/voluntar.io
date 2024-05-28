@@ -147,7 +147,7 @@ public class EventController {
         eventService.completeEvent(event, completeEventDTO);
         return ResponseEntity.ok().build();
     }
-
+  
     @PostMapping("/{eventId}/evaluation")
     public ResponseEntity<?> evaluateUser(
             @PathVariable("eventId") Long eventId,

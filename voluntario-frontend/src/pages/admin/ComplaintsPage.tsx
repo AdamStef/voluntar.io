@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getComplaints } from '@/utils/api/api.ts';
 import { Spinner } from '@/components/ui/Spinner.tsx';
 
-export const AdminPage = () => {
+export const ComplaintsPage = () => {
   const {
     data: complaints,
     isError,

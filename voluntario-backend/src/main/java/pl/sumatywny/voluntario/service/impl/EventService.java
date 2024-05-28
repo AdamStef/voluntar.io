@@ -24,7 +24,10 @@ import pl.sumatywny.voluntario.repository.EventRepository;
 import pl.sumatywny.voluntario.repository.LocationRepository;
 import pl.sumatywny.voluntario.repository.UserParticipationRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -39,6 +42,7 @@ public class EventService {
     private final LocationService locationService;
     private final PostService postService;
     private final LeaderboardService leaderboardService;
+    private final EmailService emailService;
 
     @Transactional
     public void createEvent(EventRequestDTO eventRequestDTO, Organization organization) {
@@ -83,6 +87,11 @@ public class EventService {
                 .event(event)
                 .build();
         userParticipationRepository.save(userParticipation);
+        String subject = "Potwierdzenie zapisu na wolontariat - " + event.getName();
+        String text = "\n\ndziękujemy za zapisanie się na wolontariat i chęć pomocy innym. Do zobaczenia "
+                + event.getStartDate().toLocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) +
+                "\n\nPozdrawiamy,\nZespół Voluntar.io";
+        emailService.sendEmail(user.getEmail(), subject, text);
     }
 
     @Transactional
@@ -99,6 +108,10 @@ public class EventService {
                 );
 
         userParticipationRepository.delete(participation);
+        String subject = "Potwierdzenie wypisania się z wolontariatu - " + event.getName();
+        String text = "\n\nwypisałeś się z wolontariatu lub zrobił to organizator. Do zobaczenia na innym wolontariacie." +
+                        "\n\nPozdrawiamy,\nZespół Voluntar.io";
+        emailService.sendEmail(user.getEmail(), subject, text);
     }
 
     @Transactional
@@ -228,6 +241,24 @@ public class EventService {
                 .location(event.getLocation())
                 .status(event.getStatus())
                 .build();
+    }
+
+    public List<EventResponseDTO> getSoonEvents() {
+        LocalDate tomorrowDateEnd = LocalDate.now().plusDays(1);
+        LocalTime timeEnd = LocalTime.of(23, 59, 59,1);
+        LocalDateTime tomorrowEnd = LocalDateTime.of(tomorrowDateEnd, timeEnd);
+
+        LocalDate tomorrowDateStart = LocalDate.now().plusDays(1);
+        LocalTime timeStart = LocalTime.of(0, 0, 0,1);
+        LocalDateTime tomorrowStart = LocalDateTime.of(tomorrowDateStart, timeStart);
+
+        List<Event> events = eventRepository.findAllByStartDateLessThanEqualAndStartDateGreaterThanEqual(tomorrowEnd, tomorrowStart);
+        ArrayList<EventResponseDTO> result = new ArrayList<>();
+        for (Event event: events) {
+            result.add(new EventResponseDTO(event));
+        }
+
+        return result;
     }
 }
 

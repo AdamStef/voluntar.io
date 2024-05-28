@@ -101,6 +101,7 @@ public class EventController {
         return ResponseEntity.ok().body(eventService.getAllEventsDTO(search, status));
     }
 
+
     @GetMapping("/{eventId}")
     public ResponseEntity<?> event(@PathVariable("eventId") Long eventId) {
         var event = eventService.getEventDTO(eventId);

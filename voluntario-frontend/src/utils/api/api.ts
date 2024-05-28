@@ -115,6 +115,9 @@ export const getAllEvents = async (search: string, status: EventStatus) =>
 export const getOrganizerEvents = async () =>
   axiosClient.get<EventType[]>(`/events/organization`).then((res) => res.data);
 
+export const getUserEvents = async () =>
+  axiosClient.get<EventType[]>(`/events/user`).then((res) => res.data);
+
 export const getEvent = async (id: string) =>
   axiosClient.get<EventType>(`/events/${id}`);
 

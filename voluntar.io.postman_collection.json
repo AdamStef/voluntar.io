@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "4f8d1e94-3f80-4b89-91d9-95d9dbda58b4",
+		"_postman_id": "743060b9-5c6a-4cb2-816a-3bbbbc6399f1",
 		"name": "voluntar.io",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "31669741",
-		"_collection_link": "https://blue-crater-52358.postman.co/workspace/SUMY-Workspace~73926df5-7a8b-4d9d-8020-1c3110b7bd87/collection/32305026-4f8d1e94-3f80-4b89-91d9-95d9dbda58b4?action=share&source=collection_link&creator=31669741"
+		"_exporter_id": "34632865"
 	},
 	"item": [
 		{
@@ -1066,6 +1065,239 @@
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "points shop",
+			"item": [
+				{
+					"name": "sponsors",
+					"item": [
+						{
+							"name": "create sponsor",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"firma krzak\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basic_url}}/points-shop/sponsors",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"points-shop",
+										"sponsors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get all sponsors",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{basic_url}}/points-shop/sponsors",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"points-shop",
+										"sponsors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get specific sponsor",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{basic_url}}/points-shop/sponsors/1",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"points-shop",
+										"sponsors",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "offers",
+					"item": [
+						{
+							"name": "create offer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"offerDTO\": {\r\n        \"name\": \"Special Discount Offer\",\r\n        \"description\": \"Get a special discount on our new products\",\r\n        \"sponsorID\": 1,\r\n        \"endDate\": \"2024-12-31\",\r\n        \"pointsCost\": 100\r\n    },\r\n    \"promoCodeDTO\": {\r\n        \"offerID\": 67890,\r\n        \"promoCodeType\": \"percentage\",\r\n        \"discount\": 20.5,\r\n        \"maxUsages\": 50,\r\n        \"expirationDate\": \"2024-12-31\"\r\n    },\r\n    \"numberOfPromoCodes\": 10\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basic_url}}/points-shop/offers",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"points-shop",
+										"offers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get offers by sponsor id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{basic_url}}/points-shop/offers/sponsors/1",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"points-shop",
+										"offers",
+										"sponsors",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get active offers",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{basic_url}}/points-shop/offers/active",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"points-shop",
+										"offers",
+										"active"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get specific offer",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{basic_url}}/points-shop/offers/2",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"points-shop",
+										"offers",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "promo codes",
+					"item": [
+						{
+							"name": "assign promo code to volunteer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{basic_url}}/points-shop/offers/4/assign",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"points-shop",
+										"offers",
+										"4",
+										"assign"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "all my promo codes",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{basic_url}}/points-shop/my-promo-codes",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"points-shop",
+										"my-promo-codes"
+									],
+									"query": [
+										{
+											"key": "active",
+											"value": "true",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get my specific promo code",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{basic_url}}/points-shop/my-promo-codes/RGIFvCCtDg",
+									"host": [
+										"{{basic_url}}"
+									],
+									"path": [
+										"points-shop",
+										"my-promo-codes",
+										"RGIFvCCtDg"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},

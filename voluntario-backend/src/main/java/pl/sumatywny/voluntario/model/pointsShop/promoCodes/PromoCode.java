@@ -28,8 +28,8 @@ public abstract class PromoCode {
     private String code;
 
     @NonNull
-    @Min(0)
-    private Integer remainingUses;
+    @Min(1)
+    private Integer maxUsages;
 
     @ManyToOne
     @NonNull

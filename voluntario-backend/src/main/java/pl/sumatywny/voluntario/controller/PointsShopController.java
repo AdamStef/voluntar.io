@@ -58,7 +58,7 @@ public class PointsShopController {
     }
 
     @GetMapping("/offers/active")
-    public ResponseEntity<?> getActiveOffers(@RequestParam("active") Boolean active) {
+    public ResponseEntity<?> getActiveOffers() {
         return ResponseEntity.ok(pointsShopService.findAllActiveOffers());
     }
 
@@ -82,5 +82,12 @@ public class PointsShopController {
         }
         return ResponseEntity.ok(pointsShopService.findAllUsersPromoCodes(user.getId(), false));
     }
+
+    @GetMapping("/my-promo-codes/{promoCode}")
+    public ResponseEntity<?> getMyPromoCode(@PathVariable("promoCode") String promoCode) {
+        var user = authService.getUserFromSession();
+        return ResponseEntity.ok(pointsShopService.findPromoCodeByCode(user.getId(), promoCode));
+    }
+
 
 }

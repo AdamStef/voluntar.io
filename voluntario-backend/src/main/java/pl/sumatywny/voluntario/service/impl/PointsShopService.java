@@ -194,12 +194,27 @@ public class PointsShopService {
         return promoPossession;
     }
 
-    public List<PromoCodePossession> findAllUsersPromoCodes(Long volunteerId, boolean canBeUsed) {
+    public List<PromoCode> findAllUsersPromoCodes(Long volunteerId, boolean canBeUsed) {
+        List<PromoCode> promoCodeList = new ArrayList<>();
         if(canBeUsed){
             var promoCodePossessionList = promoCodePossessionRepository.findAllByVolunteerId(volunteerId);
             promoCodePossessionList.removeIf(promoCodePossession -> !promoCodePossession.getPromoCode().getCanBeUsed());
+            for(PromoCodePossession promoCodePossession : promoCodePossessionList){
+                promoCodeList.add(promoCodePossession.getPromoCode());
+            }
         }
-        return promoCodePossessionRepository.findAllByVolunteerId(volunteerId);
+        return promoCodeList;
+    }
+
+    public PromoCode findPromoCodeByCode(Long userID, String code) {
+        var promoCodePossession = promoCodePossessionRepository.findFirstByPromoCodeCode(code);
+        if (promoCodePossession == null) {
+            throw new RuntimeException("Promo code possession not found");
+        }
+        if (promoCodePossession.getVolunteer().getId() != userID) {
+            throw new RuntimeException("Promo code possession not found");
+        }
+        return promoCodePossession.getPromoCode();
     }
 
 

@@ -58,4 +58,20 @@ public class AuthController {
 
         return ResponseEntity.ok().body(UserResponseDTO.mapFromUser(user));
     }
+
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(String newPassword) {
+        var user = authService.getUserFromSession();
+        userService.changePassword(user, newPassword);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/change-data")
+    public ResponseEntity<?> changeData(String firstName, String lastName, String email, String phoneNumber) {
+        var user = authService.getUserFromSession();
+        userService.changeData(user, firstName, lastName, email, phoneNumber);
+        return ResponseEntity.ok().build();
+    }
+
 }

@@ -23,4 +23,19 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User with id %d not found".formatted(id)));
     }
+
+    // Function to change the password of a user
+    public void changePassword(User user, String newPassword) {
+        user.setPassword(newPassword);
+        userRepository.save(user);
+    }
+
+    public User changeData(User user, String firstName, String lastName, String email, String phoneNumber) {
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPhoneNumber(phoneNumber);
+        return userRepository.save(user);
+    }
+
 }

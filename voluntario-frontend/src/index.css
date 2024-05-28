@@ -99,3 +99,13 @@
     src: url(/assets/fonts/Roboto/Roboto-Regular.tff) format('.tff');
   }
 }
+
+/* .calendar-container .react-calendar__tile--today {
+  border: 2px solid green;
+  border-radius: 50%;
+}
+
+.calendar-container .react-calendar__tile--event {
+  border: 2px solid red;
+  border-radius: 50%;
+} */

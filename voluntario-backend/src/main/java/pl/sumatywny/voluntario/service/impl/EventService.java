@@ -23,6 +23,7 @@ import pl.sumatywny.voluntario.model.user.UserParticipation;
 import pl.sumatywny.voluntario.repository.EventRepository;
 import pl.sumatywny.voluntario.repository.LocationRepository;
 import pl.sumatywny.voluntario.repository.UserParticipationRepository;
+import pl.sumatywny.voluntario.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class EventService {
     private final LocationService locationService;
     private final PostService postService;
     private final LeaderboardService leaderboardService;
+    private final UserRepository userRepository;
 
     @Transactional
     public void createEvent(EventRequestDTO eventRequestDTO, Organization organization) {
@@ -127,10 +129,20 @@ public class EventService {
     }
 
     @Transactional
-    public List<EventResponseDTO> getAllEventsDTO() {
+    public List<EventResponseDTO> getAllEventsDTO(String search, String status) {
         return eventRepository
                 .findAllWithParticipants()
                 .stream()
+                .filter(event -> search.isBlank() || event.getName().contains(search))
+                .filter(event -> status.isBlank() || event.getStatus().equals(EventStatus.fromString(status)))
+                .map(this::getEventResponse)
+                .toList();
+    }
+
+    public List<EventResponseDTO> getUserEvents(User user) {
+        return userParticipationRepository.findByUserId(user.getId())
+                .stream()
+                .map(UserParticipation::getEvent)
                 .map(this::getEventResponse)
                 .toList();
     }
@@ -146,6 +158,11 @@ public class EventService {
 
     public Page<EventResponseDTO> getAllEventsPageable(String search, Pageable pageable) {
         var events = eventRepository.findAllByNameWithParticipantsPageable(search, pageable);
+        return events.map(this::getEventResponse);
+    }
+
+    public Page<EventResponseDTO> getAllEventsByStatusPageable(String search, String status, Pageable pageable) {
+        var events = eventRepository.findAllByNameAndStatusWithParticipantsPageable(search, EventStatus.fromString(status), pageable);
         return events.map(this::getEventResponse);
     }
 
@@ -186,17 +203,48 @@ public class EventService {
         event.setStatus(EventStatus.COMPLETED);
         eventRepository.save(event);
 
-        var participations = userParticipationRepository.findByEventId(event.getId());
-        participations.forEach(userParticipation -> {
-            var evaluation = completeEventDTO.stream()
-                    .filter(e -> e.getUserId().equals(userParticipation.getUser().getId()))
-                    .findFirst()
-                    .orElseThrow(() -> new NoSuchElementException("User not found"));
+//        var participations = userParticipationRepository.findByEventId(event.getId());
+//        participations.forEach(userParticipation -> {
+//            var evaluation = completeEventDTO.stream()
+//                    .filter(e -> e.getUserId().equals(userParticipation.getUser().getId()))
+//                    .findFirst()
+//                    .orElseThrow(() -> new NoSuchElementException("User not found"));
+//
+//            userParticipation.setRating(evaluation.getRating());
+//            userParticipation.setComment(evaluation.getComment());
+//            leaderboardService.addScore(userParticipation.getUser(), evaluation);
+//        });
+    }
 
-            userParticipation.setRating(evaluation.getRating());
-            userParticipation.setComment(evaluation.getComment());
-            leaderboardService.addScore(userParticipation.getUser(), evaluation);
-        });
+    @Transactional
+    public void evaluateUser(Long eventId, UserEvaluationDTO evaluation) {
+        if (evaluation.getRating() < 1 || evaluation.getRating() > 5) {
+            throw new IllegalArgumentException("Rating must be between 1 and 5.");
+        }
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventId)));
+        if (!event.getStatus().equals(EventStatus.COMPLETED)) {
+            throw new IllegalStateException("Cannot evaluate user in not completed event.");
+        }
+
+        var participation = userParticipationRepository.findByUserIdAndEventId(evaluation.getUserId(), eventId)
+                .orElseThrow(() -> new NoSuchElementException("User not found in event."));
+
+        if (participation.getRating() > 0) {
+            throw new IllegalStateException("User already evaluated.");
+        }
+
+        participation.setRating(evaluation.getRating());
+        participation.setComment(evaluation.getComment());
+        userParticipationRepository.save(participation);
+
+        if (event.getParticipations().stream().noneMatch(p -> p.getRating() == 0)) {
+            event.setStatus(EventStatus.EVALUATED);
+            eventRepository.save(event);
+        }
+
+        leaderboardService.addScore(evaluation);
     }
 
     private boolean isUserVolunteer(User user) {
@@ -219,7 +267,7 @@ public class EventService {
                 .participants(
                         participants != null ?
                                 participants.stream().map(UserParticipationMapper::mapToDTO).toList()
-                        :
+                                :
                                 new ArrayList<>()
                 )
                 .numberOfVolunteersNeeded(event.getNumberOfVolunteersNeeded())

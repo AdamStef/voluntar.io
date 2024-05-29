@@ -1,8 +1,8 @@
-import { EventType, Role } from '@/utils/types/types';
+import { EventStatus, EventType, Role } from '@/utils/types/types';
 import { CalendarCheck } from 'lucide-react';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { H1 } from '../../ui/typography/heading';
-import { getLocationString } from '@/utils/helpers';
+import { getEnumValue, getLocationString } from '@/utils/helpers';
 import { Button } from '../../ui/button';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
@@ -64,12 +64,8 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
 
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
-  const [canJoin, setCanJoin] = useState<boolean>(
-    event.participants.every((p) => p.userId !== user?.id),
-  );
-  const [canLeave, setCanLeave] = useState<boolean>(
-    event.participants.some((p) => p.userId === user?.id),
-  );
+  const [canJoin, setCanJoin] = useState<boolean>(checkIfCanJoin());
+  const [canLeave, setCanLeave] = useState<boolean>(checkIfCanLeave());
 
   const { mutate: addParticipantMutate } = useMutation({
     mutationFn: addParticipantToEvent,
@@ -87,15 +83,31 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
     },
   });
 
-  useEffect(() => {
+  function checkIfCanJoin() {
     if (event.participants) {
-      setCanJoin(
+      return (
         event.participants.every((p) => p.userId !== user?.id) &&
-          event.participants.length < event.numberOfVolunteersNeeded,
+        event.participants.length < event.numberOfVolunteersNeeded &&
+        event.startDate > new Date()
       );
-      setCanLeave(event.participants.some((p) => p.userId === user?.id));
     }
-  }, [event.participants, user, event.numberOfVolunteersNeeded]);
+    return true;
+  }
+
+  function checkIfCanLeave() {
+    if (event.participants) {
+      return (
+        event.participants.some((p) => p.userId === user?.id) &&
+        event.startDate > new Date()
+      );
+    }
+    return false;
+  }
+
+  useEffect(() => {
+    setCanJoin(checkIfCanJoin());
+    setCanLeave(checkIfCanLeave());
+  }, [event, user]);
 
   const handleAddParticipant = () => {
     if (!user || !canJoin) return;
@@ -103,6 +115,7 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
       eventId: event.id.toString(),
       participantId: user.id,
     });
+    console.log(event.id.toString(), user.id);
   };
 
   const handleLeaveEvent = () => {
@@ -113,21 +126,20 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
     });
   };
 
+  console.log(event);
+
   return (
     <Panel className="flex flex-col justify-between gap-4 pb-0">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <CalendarCheck className="hidden h-24 w-24 md:block" />
-          <div className="flex flex-col gap-2">
-            <H1>{event.name}</H1>
-            <p className="font-semibold text-destructive">
-              {event.startDate.toLocaleDateString()} o{' '}
-              {event.startDate.toLocaleTimeString()}
-            </p>
-            <p>{getLocationString(event.location)}</p>
-          </div>
+      <div className="flex items-center gap-4">
+        <CalendarCheck className="hidden h-24 w-24 md:block" />
+        <div className="flex flex-col gap-2">
+          <H1>{event.name}</H1>
+          <p className="font-semibold text-destructive">
+            {event.startDate.toLocaleDateString()} o{' '}
+            {event.startDate.toLocaleTimeString()}
+          </p>
+          <p>{getLocationString(event.location)}</p>
         </div>
-        {/* <Button className="justify-self-end">Dołącz</Button> */}
       </div>
 
       <hr className="border-panel-foreground" />
@@ -147,26 +159,27 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
             Dyskusja
           </TabButton>
 
-          {user?.role === Role.VOLUNTEER && (
-            <>
-              {canJoin && (
-                <Button className="ml-10" onClick={handleAddParticipant}>
-                  Dołącz
-                </Button>
-              )}
-              {canLeave && (
-                <Button
-                  className="ml-10"
-                  variant={'destructive'}
-                  onClick={handleLeaveEvent}
-                >
-                  Opuść
-                </Button>
-              )}
-            </>
-          )}
+          {user?.role === Role.VOLUNTEER &&
+            getEnumValue(EventStatus, event.status) ==
+              EventStatus.NOT_COMPLETED && (
+              <>
+                {canJoin && (
+                  <Button className="ml-10" onClick={handleAddParticipant}>
+                    Dołącz
+                  </Button>
+                )}
+                {canLeave && (
+                  <Button
+                    className="ml-10"
+                    variant={'destructive'}
+                    onClick={handleLeaveEvent}
+                  >
+                    Opuść
+                  </Button>
+                )}
+              </>
+            )}
         </div>
-        {/* <Button className="">Dołącz</Button> */}
       </div>
     </Panel>
   );

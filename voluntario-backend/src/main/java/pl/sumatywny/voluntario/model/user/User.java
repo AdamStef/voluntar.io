@@ -56,7 +56,7 @@ public class User extends AuditingEntity implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<UserParticipation> participations = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private Score score;
 
     @Column(nullable = false)

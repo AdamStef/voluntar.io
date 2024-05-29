@@ -9,8 +9,9 @@ import { postLogoutUser } from '@/utils/api/api';
 import { AxiosError } from 'axios';
 import { AuthContext } from '@/utils/context/AuthContext';
 import { Role } from '@/utils/types/types.ts';
+import { cn } from '@/lib/utils';
 
-const navItems: NavbarItemType[] = [
+const volunteerNavItems: NavbarItemType[] = [
   {
     name: 'Strona główna',
     path: '/home',
@@ -23,9 +24,13 @@ const navItems: NavbarItemType[] = [
     name: 'Ranking',
     path: '/leaderboard',
   },
+  {
+    name: 'Wymiana punktów',
+    path: '/point-exchange',
+  },
 ];
 
-const navOrganizerItems: NavbarItemType[] = [
+const organizerNavItems: NavbarItemType[] = [
   {
     name: 'Strona główna',
     path: '/home',
@@ -39,8 +44,27 @@ const navOrganizerItems: NavbarItemType[] = [
     path: '/addevent',
   },
   {
+    name: 'Dodaj skargę',
+    path: '/addcomplain',
+  },
+  {
     name: 'Ranking',
     path: '/leaderboard',
+  },
+];
+
+const adminNavItems: NavbarItemType[] = [
+  {
+    name: 'Strona główna',
+    path: '/home',
+  },
+  {
+    name: 'Skargi',
+    path: '/complaints',
+  },
+  {
+    name: 'Zarządzanie sklepem',
+    path: '/shop',
   },
 ];
 
@@ -75,11 +99,14 @@ type MobileNavbarItemProps = {
 
 const NavbarItem: React.FC<NavbarItemType> = ({ name, path }) => {
   return (
-    <li key={name} className="cursor-pointer hover:text-primary">
+    <li key={name}>
       <NavLink
         to={path}
         className={({ isActive }) => {
-          return isActive ? 'text-primary' : 'text-secondary';
+          return cn(
+            'cursor-pointer py-2 text-center align-middle hover:text-primary',
+            isActive ? 'text-primary' : 'text-secondary',
+          );
         }}
       >
         {name}
@@ -159,21 +186,30 @@ const Navbar: React.FC = () => {
         {user != null ? (
           <>
             <ul className="mr-8 flex justify-between gap-8 text-lg text-secondary">
-              {user.role == Role.VOLUNTEER
-                ? navItems.map((item) => (
-                    <NavbarItem
-                      key={item.name}
-                      name={item.name}
-                      path={item.path}
-                    />
-                  ))
-                : navOrganizerItems.map((item) => (
-                    <NavbarItem
-                      key={item.name}
-                      name={item.name}
-                      path={item.path}
-                    />
-                  ))}
+              {user.role == Role.VOLUNTEER &&
+                volunteerNavItems.map((item) => (
+                  <NavbarItem
+                    key={item.name}
+                    name={item.name}
+                    path={item.path}
+                  />
+                ))}
+              {user.role == Role.ORGANIZATION &&
+                organizerNavItems.map((item) => (
+                  <NavbarItem
+                    key={item.name}
+                    name={item.name}
+                    path={item.path}
+                  />
+                ))}
+              {user.role == Role.ADMIN &&
+                adminNavItems.map((item) => (
+                  <NavbarItem
+                    key={item.name}
+                    name={item.name}
+                    path={item.path}
+                  />
+                ))}
             </ul>
             <Button onClick={handleLogout} variant={'secondary'}>
               {isLoading ?? <Spinner className="mr-1 text-white" />}
@@ -229,7 +265,7 @@ const Navbar: React.FC = () => {
             <>
               <ul className="flex flex-col divide-y">
                 {user.role == Role.VOLUNTEER
-                  ? navItems.map((item) => (
+                  ? volunteerNavItems.map((item) => (
                       <MobileNavbarItem
                         key={item.name}
                         name={item.name}
@@ -237,7 +273,7 @@ const Navbar: React.FC = () => {
                         setShowNavbar={setShowNavbar}
                       />
                     ))
-                  : navOrganizerItems.map((item) => (
+                  : organizerNavItems.map((item) => (
                       <MobileNavbarItem
                         key={item.name}
                         name={item.name}

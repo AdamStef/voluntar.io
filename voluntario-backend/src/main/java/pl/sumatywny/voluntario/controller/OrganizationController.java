@@ -35,6 +35,11 @@ public class OrganizationController {
         return ResponseEntity.ok().body(organizationService.getOrganization(organizationID));
     }
 
+    @GetMapping("/user/{userID}")
+    public ResponseEntity<?> getOrganizationForUser(@PathVariable("userID") Long userID) {
+        return ResponseEntity.ok().body(organizationService.getUserOrganization(userID));
+    }
+
     @GetMapping("/user")
     public ResponseEntity<?> getUserOrganization() {
         var user = authService.getUserFromSession();

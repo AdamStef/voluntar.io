@@ -20,7 +20,7 @@ import {
   EventStatus,
   ComplaintPostType,
   SponsorType,
-  OfferType,
+  OfferType, OrganizationType,
   // EventStatus,
   // eventSchema,
 } from '../types/types';
@@ -219,6 +219,12 @@ export const getUsers = async () =>
 
 export const getOrganizations = async () =>
   axiosClient.get(`/organizations`).then((res) => res.data);
+
+export const getOrganization = async (userId: number) =>
+    axiosClient.get(`/organizations/user/${userId}`).then((res) => res.data);
+
+// export const getOrganization = async (userId: number) =>
+//     axiosClient.get<OrganizationType>(`/organizations/user/${userId}`);
 
 //sponsors
 

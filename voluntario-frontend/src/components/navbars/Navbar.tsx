@@ -24,6 +24,10 @@ const volunteerNavItems: NavbarItemType[] = [
     name: 'Ranking',
     path: '/leaderboard',
   },
+  {
+    name: 'Wymiana punktów',
+    path: '/point-exchange',
+  },
 ];
 
 const organizerNavItems: NavbarItemType[] = [

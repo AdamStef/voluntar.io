@@ -93,5 +93,9 @@ public class PointsShopController {
         return ResponseEntity.ok(pointsShopService.findPromoCodeByCode(user.getId(), promoCode));
     }
 
-
+    @GetMapping("/current-points")
+    public ResponseEntity<?> getCurrentPoints() {
+        var user = authService.getUserFromSession();
+        return ResponseEntity.ok(pointsShopService.getPointsForUser(user.getId()));
+    }
 }

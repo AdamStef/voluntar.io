@@ -176,3 +176,16 @@ export const deletePost = async (postId: number) =>
 // Leaderboard
 export const getLeaderboard = async (): Promise<Page<ScoreType>> =>
   axiosClient.get<Page<ScoreType>>('/scores').then((res) => res.data);
+
+export const changeUserPassword = async (newPassword: string) => {
+  return axiosClient.post('/auth/change/password', { newPassword });
+};
+
+export const changeUserData = async (userData: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+}) => {
+  return axiosClient.post('/auth/change-data', userData);
+};

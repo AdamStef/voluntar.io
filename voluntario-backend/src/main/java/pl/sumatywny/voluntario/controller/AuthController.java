@@ -16,6 +16,8 @@ import pl.sumatywny.voluntario.model.user.userdetails.CustomUserDetails;
 import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
@@ -60,9 +62,25 @@ public class AuthController {
     }
 
 
-    @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(String newPassword) {
-        var user = authService.getUserFromSession();
+//    @PostMapping("/change/password")
+//    public ResponseEntity<?> changePassword(String newPassword) {
+//        var user = authService.getUserFromSession();
+//        userService.changePassword(user, newPassword);
+//        return ResponseEntity.ok().build();
+//    }
+
+    @PostMapping("/change/password")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> request) {
+        String newPassword = request.get("newPassword");
+        if (newPassword == null || newPassword.isEmpty()) {
+            return ResponseEntity.badRequest().body("New password is required");
+        }
+
+        User user = authService.getUserFromSession();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found in session");
+        }
+
         userService.changePassword(user, newPassword);
         return ResponseEntity.ok().build();
     }

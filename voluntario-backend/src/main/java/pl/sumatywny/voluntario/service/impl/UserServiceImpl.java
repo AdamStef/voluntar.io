@@ -1,6 +1,8 @@
 package pl.sumatywny.voluntario.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.service.UserService;
@@ -9,6 +11,9 @@ import pl.sumatywny.voluntario.repository.UserRepository;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -23,10 +28,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User with id %d not found".formatted(id)));
     }
-
-    // Function to change the password of a user
+    
     public void changePassword(User user, String newPassword) {
-        user.setPassword(newPassword);
+//        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 

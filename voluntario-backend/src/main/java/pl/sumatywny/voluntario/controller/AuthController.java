@@ -60,8 +60,8 @@ public class AuthController {
 
         return ResponseEntity.ok().body(UserResponseDTO.mapFromUser(user));
     }
-    
-    @PostMapping("/change/password")
+
+    @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@RequestBody Map<String, String> request) {
         String newPassword = request.get("newPassword");
 
@@ -74,7 +74,7 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/change/data")
+    @PostMapping("/change-data")
     public ResponseEntity<?> changeData(@RequestBody Map<String, String> request) {
         String firstName = request.get("firstName");
         String lastName = request.get("lastName");
@@ -83,8 +83,9 @@ public class AuthController {
 
         User user = authService.getUserFromSession();
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Użytkownik niezalogowany.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Użytkownik niezalogowany");
         }
+
         userService.changeData(user, firstName, lastName, email, phoneNumber);
         return ResponseEntity.ok().build();
     }

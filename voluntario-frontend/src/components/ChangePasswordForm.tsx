@@ -75,7 +75,7 @@ const ChangePasswordForm: React.FC<Props> = ({ className }) => {
               <FormLabel>New Password</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Enter new password"
+                  placeholder="Podaj nowe hasło"
                   type="password"
                   {...field}
                 />
@@ -93,7 +93,7 @@ const ChangePasswordForm: React.FC<Props> = ({ className }) => {
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Confirm new password"
+                  placeholder="Potwierdz nowe hasło"
                   type="password"
                   {...field}
                 />

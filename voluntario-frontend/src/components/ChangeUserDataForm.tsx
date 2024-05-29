@@ -2,7 +2,7 @@ import React, { HTMLProps, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { changeUserData, getAuthUser } from '@/utils/api/api'; // Import getAuthUser
+import { changeUserData, getAuthUser } from '@/utils/api/api';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -30,7 +30,8 @@ type Props = {
 };
 
 const ChangeUserDataForm: React.FC<Props> = ({ className }) => {
-  const [setInitialData] = useState<ChangeUserDataFormSchema | null>(null);
+  const [initialData, setInitialData] =
+    useState<ChangeUserDataFormSchema | null>(null);
 
   const form = useForm<ChangeUserDataFormSchema>({
     resolver: zodResolver(validationSchema),
@@ -69,6 +70,8 @@ const ChangeUserDataForm: React.FC<Props> = ({ className }) => {
 
     fetchUserData();
   }, [form]);
+
+  console.log(initialData);
 
   const onSubmit = async (data: ChangeUserDataFormSchema) => {
     try {

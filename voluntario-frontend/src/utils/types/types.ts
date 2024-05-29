@@ -173,3 +173,18 @@ export type Sort = {
   unsorted: boolean;
   empty: boolean;
 };
+
+export type SponsorType = {
+  id: number;
+  name: string;
+};
+
+export type OfferType = {
+  id: number;
+  name: string;
+  description: string;
+  sponsor: SponsorType;
+  endDate: Date;
+  pointsCost: number;
+  isActive: boolean;
+};

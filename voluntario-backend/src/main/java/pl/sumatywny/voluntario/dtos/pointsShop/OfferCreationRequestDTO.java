@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class OfferCreationRequestDTO {
-    private OfferDTO offerDTO;
-    private PromoCodeDTO promoCodeDTO;
+    private OfferDTO offer;
+    private PromoCodeDTO promoCode;
     private int numberOfPromoCodes;
 }

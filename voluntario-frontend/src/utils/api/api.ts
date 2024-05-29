@@ -5,6 +5,7 @@ import {
   RegisterUserParams,
   RegisterOrganizationParams,
   EvaluateUserParams,
+  AddOfferParams,
 } from '../types/params';
 import {
   EventPostType,
@@ -18,6 +19,8 @@ import {
   ScoreType,
   EventStatus,
   ComplaintPostType,
+  SponsorType,
+  OfferType,
   // EventStatus,
   // eventSchema,
 } from '../types/types';
@@ -216,3 +219,20 @@ export const getUsers = async () =>
 
 export const getOrganizations = async () =>
   axiosClient.get(`/organizations`).then((res) => res.data);
+
+//sponsors
+
+export const getAllSponsors = async () =>
+  axiosClient
+    .get<SponsorType[]>(`/points-shop/sponsors`)
+    .then((res) => res.data);
+
+export const addSponsor = async ({ name }: { name: string }) =>
+  axiosClient.post(`/points-shop/sponsors`, { name });
+
+//offers
+export const getAllOffers = async () =>
+  axiosClient.get<OfferType[]>(`/points-shop/offers`).then((res) => res.data);
+
+export const addOffer = async (request: AddOfferParams) =>
+  axiosClient.post<AddOfferParams>(`/points-shop/offers`, request);

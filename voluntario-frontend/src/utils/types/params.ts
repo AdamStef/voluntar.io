@@ -34,3 +34,21 @@ export type EvaluateUserParams = {
   rating: number;
   comment: string;
 };
+
+export type AddOfferParams = {
+  offer: {
+    name: string;
+    description: string;
+    sponsorID: number;
+    endDate: Date;
+    pointsCost: number;
+  };
+  promoCode: {
+    offerID: number;
+    promoCodeType: 'percentage' | 'value';
+    discount: number;
+    maxUsages: number;
+    expirationDate: Date;
+  };
+  numberOfPromoCodes: number;
+};

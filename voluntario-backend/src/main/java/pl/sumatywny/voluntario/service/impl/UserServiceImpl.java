@@ -28,19 +28,19 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User with id %d not found".formatted(id)));
     }
-    
+
     public void changePassword(User user, String newPassword) {
 //        user.setPassword(newPassword);
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 
-    public User changeData(User user, String firstName, String lastName, String email, String phoneNumber) {
+    public void changeData(User user, String firstName, String lastName, String email, String phoneNumber) {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
 }

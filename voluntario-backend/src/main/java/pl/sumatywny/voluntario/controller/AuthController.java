@@ -60,34 +60,31 @@ public class AuthController {
 
         return ResponseEntity.ok().body(UserResponseDTO.mapFromUser(user));
     }
-
-
-//    @PostMapping("/change/password")
-//    public ResponseEntity<?> changePassword(String newPassword) {
-//        var user = authService.getUserFromSession();
-//        userService.changePassword(user, newPassword);
-//        return ResponseEntity.ok().build();
-//    }
-
+    
     @PostMapping("/change/password")
     public ResponseEntity<?> changePassword(@RequestBody Map<String, String> request) {
         String newPassword = request.get("newPassword");
-        if (newPassword == null || newPassword.isEmpty()) {
-            return ResponseEntity.badRequest().body("New password is required");
-        }
 
         User user = authService.getUserFromSession();
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found in session");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Użytkownik niezalogowany.");
         }
 
         userService.changePassword(user, newPassword);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/change-data")
-    public ResponseEntity<?> changeData(String firstName, String lastName, String email, String phoneNumber) {
-        var user = authService.getUserFromSession();
+    @PostMapping("/change/data")
+    public ResponseEntity<?> changeData(@RequestBody Map<String, String> request) {
+        String firstName = request.get("firstName");
+        String lastName = request.get("lastName");
+        String email = request.get("email");
+        String phoneNumber = request.get("phoneNumber");
+
+        User user = authService.getUserFromSession();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Użytkownik niezalogowany.");
+        }
         userService.changeData(user, firstName, lastName, email, phoneNumber);
         return ResponseEntity.ok().build();
     }

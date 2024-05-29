@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { UserProfile } from '@/components/UserProfile';
 import ChangePasswordForm from '@/components/ChangePasswordForm';
+import ChangeUserDataForm from '@/components/ChangeUserDataForm';
 import { getAuthUser } from '@/utils/api/api';
 
 type UserType = {
@@ -72,6 +73,7 @@ export const UserProfilePage: React.FC = () => {
         </button>
       </div>
       {showPasswordForm && <ChangePasswordForm />}
+      {showUserDataForm && <ChangeUserDataForm />}
     </div>
   );
 };

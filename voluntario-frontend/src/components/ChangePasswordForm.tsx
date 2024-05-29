@@ -2,7 +2,6 @@ import React, { HTMLProps } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-// import { useNavigate } from 'react-router-dom';
 import { changeUserPassword } from '@/utils/api/api';
 import { Button } from '@/components/ui/button';
 import {
@@ -45,15 +44,12 @@ const ChangePasswordForm: React.FC<Props> = ({ className }) => {
       confirmPassword: '',
     },
   });
-  //   const navigate = useNavigate();
 
   const onSubmit = async (data: ChangePasswordFormSchema) => {
     try {
       await changeUserPassword(data.newPassword);
       alert('Udało się zmienić hasło!');
-      //   navigate('');
     } catch (error) {
-      //   console.error(error);
       form.setError('root.serverError', {
         type: 'manual',
         message: 'Nie udało się zmienić hasła. Spróbuj ponownie później',

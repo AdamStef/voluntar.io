@@ -187,5 +187,5 @@ export const changeUserData = async (userData: {
   email: string;
   phoneNumber: string;
 }) => {
-  return axiosClient.post('/auth/change-data', userData);
+  return axiosClient.post('/auth/change/data', userData);
 };

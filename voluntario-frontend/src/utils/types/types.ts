@@ -65,27 +65,29 @@ export type ParticipantType = {
 };
 
 export enum ComplaintStatusType {
-  RESOLVED = "RESOLVED", TO_REVIEW = "TO_REVIEW", UNDER_REVIEW = "UNDER_REVIEW"
+  RESOLVED = 'RESOLVED',
+  TO_REVIEW = 'TO_REVIEW',
+  UNDER_REVIEW = 'UNDER_REVIEW',
 }
 
 export type ComplaintType = {
-  id: number,
-  reporter: UserType,
-  textComplaint: string,
-  reported: UserType,
-  reportDate: Date,
-  claimDate: Date,
-  resolveDate: Date,
-  status: ComplaintStatusType,
-  response: string,
-  adminID?: number,
-  version?: number
-}
+  id: number;
+  reporter: UserType;
+  textComplaint: string;
+  reported: UserType;
+  reportDate: Date;
+  claimDate: Date;
+  resolveDate: Date;
+  status: ComplaintStatusType;
+  response: string;
+  adminID?: number;
+  version?: number;
+};
 
 export type ComplaintPostType = {
-  reportedID: number,
-  text: string,
-}
+  reportedID: number;
+  text: string;
+};
 
 export type EventFormType = {
   name: string;
@@ -170,4 +172,19 @@ export type Sort = {
   sorted: boolean;
   unsorted: boolean;
   empty: boolean;
+};
+
+export type SponsorType = {
+  id: number;
+  name: string;
+};
+
+export type OfferType = {
+  id: number;
+  name: string;
+  description: string;
+  sponsor: SponsorType;
+  endDate: Date;
+  pointsCost: number;
+  isActive: boolean;
 };

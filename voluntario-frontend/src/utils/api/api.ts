@@ -5,6 +5,7 @@ import {
   RegisterUserParams,
   RegisterOrganizationParams,
   EvaluateUserParams,
+  AddOfferParams,
 } from '../types/params';
 import {
   EventPostType,
@@ -16,7 +17,10 @@ import {
   LocationType,
   ParticipantType,
   ScoreType,
-  EventStatus, ComplaintPostType,
+  EventStatus,
+  ComplaintPostType,
+  SponsorType,
+  OfferType,
   // EventStatus,
   // eventSchema,
 } from '../types/types';
@@ -179,29 +183,56 @@ export const getLeaderboard = async (): Promise<Page<ScoreType>> =>
   axiosClient.get<Page<ScoreType>>('/scores').then((res) => res.data);
 
 export const getComplaints = async () =>
-    axiosClient.get<ComplaintType[]>('/complaints/').then((res) => res.data);
+  axiosClient.get<ComplaintType[]>('/complaints/').then((res) => res.data);
 
 export const getUnderReviewComplaints = async () =>
-    axiosClient.get<ComplaintType[]>('/complaints/underReview').then((res) => res.data);
+  axiosClient
+    .get<ComplaintType[]>('/complaints/underReview')
+    .then((res) => res.data);
 
 export const getToReviewComplaints = async () =>
-    axiosClient.get<ComplaintType[]>('/complaints/toReview').then((res) => res.data);
+  axiosClient
+    .get<ComplaintType[]>('/complaints/toReview')
+    .then((res) => res.data);
 
 export const getResolvedComplaints = async () =>
-    axiosClient.get<ComplaintType[]>('/complaints/resolved').then((res) => res.data);
+  axiosClient
+    .get<ComplaintType[]>('/complaints/resolved')
+    .then((res) => res.data);
 
 export const postComplaint = async (data: ComplaintPostType) =>
-    axiosClient.post('/complaints/', data);
+  axiosClient.post('/complaints/', data);
 
-export const resolveComplaint = async ({ complaintId, response }: { complaintId: number, response: ComplaintType }) =>
-    axiosClient.post(`/complaints/resolve/${complaintId}`, response);
+export const resolveComplaint = async ({
+  complaintId,
+  response,
+}: {
+  complaintId: number;
+  response: ComplaintType;
+}) => axiosClient.post(`/complaints/resolve/${complaintId}`, response);
 
 export const claimComplaint = async (complaintId: string) =>
-    axiosClient.post(`/complaints/claim/${complaintId}`);
+  axiosClient.post(`/complaints/claim/${complaintId}`);
 
 export const getUsers = async () =>
-    axiosClient.get(`/users/all`).then((res) => res.data);
+  axiosClient.get(`/users/all`).then((res) => res.data);
 
 export const getOrganizations = async () =>
-    axiosClient.get(`/organizations`).then((res) => res.data);
+  axiosClient.get(`/organizations`).then((res) => res.data);
 
+//sponsors
+
+export const getAllSponsors = async () =>
+  axiosClient
+    .get<SponsorType[]>(`/points-shop/sponsors`)
+    .then((res) => res.data);
+
+export const addSponsor = async ({ name }: { name: string }) =>
+  axiosClient.post(`/points-shop/sponsors`, { name });
+
+//offers
+export const getAllOffers = async () =>
+  axiosClient.get<OfferType[]>(`/points-shop/offers`).then((res) => res.data);
+
+export const addOffer = async (request: AddOfferParams) =>
+  axiosClient.post<AddOfferParams>(`/points-shop/offers`, request);

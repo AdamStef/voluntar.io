@@ -188,3 +188,14 @@ export type OfferType = {
   pointsCost: number;
   isActive: boolean;
 };
+
+export type PromoCodeType = {
+  id: number;
+  code: string;
+  offer: OfferType;
+  promoCodeType: 'percentage' | 'value';
+  discountPercentage?: number;
+  discountValue?: number;
+  maxUsages: number;
+  expirationDate: Date;
+};

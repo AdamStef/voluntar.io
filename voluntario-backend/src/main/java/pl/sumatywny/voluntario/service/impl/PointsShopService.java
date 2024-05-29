@@ -227,5 +227,9 @@ public class PointsShopService {
         return promoCodePossession.getPromoCode();
     }
 
-
+    public int getPointsForUser(Long userId) {
+        return scoreRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User does not have a score"))
+                .getPurchasePoints();
+    }
 }

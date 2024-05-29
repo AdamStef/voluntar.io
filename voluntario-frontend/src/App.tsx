@@ -24,6 +24,7 @@ import { ComplaintsPage } from '@/pages/admin/ComplaintsPage.tsx';
 import RegisterOrganizationForm from './components/forms/RegisterOrganizationForm.tsx';
 import { AddComplainPage } from '@/pages/organizer/AddComplainPage.tsx';
 import { ShopManagementPage } from './pages/admin/ShopManagementPage.tsx';
+import { PointExchangePage } from './pages/volunteer/PointExchangePage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,7 @@ function App() {
           <Route path="/complaints" element={<ComplaintsPage />} />
           <Route path="/addcomplain" element={<AddComplainPage />} />
           <Route path="/shop" element={<ShopManagementPage />} />
+          <Route path="/point-exchange" element={<PointExchangePage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
         </Route>
 

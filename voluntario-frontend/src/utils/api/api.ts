@@ -20,7 +20,8 @@ import {
   EventStatus,
   ComplaintPostType,
   SponsorType,
-  OfferType, OrganizationType,
+  OfferType,
+  PromoCodeType,
   // EventStatus,
   // eventSchema,
 } from '../types/types';
@@ -220,12 +221,6 @@ export const getUsers = async () =>
 export const getOrganizations = async () =>
   axiosClient.get(`/organizations`).then((res) => res.data);
 
-export const getOrganization = async (userId: number) =>
-    axiosClient.get(`/organizations/user/${userId}`).then((res) => res.data);
-
-// export const getOrganization = async (userId: number) =>
-//     axiosClient.get<OrganizationType>(`/organizations/user/${userId}`);
-
 //sponsors
 
 export const getAllSponsors = async () =>
@@ -240,5 +235,25 @@ export const addSponsor = async ({ name }: { name: string }) =>
 export const getAllOffers = async () =>
   axiosClient.get<OfferType[]>(`/points-shop/offers`).then((res) => res.data);
 
+export const getActiveOffers = async () =>
+  axiosClient
+    .get<OfferType[]>(`/points-shop/offers/active`)
+    .then((res) => res.data);
+
 export const addOffer = async (request: AddOfferParams) =>
   axiosClient.post<AddOfferParams>(`/points-shop/offers`, request);
+
+export const claimOffer = async (offerId: number) =>
+  axiosClient.post(`/points-shop/offers/${offerId}/assign`);
+
+//points
+export const getCurrentPoints = async () =>
+  axiosClient
+    .get<number>(`/points-shop/current-points`)
+    .then((res) => res.data);
+
+//promo codes
+export const getMyPromoCodes = async () =>
+  axiosClient
+    .get<PromoCodeType[]>(`/points-shop/my-promo-codes`)
+    .then((res) => res.data);

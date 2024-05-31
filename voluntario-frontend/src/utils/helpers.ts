@@ -1,24 +1,37 @@
-import { DateTime } from 'luxon';
+import moment from 'moment';
 import { LocationType, EventType, EventStatus } from './types/types';
 import { LatLngTuple } from 'leaflet';
-// export function isValidDateString(dateString: unknown): boolean {
-//   // return typeof dateString === 'string' && !isNaN(Date.parse(dateString));
-//   return (
-//     typeof dateString === 'string' &&
-//     Object.prototype.toString.call(dateString) === '[object Date]' // &&
-//     // !isNaN(dateString)
-//   );
-// }
 
-// export function isValidDateString(dateString: unknown): boolean {
-//   return dateString instanceof Date && !isNaN(dateString);
-// }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isIsoDateString = (value: any): boolean => {
+  if (typeof value !== 'string') return false;
+  const momentDate = moment(value, moment.ISO_8601, true);
+  return momentDate.isValid();
+};
 
-export function isValidDateString(dateString: unknown): boolean {
-  if (typeof dateString !== 'string') return false;
-  const parsedDate = DateTime.fromISO(dateString);
-  return parsedDate.isValid;
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const convertDates = (obj: any): any => {
+  if (obj === null || obj === undefined) return obj;
+
+  if (Array.isArray(obj)) {
+    return obj.map(convertDates);
+  } else if (typeof obj === 'object') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const newObj: any = {};
+    Object.keys(obj).forEach((key) => {
+      const value = obj[key];
+      if (isIsoDateString(value)) {
+        newObj[key] = new Date(value);
+      } else if (typeof value === 'object') {
+        newObj[key] = convertDates(value);
+      } else {
+        newObj[key] = value;
+      }
+    });
+    return newObj;
+  }
+  return obj;
+};
 
 export function getLocationString(location?: LocationType): string {
   if (!location) return 'Nieznana lokalizacja';

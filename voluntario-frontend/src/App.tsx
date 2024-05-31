@@ -3,7 +3,6 @@ import { LoginPage } from './pages/auth/LoginPage';
 import { AuthProvider } from './utils/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Layout } from './pages/Layout';
-import { Dashboard } from './pages/Dashboard';
 import { NotFound } from './pages/NotFound';
 import { OrganizerHomePage } from './pages/organizer/OrganizerHomePage.tsx';
 import { EventsListPage } from './pages/volunteer/EventsListPage';

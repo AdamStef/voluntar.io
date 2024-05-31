@@ -1,7 +1,9 @@
 package pl.sumatywny.voluntario.dtos.user;
 
 import lombok.*;
+import pl.sumatywny.voluntario.dtos.OrganizationDTO;
 import pl.sumatywny.voluntario.enums.Gender;
+import pl.sumatywny.voluntario.mapper.OrganizationMapper;
 import pl.sumatywny.voluntario.model.user.User;
 
 @Data
@@ -17,6 +19,7 @@ public class UserResponseDTO {
     private String lastName;
     private String phoneNumber;
     private Gender gender;
+    private OrganizationDTO organization;
 
     public static UserResponseDTO mapFromUser(User user) {
         return UserResponseDTO.builder()
@@ -27,6 +30,7 @@ public class UserResponseDTO {
                 .lastName(user.getLastName())
                 .phoneNumber(user.getPhoneNumber())
                 .gender(user.getGender())
+                .organization(OrganizationMapper.mapToDTO(user.getOrganization()))
                 .build();
     }
 }

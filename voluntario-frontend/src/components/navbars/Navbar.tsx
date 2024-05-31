@@ -44,6 +44,10 @@ const organizerNavItems: NavbarItemType[] = [
     path: '/addevent',
   },
   {
+    name: 'Oferty',
+    path: '/offers',
+  },
+  {
     name: 'Dodaj skargę',
     path: '/addcomplain',
   },

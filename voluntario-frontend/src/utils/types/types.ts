@@ -12,6 +12,7 @@ export type UserType = {
   lastName: string;
   phoneNumber: string;
   gender: 'male' | 'female';
+  organization?: OrganizationType;
 };
 
 export type NavbarItemType = {

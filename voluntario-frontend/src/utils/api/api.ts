@@ -22,10 +22,8 @@ import {
   SponsorType,
   OfferType,
   PromoCodeType,
-  // EventStatus,
-  // eventSchema,
 } from '../types/types';
-import { isValidDateString } from '../helpers';
+import { convertDates } from '../helpers';
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -35,29 +33,16 @@ const axiosClient = axios.create({
   withCredentials: true,
 });
 
-// const isIsoDateString = (value: unknown): value is string => {
-//   return typeof value === 'string' && ISODateFormat.test(value);
-// };
-
-const handleDates = (data: unknown) => {
-  if (isValidDateString(data)) return new Date(data as string);
-  if (data === null || data === undefined || typeof data !== 'object')
-    return data;
-
-  for (const [key, val] of Object.entries(data)) {
-    // @ts-expect-error this is a hack to make the type checker happy
-    if (isValidDateString(val)) data[key] = new Date(val);
-    else if (typeof val === 'object') handleDates(val);
-  }
-
-  return data;
-};
-
 // Interceptors
-axiosClient.interceptors.response.use((rep) => {
-  handleDates(rep.data);
-  return rep;
-});
+axiosClient.interceptors.response.use(
+  (response) => {
+    response.data = convertDates(response.data);
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
 // Auth
 export const postLoginUser = async (data: LoginCredentialsParams) =>

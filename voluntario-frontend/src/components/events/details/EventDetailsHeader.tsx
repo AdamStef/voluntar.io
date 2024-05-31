@@ -13,6 +13,8 @@ import {
   removeParticipantFromEvent,
 } from '@/utils/api/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useToast } from '@/components/ui/use-toast';
+import { AxiosError } from 'axios';
 
 const tabButtonVariants = cva('font-semibold p-2', {
   variants: {
@@ -64,6 +66,7 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
 
   const queryClient = useQueryClient();
   const { user } = useAuthContext();
+  const { toast } = useToast();
   const [canJoin, setCanJoin] = useState<boolean>(checkIfCanJoin());
   const [canLeave, setCanLeave] = useState<boolean>(checkIfCanLeave());
 
@@ -73,11 +76,29 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
       queryClient.invalidateQueries({ queryKey: ['events'] });
       queryClient.invalidateQueries({ queryKey: ['events', event.id] });
     },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        console.log(error.response?.data);
+        toast({
+          title: 'Błąd',
+          description: error.response?.data.message,
+          variant: 'destructive',
+        });
+        return;
+      } else {
+        toast({
+          title: 'Błąd',
+          description: error.message,
+          variant: 'destructive',
+        });
+      }
+    },
   });
 
   const { mutate: removeParticipantMutate } = useMutation({
     mutationFn: removeParticipantFromEvent,
     onSuccess: () => {
+      console.log('removed participant');
       queryClient.invalidateQueries({ queryKey: ['events'] });
       queryClient.invalidateQueries({ queryKey: ['events', event.id] });
     },
@@ -126,7 +147,7 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
     });
   };
 
-  console.log(event);
+  // console.log(event);
 
   return (
     <Panel className="flex flex-col justify-between gap-4 pb-0">

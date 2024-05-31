@@ -173,13 +173,13 @@ public class EventService {
                 .toList();
     }
 
-    public Page<EventResponseDTO> getAllEventsPageable(String search, Pageable pageable) {
-        var events = eventRepository.findAllByNameWithParticipantsPageable(search, pageable);
+    public Page<EventResponseDTO> getAllEventsPageable(String search, Long userId, Pageable pageable) {
+        var events = eventRepository.findAllByNameWithParticipantsPageable(search, userId, pageable);
         return events.map(this::getEventResponse);
     }
 
-    public Page<EventResponseDTO> getAllEventsByStatusPageable(String search, String status, Pageable pageable) {
-        var events = eventRepository.findAllByNameAndStatusWithParticipantsPageable(search, EventStatus.fromString(status), pageable);
+    public Page<EventResponseDTO> getAllEventsByStatusPageable(String search, Long userId, String status, Pageable pageable) {
+        var events = eventRepository.findAllByNameAndStatusWithParticipantsPageable(search, userId, EventStatus.fromString(status), pageable);
         return events.map(this::getEventResponse);
     }
 

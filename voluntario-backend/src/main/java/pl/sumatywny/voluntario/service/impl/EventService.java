@@ -79,9 +79,20 @@ public class EventService {
             throw new IllegalStateException("Cannot remove participant from completed event.");
         }
 
-        var participation = userParticipationRepository.findByUserIdAndEventId(user.getId(), event.getId());
-        if (participation.isPresent()) {
+        var participations = userParticipationRepository.findByUserId(user.getId());
+        if (participations.stream().anyMatch(p -> p.getEvent().getId().equals(event.getId()))) {
             throw new IllegalStateException(String.format("User %d already in event %d.", user.getId(), event.getId()));
+        }
+
+        if (participations.stream()
+                .filter(p -> !p.getEvent().getStatus().isFinished())
+                .anyMatch(p -> doEventDatesOverlap(p.getEvent(), event))
+        ) {
+            throw new IllegalStateException(String.format("User %d already in another event at the same time.", user.getId()));
+        }
+
+        if (event.getParticipations().size() >= event.getNumberOfVolunteersNeeded()) {
+            throw new IllegalStateException("Event is full.");
         }
 
         UserParticipation userParticipation = UserParticipation.builder()
@@ -102,14 +113,7 @@ public class EventService {
             throw new IllegalStateException("Cannot remove participant from completed event.");
         }
 
-        var participation = userParticipationRepository.findByUserIdAndEventId(user.getId(), event.getId())
-                .orElseThrow(() ->
-                        new NoSuchElementException(
-                                String.format("User %d not found in event %d.", user.getId(), event.getId())
-                        )
-                );
-
-        userParticipationRepository.delete(participation);
+        userParticipationRepository.deleteByEventIdAndUserId(event.getId(), user.getId());
         String subject = "Potwierdzenie wypisania się z wolontariatu - " + event.getName();
         String text = "\n\nwypisałeś się z wolontariatu lub zrobił to organizator. Do zobaczenia na innym wolontariacie." +
                         "\n\nPozdrawiamy,\nZespół Voluntar.io";
@@ -307,6 +311,10 @@ public class EventService {
         }
 
         return result;
+    }
+  
+    private boolean doEventDatesOverlap(Event event1, Event event2) {
+        return event1.getStartDate().isBefore(event2.getEndDate()) && event1.getEndDate().isAfter(event2.getStartDate());
     }
 }
 

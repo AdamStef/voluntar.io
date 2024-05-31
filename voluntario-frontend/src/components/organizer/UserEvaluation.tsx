@@ -50,6 +50,9 @@ export const UserEvaluation: React.FC<{ participant: ParticipantType }> = ({
       queryClient.refetchQueries({
         queryKey: ['organizer', 'participants', participant.eventId],
       });
+      queryClient.refetchQueries({
+        queryKey: ['organizer', 'events'],
+      });
     },
     onError: (error) => {
       const e = error as AxiosError;

@@ -93,14 +93,7 @@ public class EventService {
             throw new IllegalStateException("Cannot remove participant from completed event.");
         }
 
-        var participation = userParticipationRepository.findByUserIdAndEventId(user.getId(), event.getId())
-                .orElseThrow(() ->
-                        new NoSuchElementException(
-                                String.format("User %d not found in event %d.", user.getId(), event.getId())
-                        )
-                );
-
-        userParticipationRepository.delete(participation);
+        userParticipationRepository.deleteByEventIdAndUserId(event.getId(), user.getId());
     }
 
     @Transactional

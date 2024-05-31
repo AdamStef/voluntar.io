@@ -11,7 +11,6 @@ import { EventDetailsPage } from './pages/volunteer/EventDetailsPage';
 import { HomePage } from './pages/HomePage';
 import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { AccountType } from './components/AccountType';
 import RegisterVolunteerForm from './components/forms/RegisterVolunteerForm';
@@ -25,6 +24,7 @@ import RegisterOrganizationForm from './components/forms/RegisterOrganizationFor
 import { AddComplainPage } from '@/pages/organizer/AddComplainPage.tsx';
 import { ShopManagementPage } from './pages/admin/ShopManagementPage.tsx';
 import { PointExchangePage } from './pages/volunteer/PointExchangePage.tsx';
+import { Toaster } from './components/ui/toaster.tsx';
 
 const queryClient = new QueryClient();
 
@@ -34,8 +34,9 @@ function AppWithProviders({ children }: { children: ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           <AuthProvider>{children}</AuthProvider>
+          <Toaster />
         </Provider>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </BrowserRouter>
   );

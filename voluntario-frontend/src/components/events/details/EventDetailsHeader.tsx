@@ -78,6 +78,7 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
   const { mutate: removeParticipantMutate } = useMutation({
     mutationFn: removeParticipantFromEvent,
     onSuccess: () => {
+      console.log('removed participant');
       queryClient.invalidateQueries({ queryKey: ['events'] });
       queryClient.invalidateQueries({ queryKey: ['events', event.id] });
     },
@@ -126,7 +127,7 @@ export const EventDetailsHeader: React.FC<EventDetailsHeaderProps> = ({
     });
   };
 
-  console.log(event);
+  // console.log(event);
 
   return (
     <Panel className="flex flex-col justify-between gap-4 pb-0">

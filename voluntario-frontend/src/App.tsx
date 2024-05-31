@@ -3,7 +3,6 @@ import { LoginPage } from './pages/auth/LoginPage';
 import { AuthProvider } from './utils/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Layout } from './pages/Layout';
-import { Dashboard } from './pages/Dashboard';
 import { NotFound } from './pages/NotFound';
 import { OrganizerHomePage } from './pages/organizer/OrganizerHomePage.tsx';
 import { EventsListPage } from './pages/volunteer/EventsListPage';
@@ -61,13 +60,12 @@ function App() {
 
         {/* Authenticated routes */}
         <Route element={<ProtectedRoute children={<Layout />} />}>
-          <Route path="/home" element={<HomePage />} />
+          {/* Volunteer */}
           <Route path="/events" element={<EventsListPage />} />
           <Route path="/events/:eventId" element={<EventDetailsPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Organizer */}
           <Route path="/organizer" element={<OrganizerHomePage />} />
           <Route path="/addevent" element={<AddEventPage />} />
-          <Route path="/complaints" element={<ComplaintsPage />} />
           <Route path="/addcomplain" element={<AddComplainPage />} />
           <Route path="/realize-coupon" element={<RealizeCouponPage />} />
           <Route path="/offers" element={<OffersPage />} />
@@ -75,6 +73,8 @@ function App() {
           <Route path="/complaints" element={<ComplaintsPage />} />
           <Route path="/shop" element={<ShopManagementPage />} />
           <Route path="/point-exchange" element={<PointExchangePage />} />
+          {/* Common */}
+          <Route path="/home" element={<HomePage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
         </Route>
 

@@ -221,6 +221,9 @@ export const getUsers = async () =>
 export const getOrganizations = async () =>
   axiosClient.get(`/organizations`).then((res) => res.data);
 
+export const getUserOrganization = async (userId: number) =>
+    axiosClient.get(`/organizations/user/${userId}`).then((res) => res.data);
+
 //sponsors
 
 export const getAllSponsors = async () =>

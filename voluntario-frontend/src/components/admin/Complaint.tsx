@@ -5,6 +5,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {
   resolveComplaint,
   claimComplaint,
+  getUserOrganization,
 } from '@/utils/api/api.ts';
 import React, { ChangeEvent, useState } from 'react';
 import { ComplaintStatusType, ComplaintType } from '@/utils/types/types.ts';
@@ -21,7 +22,7 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
     data: organization,
   } = useQuery({
     queryKey: ['complaint', 'organizer', complaint.reporter.id],
-    queryFn: () => getOrganization(complaint.reporter.id)
+    queryFn: () => getUserOrganization(complaint.reporter.id)
   });
 
   const [showInput, setShowInput] = useState(false);

@@ -25,6 +25,7 @@ import { ShopManagementPage } from './pages/admin/ShopManagementPage.tsx';
 import { PointExchangePage } from './pages/volunteer/PointExchangePage.tsx';
 import { Toaster } from './components/ui/toaster.tsx';
 import { RealizeCouponPage } from './pages/organizer/RealizeCouponPage.tsx';
+import { OffersPage } from './pages/organizer/OffersPage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -62,12 +63,12 @@ function App() {
           {/* Volunteer */}
           <Route path="/events" element={<EventsListPage />} />
           <Route path="/events/:eventId" element={<EventDetailsPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           {/* Organizer */}
           <Route path="/organizer" element={<OrganizerHomePage />} />
           <Route path="/addevent" element={<AddEventPage />} />
           <Route path="/addcomplain" element={<AddComplainPage />} />
           <Route path="/realize-coupon" element={<RealizeCouponPage />} />
+          <Route path="/offers" element={<OffersPage />} />
           {/* Admin */}
           <Route path="/complaints" element={<ComplaintsPage />} />
           <Route path="/shop" element={<ShopManagementPage />} />

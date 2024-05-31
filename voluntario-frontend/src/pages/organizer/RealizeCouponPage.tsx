@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { RealizeCouponDialog } from '@/components/organizer/RealizeCouponDialog';
+import { Subpanel } from '@/components/ui/Subpanel';
 
 export const RealizeCouponPage = () => {
   return (
@@ -21,7 +22,7 @@ export const RealizeCouponPage = () => {
           <Input className="w-2/3" placeholder="Wpisz kod kuponu" />
           <Button>Wyszukaj</Button>
         </div>
-        <div className="rounded-lg border border-gray-300 bg-white p-4 shadow-sm">
+        <Subpanel>
           <H4 className="mb-2">Dane kuponu</H4>
           <Table>
             <TableHeader>
@@ -50,7 +51,7 @@ export const RealizeCouponPage = () => {
               {/* ))} */}
             </TableBody>
           </Table>
-        </div>
+        </Subpanel>
       </Panel>
     </div>
   );

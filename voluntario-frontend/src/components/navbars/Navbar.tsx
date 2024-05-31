@@ -48,6 +48,10 @@ const organizerNavItems: NavbarItemType[] = [
     path: '/realize-coupon',
   },
   {
+    name: 'Oferty',
+    path: '/offers',
+  },
+  {
     name: 'Dodaj skargę',
     path: '/addcomplain',
   },

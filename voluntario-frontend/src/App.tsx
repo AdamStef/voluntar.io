@@ -3,7 +3,6 @@ import { LoginPage } from './pages/auth/LoginPage';
 import { AuthProvider } from './utils/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Layout } from './pages/Layout';
-import { Dashboard } from './pages/Dashboard';
 import { NotFound } from './pages/NotFound';
 import { OrganizerHomePage } from './pages/organizer/OrganizerHomePage.tsx';
 import { EventsListPage } from './pages/volunteer/EventsListPage';
@@ -59,16 +58,19 @@ function App() {
 
         {/* Authenticated routes */}
         <Route element={<ProtectedRoute children={<Layout />} />}>
+          {/* Volunteer */}
           <Route path="/home" element={<HomePage />} />
           <Route path="/events" element={<EventsListPage />} />
           <Route path="/events/:eventId" element={<EventDetailsPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Organizer */}
           <Route path="/organizer" element={<OrganizerHomePage />} />
           <Route path="/addevent" element={<AddEventPage />} />
           <Route path="/complaints" element={<ComplaintsPage />} />
+          {/* Admin */}
           <Route path="/addcomplain" element={<AddComplainPage />} />
           <Route path="/shop" element={<ShopManagementPage />} />
           <Route path="/point-exchange" element={<PointExchangePage />} />
+          {/* Common */}
           <Route path="/leaderboard" element={<LeaderboardPage />} />
         </Route>
 

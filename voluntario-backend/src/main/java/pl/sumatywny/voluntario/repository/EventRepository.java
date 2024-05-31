@@ -33,21 +33,21 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByStartDateLessThanEqualAndStartDateGreaterThanEqual(@Param("endDate") LocalDateTime endDate, @Param("startDate") LocalDateTime startDate);
 
     @Query("""
-            SELECT e FROM Event e LEFT JOIN FETCH e.participations
+            SELECT e FROM Event e LEFT JOIN FETCH e.participations p
                 WHERE ((CASE WHEN :name IS NULL OR :name = '' THEN true END)
                 OR lower(e.name) LIKE lower(concat('%', :name, '%')))
                 AND e.startDate >= current_date
-                ORDER BY e.startDate ASC
+                ORDER BY CASE WHEN p.user.id = :userId THEN 0 ELSE 1 END, e.startDate ASC
             """)
-    Page<Event> findAllByNameWithParticipantsPageable(String name, Pageable pageable);
+    Page<Event> findAllByNameWithParticipantsPageable(String name, Long userId, Pageable pageable);
 
     @Query("""
-            SELECT e FROM Event e LEFT JOIN FETCH e.participations
+            SELECT e FROM Event e LEFT JOIN FETCH e.participations p
                 WHERE ((CASE WHEN :name IS NULL OR :name = '' THEN true END)
                 OR lower(e.name) LIKE lower(concat('%', :name, '%')))
                 AND e.startDate >= current_date
                 AND e.status = :status
-                ORDER BY e.startDate ASC
+                ORDER BY CASE WHEN p.user.id = :userId THEN 0 ELSE 1 END, e.startDate ASC
             """)
-    Page<Event> findAllByNameAndStatusWithParticipantsPageable(String name, EventStatus status, Pageable pageable);
+    Page<Event> findAllByNameAndStatusWithParticipantsPageable(String name, Long userId, EventStatus status, Pageable pageable);
 }

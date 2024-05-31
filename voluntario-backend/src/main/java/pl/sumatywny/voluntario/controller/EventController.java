@@ -87,10 +87,11 @@ public class EventController {
             @RequestParam(name = "status", required = false, defaultValue = "") String status,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable
     ) {
+        var user = authService.getUserFromSession();
         if (status.isBlank()) {
-            return ResponseEntity.ok().body(eventService.getAllEventsPageable(search, pageable));
+            return ResponseEntity.ok().body(eventService.getAllEventsPageable(search, user.getId(), pageable));
         }
-        return ResponseEntity.ok().body(eventService.getAllEventsByStatusPageable(search, status, pageable));
+        return ResponseEntity.ok().body(eventService.getAllEventsByStatusPageable(search, user.getId(), status, pageable));
     }
 
     @GetMapping("/all")

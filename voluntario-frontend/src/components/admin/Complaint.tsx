@@ -5,9 +5,8 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {
   resolveComplaint,
   claimComplaint,
-  getOrganization,
 } from '@/utils/api/api.ts';
-import { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { ComplaintStatusType, ComplaintType } from '@/utils/types/types.ts';
 import {format} from "date-fns";
 
@@ -20,8 +19,6 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
 
   const {
     data: organization,
-    isError,
-    isPending,
   } = useQuery({
     queryKey: ['complaint', 'organizer', complaint.reporter.id],
     queryFn: () => getOrganization(complaint.reporter.id)
@@ -91,9 +88,9 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
   console.log(organization);
 
   return (
-    <div className="relative my-4 flex h-auto flex-col bg-gray-400 md:flex-row">
+    <div className="relative my-4 flex h-auto flex-col bg-gray-400 lg:flex-row">
       {/* volunteer */}
-      <div className="mx-2 my-2 flex w-full flex-col items-center md:w-1/4">
+      <div className="mx-2 my-2 flex w-full flex-col items-center lg:w-1/4">
         <img
           className="my-2 rounded-sm border bg-white"
           src={ManAvatar}
@@ -122,7 +119,6 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
                 </span>
                 { organization &&
                     <div className="flex flex-row">
-                      {/*<RiOrganizationChart className="h-7 w-7" />*/}
                       <p className="w-fit text-sm">
                         <span className="font-normal">Organizacja: </span>
                         <span className="font-bold">{organization.name}</span>
@@ -149,20 +145,17 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
                   }
                 </div>
               </p>
-
             </div>
-
-
           </div>
           <div>
-            <p>Uwagi:</p>
+            <p className="font-bold">Uwagi:</p>
             <p>{complaint.textComplaint}</p>
           </div>
           {/*wyslana odpowiedz??*/}
           {responseSent && (
             <div>
               <br />
-              <p>Wysłana odpowiedź:</p>
+              <p className="font-bold">Wysłana odpowiedź:</p>
               <p>{complaint.response}</p>
             </div>
           )}
@@ -171,30 +164,41 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
         {/* buttons */}
         <div className="mt-4 flex justify-end">
           {responseSent && (
+              <>
             <Button className="mx-3 w-40 bg-gray-600 hover:bg-green-800">
               Wysłano odpowiedź
             </Button>
+            <Button className="mx-3 w-48 bg-gray-600 hover:bg-gray-600">
+            Potwierdzono otrzymanie
+            </Button>
+              </>
           )}
           {!responseSent && !showInput && (
             <>
               {!claimed && (
+                  <>
+                    {/*<Button className="mx-3 w-40 bg-gray-600 hover:bg-gray-600">*/}
+                    {/*  /!*Wyślij odpowiedź*!/*/}
+                    {/*</Button>*/}
                 <Button
-                  className="mx-3 w-40 bg-green-600 hover:bg-green-800"
+                  className="mx-3 w-48 bg-green-600 hover:bg-green-800"
                   onClick={submitClaimComplaint}
                 >
                   Potwierdź otrzymanie
                 </Button>
+
+                  </>
               )}
               {claimed && (
                 <>
-                  <Button className="mx-3 w-48 bg-gray-600 hover:bg-gray-600">
-                    Potwierdzono otrzymanie
-                  </Button>
                   <Button
-                    className="mx-3 w-32 bg-green-600 hover:bg-green-800"
-                    onClick={openResponse}
+                      className="mx-3 w-40 bg-green-600 hover:bg-green-800"
+                      onClick={openResponse}
                   >
                     Wyślij odpowiedź
+                  </Button>
+                  <Button className="mx-3 w-48 bg-gray-600 hover:bg-gray-600">
+                    Potwierdzono otrzymanie
                   </Button>
                 </>
               )}

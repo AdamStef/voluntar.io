@@ -1,4 +1,4 @@
-import { Offers } from '@/components/admin/offer/Offers';
+import { Offers } from '@/components/organizer/offer/Offers';
 import { H3 } from '@/components/ui/typography/heading';
 
 export const OffersPage = () => {

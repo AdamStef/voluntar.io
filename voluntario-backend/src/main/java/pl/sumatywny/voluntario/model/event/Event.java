@@ -8,7 +8,6 @@ import pl.sumatywny.voluntario.model.post.Post;
 import pl.sumatywny.voluntario.model.user.Organization;
 import pl.sumatywny.voluntario.model.AuditingEntity;
 import pl.sumatywny.voluntario.model.user.UserParticipation;
-import pl.sumatywny.voluntario.model.user.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,13 +34,15 @@ public class Event extends AuditingEntity {
     private Organization organization;
     private int numberOfVolunteersNeeded;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<UserParticipation> participations = new ArrayList<>();
 
+//    @DateTimeFormat
     private LocalDateTime startDate;
+//    @DateTimeFormat
     private LocalDateTime endDate;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Post> posts;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)

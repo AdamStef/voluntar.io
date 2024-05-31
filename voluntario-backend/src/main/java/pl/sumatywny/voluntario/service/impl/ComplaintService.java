@@ -66,7 +66,6 @@ public class ComplaintService {
         return "Complaint resolved";
     }
 
-
     public List<ComplaintResponseDTO> getComplaintsByStatus(Status status) {
         return complaintRepository.getComplaintByStatus(status).stream().map(ComplaintResponseDTO::new).collect(Collectors.toList());
     }

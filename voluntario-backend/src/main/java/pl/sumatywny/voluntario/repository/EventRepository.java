@@ -4,10 +4,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.sumatywny.voluntario.enums.EventStatus;
 import pl.sumatywny.voluntario.model.event.Event;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +28,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("SELECT e FROM Event e LEFT JOIN FETCH e.participations ORDER BY e.startDate ASC")
 //    @EntityGraph(attributePaths = {"participations", "organization", "location"})
     List<Event> findAllWithParticipants();
+
+    @Query("SELECT e FROM Event e WHERE e.startDate <= :endDate AND e.startDate >= :startDate")
+    List<Event> findAllByStartDateLessThanEqualAndStartDateGreaterThanEqual(@Param("endDate") LocalDateTime endDate, @Param("startDate") LocalDateTime startDate);
 
     @Query("""
             SELECT e FROM Event e LEFT JOIN FETCH e.participations

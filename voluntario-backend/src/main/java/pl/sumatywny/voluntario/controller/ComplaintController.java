@@ -22,7 +22,6 @@ public class ComplaintController {
         this.complaintService = complaintService;
         this.authService = authService;
         this.userService = userService;
-
     }
 
     //    @IsAdmin

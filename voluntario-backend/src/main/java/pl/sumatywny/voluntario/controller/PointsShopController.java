@@ -41,8 +41,8 @@ public class PointsShopController {
     @PostMapping("/offers")
     @IsAdmin
     public ResponseEntity<?> createOffer(@RequestBody OfferCreationRequestDTO offerCreationRequestDTO) {
-        var offerDTO = offerCreationRequestDTO.getOfferDTO();
-        var promoCodeDTO = offerCreationRequestDTO.getPromoCodeDTO();
+        var offerDTO = offerCreationRequestDTO.getOffer();
+        var promoCodeDTO = offerCreationRequestDTO.getPromoCode();
         var numberOfPromoCodes = offerCreationRequestDTO.getNumberOfPromoCodes();
         return ResponseEntity.ok(pointsShopService.createOffer(offerDTO, promoCodeDTO, numberOfPromoCodes));
     }
@@ -93,5 +93,9 @@ public class PointsShopController {
         return ResponseEntity.ok(pointsShopService.findPromoCodeByCode(user.getId(), promoCode));
     }
 
-
+    @GetMapping("/current-points")
+    public ResponseEntity<?> getCurrentPoints() {
+        var user = authService.getUserFromSession();
+        return ResponseEntity.ok(pointsShopService.getPointsForUser(user.getId()));
+    }
 }

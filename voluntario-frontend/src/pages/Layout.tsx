@@ -7,7 +7,9 @@ export const Layout = () => {
       <header>
         <Navbar />
       </header>
+      {/* <div className="bg-gray-100"> */}
       <Outlet />
+      {/* </div> */}
       <footer className="pt-24"></footer>
     </>
   );

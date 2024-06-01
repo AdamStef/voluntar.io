@@ -1,4 +1,6 @@
 package pl.sumatywny.voluntario.service.impl;
+import org.hibernate.Hibernate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +29,14 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User with id %d not found".formatted(id)));
+    }
+
+    public List<User> getAllUsers() {
+        List<User> users = userRepository.findAll();
+//        for (User user : users) {
+//            Hibernate.initialize(user.getParticipations());
+//        }
+        return users;
     }
 
     public void changePassword(User user, String newPassword) {

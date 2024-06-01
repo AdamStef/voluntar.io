@@ -14,7 +14,8 @@ export const Panel: React.FC<PanelProps & HTMLAttributes<HTMLDivElement>> = ({
   return (
     <div
       className={cn(
-        'rounded-sm bg-panel p-4 text-panel-foreground shadow-sm',
+        // 'rounded-sm bg-panel p-4 text-panel-foreground shadow-sm',
+        'rounded-sm bg-gray-200 p-4 text-gray-800 shadow-sm',
         className,
       )}
       {...props}

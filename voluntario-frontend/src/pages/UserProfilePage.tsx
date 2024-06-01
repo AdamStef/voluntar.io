@@ -3,6 +3,7 @@ import { UserProfile } from '@/components/UserProfile';
 import ChangePasswordForm from '@/components/ChangePasswordForm';
 import ChangeUserDataForm from '@/components/ChangeUserDataForm';
 import { getAuthUser, getUserScores } from '@/utils/api/api';
+import { Button } from '@/components/ui/button';
 
 type UserType = {
   id: number;
@@ -45,7 +46,7 @@ export const UserProfilePage: React.FC = () => {
         setUserScores(totalScore);
       } catch (error) {
         console.error(
-          'Nie udało się pobrać danych użytkownika. Spróbuj ponownie później',
+          'Nie udało się pobrać danych. Spróbuj ponownie później',
           error,
         );
       }
@@ -59,7 +60,7 @@ export const UserProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="border-2 border-black p-4">
+    <div className="w-1/2 border-2 border-black p-4">
       <div className="mb-4">
         <h2>Punkty użytkownika: {userScores !== null ? userScores : '0'}</h2>
       </div>
@@ -71,18 +72,19 @@ export const UserProfilePage: React.FC = () => {
         />
       </div>
       <div className="mb-4">
-        <button
-          className="mr-2 border-2 border-red-600 p-2"
+        <Button
+          variant="outline"
+          className="mr-2"
           onClick={() => setShowPasswordForm(!showPasswordForm)}
         >
           Zmień hasło
-        </button>
-        <button
-          className="border-2 border-green-600 p-2"
+        </Button>
+        <Button
+          variant="outline"
           onClick={() => setShowUserDataForm(!showUserDataForm)}
         >
           Zmień dane
-        </button>
+        </Button>
       </div>
       {showPasswordForm && <ChangePasswordForm />}
       {showUserDataForm && <ChangeUserDataForm />}

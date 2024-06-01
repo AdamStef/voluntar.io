@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { UserProfile } from '@/components/UserProfile';
 import ChangePasswordForm from '@/components/ChangePasswordForm';
 import ChangeUserDataForm from '@/components/ChangeUserDataForm';
-import { getAuthUser, getUserScores } from '@/utils/api/api';
+import { getAuthUser, getLeaderboard } from '@/utils/api/api';
 import { Button } from '@/components/ui/button';
+import { FaStar } from 'react-icons/fa';
 
 type UserType = {
   id: number;
@@ -19,13 +20,14 @@ type User = {
   email: string;
   firstName: string;
   lastName: string;
+  rating?: number; // Optional rating
+  points?: number; // Optional points
 };
 
 export const UserProfilePage: React.FC = () => {
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [showUserDataForm, setShowUserDataForm] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [userScores, setUserScores] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -36,14 +38,18 @@ export const UserProfilePage: React.FC = () => {
           ...userData,
           name: `${userData.firstName} ${userData.lastName}`,
         };
-        setUser(userWithFullName);
 
-        const scoresResponse = await getUserScores(userData.id);
-        const totalScore = scoresResponse.reduce(
-          (acc, score) => acc + score.score,
-          0,
+        const leaderboardResponse = await getLeaderboard();
+        const userInLeaderboard = leaderboardResponse.content.find(
+          (u) => u.userId === userData.id,
         );
-        setUserScores(totalScore);
+
+        if (userInLeaderboard) {
+          userWithFullName.rating = userInLeaderboard.rating;
+          userWithFullName.points = userInLeaderboard.points;
+        }
+
+        setUser(userWithFullName);
       } catch (error) {
         console.error(
           'Nie udało się pobrać danych. Spróbuj ponownie później',
@@ -61,8 +67,19 @@ export const UserProfilePage: React.FC = () => {
 
   return (
     <div className="w-1/2 border-2 border-black p-4">
-      <div className="mb-4">
-        <h2>Punkty użytkownika: {userScores !== null ? userScores : '0'}</h2>
+      <div className="mb-4 flex items-center">
+        <div className="flex items-center gap-2">
+          <h2>Punkty użytkownika:</h2>
+          <div className="flex items-center gap-2">
+            <p>{user.points !== undefined ? user.points : '0'}</p>
+          </div>
+        </div>
+        {user.rating !== undefined && (
+          <div className="ml-4 flex items-center gap-2">
+            <FaStar color="gold" size={24} />
+            <p>{user.rating}</p>
+          </div>
+        )}
       </div>
       <div className="mb-4">
         <UserProfile

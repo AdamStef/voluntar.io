@@ -13,12 +13,10 @@ public class PromoCodeMapper {
         if (promoCodeDTO.getPromoCodeType().equals("percentage")) {
             promoCode = new PromoCodePercentage(promoCodeDTO.getDiscount());
             promoCode.setCode(RandomStringUtils.randomAlphabetic(10));
-            promoCode.setMaxUsages(promoCodeDTO.getMaxUsages());
             promoCode.setExpirationDate(promoCodeDTO.getExpirationDate());
         } else if (promoCodeDTO.getPromoCodeType().equals("value")) {
             promoCode = new PromoCodeValue(promoCodeDTO.getDiscount());
             promoCode.setCode(RandomStringUtils.randomAlphabetic(10));
-            promoCode.setMaxUsages(promoCodeDTO.getMaxUsages());
             promoCode.setExpirationDate(promoCodeDTO.getExpirationDate());
         } else {
             throw new RuntimeException("Invalid promo code type");

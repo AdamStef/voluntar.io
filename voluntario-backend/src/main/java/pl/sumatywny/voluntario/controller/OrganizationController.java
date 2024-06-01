@@ -41,5 +41,10 @@ public class OrganizationController {
         return ResponseEntity.ok().body(organizationService.getUserOrganization(user.getId()));
     }
 
+    @PostMapping("/verify/{organizationID}")
+    public ResponseEntity<?> verifyOrganization(@PathVariable("organizationID") Long organizationID) {
+        return ResponseEntity.ok().body(organizationService.verifyOrganization(organizationID));
+    }
+
 
 }

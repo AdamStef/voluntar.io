@@ -7,6 +7,7 @@ import pl.sumatywny.voluntario.model.user.Organization;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.OrganizationRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -24,7 +25,11 @@ public class OrganizationService {
                 .website(organizationDTO.getWebsite())
                 .address(organizationDTO.getAddress())
                 .krs(organizationDTO.getKrs())
-                .user(user).build();
+                .user(user)
+                .verified(false)
+                .creationDate(LocalDateTime.now())
+                .verificationDate(null)
+                .build();
         return organizationRepository.save(organization);
     }
 
@@ -40,6 +45,18 @@ public class OrganizationService {
 
     public Organization getUserOrganization(Long userID) {
         return organizationRepository.findOrganizationByUserId(userID);
+    }
+
+    public String verifyOrganization(Long organizationID) {
+        var organization = organizationRepository.findById(organizationID);
+        if (!organization.isEmpty()) {
+            organization.get().setVerified(true);
+            organization.get().setVerificationDate(LocalDateTime.now());
+            organizationRepository.save(organization.get());
+            return String.format("Organization %d verified successfully", organizationID);
+        } else {
+            throw new NoSuchElementException(String.format("Organization %d not found.", organizationID));
+        }
     }
 
 }

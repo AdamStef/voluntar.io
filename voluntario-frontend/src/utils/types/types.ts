@@ -12,58 +12,13 @@ export type UserType = {
   lastName: string;
   phoneNumber: string;
   gender: 'male' | 'female';
+  organization?: OrganizationType;
 };
 
 export type NavbarItemType = {
   name: string;
   path: string;
 };
-
-// export const eventSchema = z.object({
-//   id: z.number(),
-//   name: z.string(),
-//   description: z.string(),
-//   numberOfVolunteersNeeded: z.number(),
-//   participants: z.array(
-//     z.object({
-//       id: z.number(),
-//       email: z.string(),
-//       role: z.nativeEnum(Role),
-//       firstName: z.string(),
-//       lastName: z.string(),
-//       phoneNumber: z.string(),
-//       gender: z.enum(['male', 'female']),
-//     }),
-//   ),
-//   startDate: z.coerce.date(),
-//   endDate: z.coerce.date(),
-//   location: z.object({
-//     id: z.number(),
-//     name: z.string(),
-//     city: z.string(),
-//     postalCode: z.string(),
-//     street: z.string(),
-//     number: z.string(),
-//     flatNumber: z.string().nullable(),
-//     latitude: z.number().nullable(),
-//     longitude: z.number().nullable(),
-//     additionalInformation: z.string().nullable(),
-//   }),
-// });
-
-// export type EventType = z.infer<typeof eventSchema>;
-
-// export type EventType = {
-//   id: number;
-//   name: string;
-//   description: string;
-//   organization?: OrganizationType;
-//   numberOfVolunteersNeeded: number;
-//   participants: UserType[];
-//   startDate: Date;
-//   endDate: Date;
-//   location: LocationType;
-// };
 
 export enum EventStatus {
   NOT_COMPLETED = 'Niezakończone',
@@ -108,6 +63,31 @@ export type ParticipantType = {
   name: string;
   phoneNumber: string;
   gender: 'male' | 'female';
+};
+
+export enum ComplaintStatusType {
+  RESOLVED = 'RESOLVED',
+  TO_REVIEW = 'TO_REVIEW',
+  UNDER_REVIEW = 'UNDER_REVIEW',
+}
+
+export type ComplaintType = {
+  id: number;
+  reporter: UserType;
+  textComplaint: string;
+  reported: UserType;
+  reportDate: Date;
+  claimDate: Date;
+  resolveDate: Date;
+  status: ComplaintStatusType;
+  response: string;
+  adminID?: number;
+  version?: number;
+};
+
+export type ComplaintPostType = {
+  reportedID: number;
+  text: string;
 };
 
 export type EventFormType = {
@@ -193,4 +173,30 @@ export type Sort = {
   sorted: boolean;
   unsorted: boolean;
   empty: boolean;
+};
+
+export type SponsorType = {
+  id: number;
+  name: string;
+};
+
+export type OfferType = {
+  id: number;
+  name: string;
+  description: string;
+  sponsor: SponsorType;
+  endDate: Date;
+  pointsCost: number;
+  isActive: boolean;
+};
+
+export type PromoCodeType = {
+  id: number;
+  code: string;
+  offer: OfferType;
+  promoCodeType: 'percentage' | 'value';
+  discountPercentage?: number;
+  discountValue?: number;
+  maxUsages: number;
+  expirationDate: Date;
 };

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.sumatywny.voluntario.dtos.complaint.ComplaintRequestDTO;
 import pl.sumatywny.voluntario.dtos.complaint.ComplaintResponseDTO;
 import pl.sumatywny.voluntario.model.complaint.Status;
+import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.ComplaintService;
 
@@ -15,10 +16,12 @@ public class ComplaintController {
 
     private final ComplaintService complaintService;
     private final AuthService authService;
+    private final UserService userService;
 
-    public ComplaintController(ComplaintService complaintService, AuthService authService) {
+    public ComplaintController(ComplaintService complaintService, AuthService authService, UserService userService) {
         this.complaintService = complaintService;
         this.authService = authService;
+        this.userService = userService;
     }
 
     //    @IsAdmin
@@ -67,5 +70,22 @@ public class ComplaintController {
         return ResponseEntity.ok().body(complaintService.getComplaintsByStatus(Status.UNDER_REVIEW));
     }
 
+    @GetMapping(value = {"/on/{userID}", "/on/me"})
+    public ResponseEntity<?> getComplaintsOnUser(@PathVariable(name = "userID", required = false) Long userID) {
+        if (userID == null) {
+            return ResponseEntity.ok().body(complaintService.allComplaintsOnUser(authService.getUserFromSession()));
+        } else {
+            return ResponseEntity.ok().body(complaintService.allComplaintsOnUser(userService.getUserById(userID)));
+        }
+    }
+
+    @GetMapping(value = {"/by/{userID}", "/by/me"})
+    public ResponseEntity<?> getComplaintsByUser(@PathVariable(name = "userID", required = false) Long userID) {
+        if (userID == null) {
+            return ResponseEntity.ok().body(complaintService.allComplaintsByUser(authService.getUserFromSession()));
+        } else {
+            return ResponseEntity.ok().body(complaintService.allComplaintsByUser(userService.getUserById(userID)));
+        }
+    }
 
 }

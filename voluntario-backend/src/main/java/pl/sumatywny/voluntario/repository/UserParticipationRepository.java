@@ -2,6 +2,7 @@ package pl.sumatywny.voluntario.repository;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import pl.sumatywny.voluntario.dtos.user.ScoreDTO;
 import pl.sumatywny.voluntario.model.user.UserParticipation;
@@ -34,4 +35,8 @@ public interface UserParticipationRepository extends JpaRepository<UserParticipa
 
     @Query("SELECT COUNT(p) FROM UserParticipation p WHERE p.user.id = :userId")
     int countByUserId(Long userId);
+
+    @Modifying
+    @Query("DELETE FROM UserParticipation p WHERE p.event.id = :eventId AND p.user.id = :userId")
+    void deleteByEventIdAndUserId(Long eventId, Long userId);
 }

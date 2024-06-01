@@ -133,6 +133,7 @@ export type EventPostType = {
 };
 
 export type ScoreType = {
+  score: number;
   userId: number;
   fullName: string;
   points: number;

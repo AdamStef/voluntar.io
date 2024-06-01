@@ -255,3 +255,8 @@ export const changeUserData = async (userData: {
 }) => {
   return axiosClient.post('/auth/change-data', userData);
 };
+export const getUserScores = async (userId: number) => {
+  return axiosClient
+    .get<ScoreType[]>(`/users/${userId}/scores`)
+    .then((res) => res.data);
+};

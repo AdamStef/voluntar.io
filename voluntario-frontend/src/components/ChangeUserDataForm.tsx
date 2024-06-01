@@ -15,6 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/Spinner';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/components/ui/use-toast';
 
 const validationSchema = z.object({
   firstName: z.string().min(1, 'Imię jest wymagane'),
@@ -43,6 +44,8 @@ const ChangeUserDataForm: React.FC<Props> = ({ className }) => {
     },
   });
 
+  const { toast } = useToast();
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -65,22 +68,34 @@ const ChangeUserDataForm: React.FC<Props> = ({ className }) => {
           'Nie udało się pobrać danych użytkownika. Spróbuj ponownie później.',
           error,
         );
+        toast({
+          title: 'Błąd',
+          description:
+            'Nie udało się pobrać danych użytkownika. Spróbuj ponownie później.',
+        });
       }
     };
 
     fetchUserData();
-  }, [form]);
+  }, [form, toast]);
 
   console.log(initialData);
 
   const onSubmit = async (data: ChangeUserDataFormSchema) => {
     try {
       await changeUserData(data);
-      alert('Udało się zmienić dane użytkownika!');
+      toast({
+        title: 'Sukces!',
+        description: 'Dane użytkownika zostały zmienione.',
+      });
     } catch (error) {
       form.setError('root.serverError', {
         type: 'manual',
         message: 'Nie udało się zmienić danych. Spróbuj ponownie później.',
+      });
+      toast({
+        title: 'Błąd',
+        description: 'Nie udało się zmienić danych. Spróbuj ponownie później.',
       });
     }
   };

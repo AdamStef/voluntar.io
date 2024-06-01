@@ -15,6 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/Spinner';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/components/ui/use-toast';
 
 const validationSchema = z
   .object({
@@ -45,14 +46,23 @@ const ChangePasswordForm: React.FC<Props> = ({ className }) => {
     },
   });
 
+  const { toast } = useToast();
+
   const onSubmit = async (data: ChangePasswordFormSchema) => {
     try {
       await changeUserPassword(data.newPassword);
-      alert('Udało się zmienić hasło!');
+      toast({
+        title: 'Sukces!',
+        description: 'Hasło zostało zmienione.',
+      });
     } catch (error) {
       form.setError('root.serverError', {
         type: 'manual',
         message: 'Nie udało się zmienić hasła. Spróbuj ponownie później',
+      });
+      toast({
+        title: 'Błąd',
+        description: 'Nie udało się zmienić hasła. Spróbuj ponownie później.',
       });
     }
   };
@@ -72,7 +82,7 @@ const ChangePasswordForm: React.FC<Props> = ({ className }) => {
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>New Password</FormLabel>
+              <FormLabel>Nowe hasło</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Podaj nowe hasło"
@@ -90,10 +100,10 @@ const ChangePasswordForm: React.FC<Props> = ({ className }) => {
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel>Potwierdź hasło</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Potwierdz nowe hasło"
+                  placeholder="Potwierdź nowe hasło"
                   type="password"
                   {...field}
                 />
@@ -105,7 +115,7 @@ const ChangePasswordForm: React.FC<Props> = ({ className }) => {
 
         <Button className="w-full" type="submit">
           {isSubmitting && <Spinner className="mr-1 text-white" />}
-          Change Password
+          Zmień hasło
         </Button>
         {errors.root?.serverError && (
           <p className="text-center text-sm text-destructive">

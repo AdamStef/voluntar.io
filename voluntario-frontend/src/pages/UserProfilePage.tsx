@@ -20,8 +20,8 @@ type User = {
   email: string;
   firstName: string;
   lastName: string;
-  rating?: number; // Optional rating
-  points?: number; // Optional points
+  rating?: number;
+  points?: number;
 };
 
 export const UserProfilePage: React.FC = () => {
@@ -61,12 +61,22 @@ export const UserProfilePage: React.FC = () => {
     fetchUserData();
   }, []);
 
+  const handleTogglePasswordForm = () => {
+    setShowPasswordForm(!showPasswordForm);
+    setShowUserDataForm(false);
+  };
+
+  const handleToggleUserDataForm = () => {
+    setShowUserDataForm(!showUserDataForm);
+    setShowPasswordForm(false);
+  };
+
   if (!user) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="w-1/2 border-2 border-black p-4">
+    <div className="mx-auto w-1/2 border-2 border-black p-4">
       <div className="mb-4 flex items-center">
         <div className="flex items-center gap-2">
           <h2>Punkty użytkownika:</h2>
@@ -92,13 +102,15 @@ export const UserProfilePage: React.FC = () => {
         <Button
           variant="outline"
           className="mr-2"
-          onClick={() => setShowPasswordForm(!showPasswordForm)}
+          onClick={handleTogglePasswordForm}
+          disabled={showUserDataForm}
         >
           Zmień hasło
         </Button>
         <Button
           variant="outline"
-          onClick={() => setShowUserDataForm(!showUserDataForm)}
+          onClick={handleToggleUserDataForm}
+          disabled={showPasswordForm}
         >
           Zmień dane
         </Button>

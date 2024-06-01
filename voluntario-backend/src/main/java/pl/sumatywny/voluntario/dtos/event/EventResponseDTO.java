@@ -3,7 +3,7 @@ package pl.sumatywny.voluntario.dtos.event;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import pl.sumatywny.voluntario.dtos.OrganizationDTO;
+import pl.sumatywny.voluntario.dtos.oragnization.OrganizationResponseDTO;
 import pl.sumatywny.voluntario.dtos.user.UserParticipationDTO;
 import pl.sumatywny.voluntario.enums.EventStatus;
 import pl.sumatywny.voluntario.model.event.Event;
@@ -20,7 +20,7 @@ public class EventResponseDTO {
     private Long id;
     private String name;
     private String description;
-    private OrganizationDTO organization;
+    private OrganizationResponseDTO organization;
     private List<UserParticipationDTO> participants;
     private int numberOfVolunteersNeeded;
 //    ?
@@ -35,7 +35,7 @@ public class EventResponseDTO {
         this.id = event.getId();
         this.name = event.getName();
         this.description = event.getDescription();
-        this.organization = new OrganizationDTO(event.getOrganization());
+        this.organization = new OrganizationResponseDTO(event.getOrganization());
 
 //        List<UserParticipationDTO> userParticipationDTOS = new ArrayList<>();
 //        Hibernate.initialize(event.getParticipations());

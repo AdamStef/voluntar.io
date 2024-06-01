@@ -2,7 +2,9 @@ package pl.sumatywny.voluntario.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.sumatywny.voluntario.dtos.OrganizationDTO;
+import pl.sumatywny.voluntario.dtos.complaint.ComplaintResponseDTO;
+import pl.sumatywny.voluntario.dtos.oragnization.OrganizationRequestDTO;
+import pl.sumatywny.voluntario.dtos.oragnization.OrganizationResponseDTO;
 import pl.sumatywny.voluntario.model.user.Organization;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.OrganizationRepository;
@@ -10,6 +12,7 @@ import pl.sumatywny.voluntario.repository.OrganizationRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,13 +21,13 @@ public class OrganizationService {
     private final OrganizationRepository organizationRepository;
 
 
-    public Organization createOrganization(OrganizationDTO organizationDTO, User user) {
+    public Organization createOrganization(OrganizationRequestDTO organizationRequestDTO, User user) {
         Organization organization = Organization.builder()
-                .name(organizationDTO.getName())
-                .description(organizationDTO.getDescription())
-                .website(organizationDTO.getWebsite())
-                .address(organizationDTO.getAddress())
-                .krs(organizationDTO.getKrs())
+                .name(organizationRequestDTO.getName())
+                .description(organizationRequestDTO.getDescription())
+                .website(organizationRequestDTO.getWebsite())
+                .address(organizationRequestDTO.getAddress())
+                .krs(organizationRequestDTO.getKrs())
                 .user(user)
                 .verified(false)
                 .creationDate(LocalDateTime.now())
@@ -33,14 +36,14 @@ public class OrganizationService {
         return organizationRepository.save(organization);
     }
 
-    public List<Organization> getAllOrganizations() {
-        return organizationRepository.findAll();
+    public List<OrganizationResponseDTO> getAllOrganizations() {
+        return organizationRepository.findAll().stream().map(OrganizationResponseDTO::new).collect(Collectors.toList());
     }
 
 
-    public Organization getOrganization(Long organizationID) {
-        return organizationRepository.findById(organizationID)
-                .orElseThrow(() -> new NoSuchElementException(String.format("Organization %d not found.", organizationID)));
+    public OrganizationResponseDTO getOrganization(Long organizationID) {
+        return new OrganizationResponseDTO(organizationRepository.findById(organizationID)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Organization %d not found.", organizationID))));
     }
 
     public Organization getUserOrganization(Long userID) {

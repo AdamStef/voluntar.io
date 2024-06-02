@@ -54,7 +54,9 @@ export interface OrganizationType {
   krs: string;
   address: string;
   website: string;
+  owner: UserType;
 }
+
 
 export type ParticipantType = {
   userId: number;

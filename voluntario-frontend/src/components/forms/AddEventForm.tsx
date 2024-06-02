@@ -1,34 +1,26 @@
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import {fromAddress, setDefaults} from "react-geocode";
+import {Button} from '@/components/ui/button';
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from '@/components/ui/form';
+import {fromAddress, OutputFormat, setDefaults} from "react-geocode";
 import 'react-datepicker/dist/react-datepicker.css';
-import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import {Input} from '@/components/ui/input';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {useForm} from 'react-hook-form';
+import {useNavigate} from 'react-router-dom';
 import DatePicker from 'react-datepicker';
-import { z } from 'zod';
-import React, { HTMLProps, useState } from 'react';
-import { cn } from '@/lib/utils';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
-import { useMapEvents } from 'react-leaflet/hooks';
+import {z} from 'zod';
+import React, {HTMLProps} from 'react';
+import {cn} from '@/lib/utils';
 import 'leaflet/dist/leaflet.css';
-import { EventFormType } from '@/utils/types/types';
-import { postEvent } from '@/utils/api/api';
-import { Spinner } from '../ui/Spinner';
+import {EventFormType} from '@/utils/types/types';
+import {postEvent} from '@/utils/api/api';
+import {Spinner} from '../ui/Spinner';
 import 'react-toastify/dist/ReactToastify.css';
 
 setDefaults({
     key: "AIzaSyB6ePRA6ILkM7mjRbQ-9OoPYZiKUQz-ZB8",
     language: "pl",
-    region: "pl"
+    region: "pl",
+    outputFormat: OutputFormat.JSON,
 })
 
 const locationSchema = z.object({
@@ -125,24 +117,12 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
         }
     };
 
-  const [currentPos, setCurrentPos] = useState({ lat: 52, lng: 19 });
-  const LocationFinder = () => {
-    useMapEvents({
-      click(e) {
-        setCurrentPos(e.latlng);
-        console.log(currentPos);
-      },
-    });
-    return null;
-  };
-
   return (
     <Form {...form}>
       <form
         className={cn('gap-2 md:grid md:grid-cols-2', className)}
         onSubmit={form.handleSubmit(onSubmit)}
       >
-
           <FormField
               name="name"
               control={form.control}
@@ -329,85 +309,64 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
           )}
         />
 
-        {/*<Map/>*/}
-        {/*<div className="col-span-2">*/}
-        {/*  <p className="my-2 text-sm">Dokładna lokalizacja na mapie</p>*/}
-        {/*  <MapContainer*/}
-        {/*    center={currentPos}*/}
-        {/*    zoom={6}*/}
-        {/*    scrollWheelZoom={true}*/}
-        {/*    style={{ width: '100%', height: '405px' }}*/}
-        {/*    className="z-10"*/}
-        {/*  >*/}
-        {/*    <>*/}
-        {/*      <TileLayer*/}
-        {/*        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">'*/}
-        {/*        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"*/}
-        {/*      />*/}
-        {/*      <Marker position={currentPos} />*/}
-        {/*    </>*/}
-        {/*    <LocationFinder />*/}
-        {/*  </MapContainer>*/}
-        {/*</div>*/}
-
         {/*hidden bo bez nich nie działało a po co to pokazywać*/}
-        <FormField
-          name="location.latitude"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="hidden">
-              <FormLabel>Szerokość geograficzna</FormLabel>
-              <FormControl>
-                <Input
-                  disabled
-                  placeholder=""
-                  type="text"
-                  {...field}
-                  value={currentPos.lat}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/*<FormField*/}
+        {/*  name="location.latitude"*/}
+        {/*  control={form.control}*/}
+        {/*  render={({ field }) => (*/}
+        {/*    <FormItem className="hidden">*/}
+        {/*      <FormLabel>Szerokość geograficzna</FormLabel>*/}
+        {/*      <FormControl>*/}
+        {/*        <Input*/}
+        {/*          disabled*/}
+        {/*          placeholder=""*/}
+        {/*          type="text"*/}
+        {/*          {...field}*/}
+        {/*          value={currentPos.lat}*/}
+        {/*        />*/}
+        {/*      </FormControl>*/}
+        {/*      <FormMessage />*/}
+        {/*    </FormItem>*/}
+        {/*  )}*/}
+        {/*/>*/}
 
-        <FormField
-          name="location.longitude"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="hidden">
-              <FormLabel>Długość geograficzna</FormLabel>
-              <FormControl>
-                <Input
-                  disabled
-                  placeholder=""
-                  type="number"
-                  {...field}
-                  value={currentPos.lng}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/*<FormField*/}
+        {/*  name="location.longitude"*/}
+        {/*  control={form.control}*/}
+        {/*  render={({ field }) => (*/}
+        {/*    <FormItem className="hidden">*/}
+        {/*      <FormLabel>Długość geograficzna</FormLabel>*/}
+        {/*      <FormControl>*/}
+        {/*        <Input*/}
+        {/*          disabled*/}
+        {/*          placeholder=""*/}
+        {/*          type="number"*/}
+        {/*          {...field}*/}
+        {/*          value={currentPos.lng}*/}
+        {/*        />*/}
+        {/*      </FormControl>*/}
+        {/*      <FormMessage />*/}
+        {/*    </FormItem>*/}
+        {/*  )}*/}
+        {/*/>*/}
 
-        <FormField
-          name="location.additionalInformation"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel>Dodatkowe informacje</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="np. wskazówki jak dotrzeć..."
-                  type="text"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/*<FormField*/}
+        {/*  name="location.additionalInformation"*/}
+        {/*  control={form.control}*/}
+        {/*  render={({ field }) => (*/}
+        {/*    <FormItem className="col-span-2">*/}
+        {/*      <FormLabel>Dodatkowe informacje</FormLabel>*/}
+        {/*      <FormControl>*/}
+        {/*        <Input*/}
+        {/*          placeholder="np. wskazówki jak dotrzeć..."*/}
+        {/*          type="text"*/}
+        {/*          {...field}*/}
+        {/*        />*/}
+        {/*      </FormControl>*/}
+        {/*      <FormMessage />*/}
+        {/*    </FormItem>*/}
+        {/*  )}*/}
+        {/*/>*/}
 
 
         <div className="col-span-2 flex justify-center">

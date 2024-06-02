@@ -27,9 +27,11 @@ export const ComplaintsPage = () => {
         {/*complainty*/}
         <div className="mx-4">
           <p className="mt-4 text-xl font-bold"> Skargi od organizatorów: </p>
-          {complaints.map((complaint, index: number) => (
-            <Complaint key={index} complaint={complaint}></Complaint>
-          ))}
+          {complaints
+              .sort((a, b) => b.reportDate.getTime() - a.reportDate.getTime())
+              .map((complaint) => (
+                  <Complaint key={complaint.id} complaint={complaint} />
+              ))}
         </div>
       </div>
       {/*<UnconfirmedOrganizationsList/>*/}

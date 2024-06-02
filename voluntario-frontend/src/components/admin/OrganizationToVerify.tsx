@@ -1,9 +1,11 @@
 import React, {useState} from "react";
 import axios from "axios";
+import { Download }  from 'lucide-react';
 import {Button} from "@/components/ui/button.tsx"
 import {OrganizationType} from "@/utils/types/types.ts";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {claimComplaint, verifyOrganization} from "@/utils/api/api.ts";
+import {verifyOrganization} from "@/utils/api/api.ts";
+import {Spinner} from "@/components/ui/Spinner.tsx";
 
 type OrganizationProps = {
     organization: OrganizationType;
@@ -11,28 +13,43 @@ type OrganizationProps = {
 
 export const OrganizationToVerify: React.FC<OrganizationProps> = ({ organization }) => {
     const queryClient = useQueryClient();
-    const [data, setData] = useState({
-        odpis: undefined
+    const [name, setName] = useState('');
+    const [address, setAddress] = useState({
+        kodPocztowy: '',
+        miejscowosc: '',
+        ulica: '',
+        nrDomu: '',
+        nrLokalu: ''
     });
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [isError, setIsError] = useState(false);
     const [krsCorrect, setKrsCorrect] = useState(false);
     const [krsWasVerified, setKrsWasVerified] = useState(false);
-
-    const verifyKrsSubmit = async (event) => {
+    const [loading, setLoading] = useState(false);
+    const verifyKrsSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault(); // Prevent form from submitting the default way
+        setIsError(false);
         setLoading(true);
-        setError(null);
-
         try {
             const response = await axios.get(`https://api-krs.ms.gov.pl/api/krs/OdpisAktualny/${organization.krs}?rejestr=S&format=json`);
-            setData(response.data);
+            setName(response.data.odpis.dane.dzial1.danePodmiotu.nazwa);
+            setAddress(
+                {
+                    kodPocztowy: response.data.odpis.dane.dzial1.siedzibaIAdres.adres.kodPocztowy,
+                    miejscowosc: response.data.odpis.dane.dzial1.siedzibaIAdres.adres.miejscowosc,
+                    ulica: response.data.odpis.dane.dzial1.siedzibaIAdres.adres.ulica,
+                    nrDomu: response.data.odpis.dane.dzial1.siedzibaIAdres.nrDomu,
+                    nrLokalu: response.data.odpis.dane.dzial1.siedzibaIAdres.adres.nrLokalu,
+                }
+                );
             setLoading(false);
             console.log(response.data);
             setKrsCorrect(true);
-        } catch (err) {
+        } catch (err: any) {
             if (err.response.status == 404) {
                 setKrsCorrect(false);
+            }
+            else {
+                setIsError(true);
             }
         }
         setKrsWasVerified(true);
@@ -50,9 +67,7 @@ export const OrganizationToVerify: React.FC<OrganizationProps> = ({ organization
         verifyOrganizationMutate(organization.id);
     }
 
-    const rejectOrganization = () => {
-        console.log("todo");
-    }
+    if (loading) return <Spinner className="h-16 w-16" />;
 
     return (
         <div className="relative flex h-auto flex-col bg-gray-400">
@@ -73,19 +88,18 @@ export const OrganizationToVerify: React.FC<OrganizationProps> = ({ organization
                             </a>
                         </p>
                     )}
+                    <p>Telefon: {organization.owner.phoneNumber} </p>
+                    <p>E-mail: {organization.owner.email} </p>
                     <p>KRS: {organization.krs} </p>
                 </div>
                 {/*dane z krs*/}
                 <div className="w-1/2">
-                    <div className="font-bold mb-2">Dane z KRS:
+                    <div className="font-bold mt-2 xl:mt-0 mb-2">Dane z KRS:
 
                     </div>
                     {krsWasVerified && krsCorrect && <div>
-                        <p>
-                            Nazwa organizacji:
-                            {data.odpis.dane.dzial1.danePodmiotu.nazwa}
-                        </p>
-                        <p>Adres: {data.odpis.dane.dzial1.siedzibaIAdres.adres.miejscowosc}, ul. {data.odpis.dane.dzial1.siedzibaIAdres.adres.ulica} {data.odpis.dane.dzial1.siedzibaIAdres.adres.nrDomu} {data.odpis.dane.dzial1.siedzibaIAdres.adres.nrLokalu}</p>
+                        <p>Nazwa organizacji: {name}</p>
+                        <p>Adres: {address.kodPocztowy} {address.miejscowosc}, ul. {address.ulica} {address.nrDomu} {address.nrLokalu}</p>
                     </div>
                     }
                     {krsWasVerified && !krsCorrect && <div>
@@ -93,24 +107,20 @@ export const OrganizationToVerify: React.FC<OrganizationProps> = ({ organization
                     </div>
                     }
                     {!krsWasVerified &&
-                        <Button className="w-36" onClick={verifyKrsSubmit}>
+                        <Button className="w-44" onClick={verifyKrsSubmit}>
+                            <Download className="w-6 h-6 mr-2"/>
                             Weryfikuj z KRS
                         </Button>
                     }
-                    {/*{krsWasVerified &&*/}
-                    {/*    <Button className="w-36 bg-gray-600 hover:bg-gray-600">*/}
-                    {/*        Weryfikowano z KRS*/}
-                    {/*    </Button>*/}
-                    {/*}*/}
+                    {krsWasVerified && isError &&
+                    <div>
+                        Wyszukanie informacji z KRS się nie powiodło.
+                    </div>}
                 </div>
             </div>
             <div className="ml-2 mb-2">
-                {/*buttons*/}
-                <Button className="w-20 h-8 hover:bg-green-900" onClick={approveOrganization}>
+                <Button className="w-20 hover:bg-green-900" onClick={approveOrganization}>
                     Akceptuj
-                </Button>
-                <Button className="w-20 h-8 ml-2 bg-red-600 hover:bg-red-800" onClick={rejectOrganization}>
-                    Odrzuć
                 </Button>
             </div>
         </div>

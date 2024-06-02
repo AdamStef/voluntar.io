@@ -51,9 +51,4 @@ public class Score {
             this.previousTotalPoints = this.totalPoints;
         }
     }
-
-
-
-
-
 }

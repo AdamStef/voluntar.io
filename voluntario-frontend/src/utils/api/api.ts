@@ -22,6 +22,7 @@ import {
   SponsorType,
   OfferType,
   PromoCodeType,
+  PromoCodePossessionType,
 } from '../types/types';
 import { convertDates } from '../helpers';
 
@@ -231,6 +232,9 @@ export const addOffer = async (request: AddOfferParams) =>
 export const claimOffer = async (offerId: number) =>
   axiosClient.post(`/points-shop/offers/${offerId}/assign`);
 
+export const deleteOffer = async (offerId: number) =>
+  axiosClient.delete(`/points-shop/offers/${offerId}`);
+
 //points
 export const getCurrentPoints = async () =>
   axiosClient
@@ -240,5 +244,19 @@ export const getCurrentPoints = async () =>
 //promo codes
 export const getMyPromoCodes = async () =>
   axiosClient
-    .get<PromoCodeType[]>(`/points-shop/my-promo-codes`)
+    .get<PromoCodeType[]>(`/points-shop/my-promo-codes?active=true`)
     .then((res) => res.data);
+
+// export const usePromoCode = async (code: string) =>
+//   axiosClient.post(`/points-shop/promo-codes/${code}/use`);
+
+export const checkPromoCodePossession = async (code: string) =>
+  axiosClient.get<PromoCodePossessionType>(
+    `/points-shop/promo-codes/${code}/check`,
+  );
+
+export const getPromoCode = async (code: string) =>
+  axiosClient.get<PromoCodeType>(`/points-shop/promo-codes/${code}`);
+
+export const redeemPromoCode = async (code: string) =>
+  axiosClient.post(`/points-shop/promo-codes/${code}/redeem`);

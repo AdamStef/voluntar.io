@@ -38,7 +38,7 @@ const AddOfferForm = z.object({
   offer: z.object({
     name: z.string(),
     description: z.string(),
-    sponsorID: z.number(),
+    // sponsorID: z.number(),
     endDate: z.date(),
     pointsCost: z.number().positive(),
   }),
@@ -46,7 +46,7 @@ const AddOfferForm = z.object({
     offerID: z.number(),
     promoCodeType: z.enum(['percentage', 'value']),
     discount: z.number().positive(),
-    maxUsages: z.number().min(1),
+    // maxUsages: z.number().min(1),
     expirationDate: z.date(),
   }),
   numberOfPromoCodes: z.number().min(1),
@@ -64,7 +64,7 @@ export const AddOfferDialog = () => {
       offer: {
         name: '',
         description: '',
-        sponsorID: 1,
+        // sponsorID: 1,
         endDate: new Date(),
         pointsCost: 1,
       },
@@ -72,7 +72,7 @@ export const AddOfferDialog = () => {
         offerID: 0,
         promoCodeType: 'percentage',
         discount: 1,
-        maxUsages: 1,
+        // maxUsages: 1,
         expirationDate: new Date(),
       },
       numberOfPromoCodes: 1,
@@ -99,7 +99,7 @@ export const AddOfferDialog = () => {
       ...values,
       offer: {
         ...values.offer,
-        sponsorID: Number(values.offer.sponsorID),
+        // sponsorID: Number(values.offer.sponsorID),
         pointsCost: Number(values.offer.pointsCost),
       },
     });
@@ -151,12 +151,11 @@ export const AddOfferDialog = () => {
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 name="offer.sponsorID"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    {/* TODO: Add sponsor select */}
                     <FormLabel>Sponsor</FormLabel>
                     <FormControl>
                       <Input
@@ -174,7 +173,7 @@ export const AddOfferDialog = () => {
                     </FormDescription>
                   </FormItem>
                 )}
-              />
+              /> */}
 
               <FormField
                 name="offer.endDate"
@@ -275,7 +274,7 @@ export const AddOfferDialog = () => {
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 name="promoCode.maxUsages"
                 control={form.control}
                 render={({ field }) => (
@@ -297,7 +296,7 @@ export const AddOfferDialog = () => {
                     </FormDescription>
                   </FormItem>
                 )}
-              />
+              /> */}
 
               <FormField
                 name="promoCode.expirationDate"

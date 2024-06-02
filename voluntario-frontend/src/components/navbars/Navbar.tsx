@@ -70,10 +70,10 @@ const adminNavItems: NavbarItemType[] = [
     name: 'Skargi',
     path: '/complaints',
   },
-  {
-    name: 'Zarządzanie sklepem',
-    path: '/shop',
-  },
+  // {
+  //   name: 'Zarządzanie sklepem',
+  //   path: '/shop',
+  // },
 ];
 
 // const navButtons: NavButtonType[] = [

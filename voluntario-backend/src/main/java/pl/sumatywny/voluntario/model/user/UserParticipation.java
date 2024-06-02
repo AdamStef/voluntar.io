@@ -31,6 +31,7 @@ public class UserParticipation extends AuditingEntity {
 //    private boolean isCompleted;
 //    private boolean isRated;
     private int rating;
+    @Getter
     private String comment;
 //    private boolean isEvaluated;
 //    private boolean isCommented;
@@ -39,4 +40,5 @@ public class UserParticipation extends AuditingEntity {
 //    private boolean isReported;
 //    private boolean isBlocked;
 //    private boolean isDeleted;
+
 }

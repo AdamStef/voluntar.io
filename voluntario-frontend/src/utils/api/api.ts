@@ -260,3 +260,9 @@ export const getUserScores = async (userId: number) => {
     .get<ScoreType[]>(`/users/${userId}/scores`)
     .then((res) => res.data);
 };
+
+export const getUserComments = async (userId: number) => {
+  return axiosClient
+    .get<string[]>(`/users/${userId}/comments`)
+    .then((res) => res.data);
+};

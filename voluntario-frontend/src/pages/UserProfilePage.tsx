@@ -5,6 +5,7 @@ import ChangeUserDataForm from '@/components/ChangeUserDataForm';
 import { getAuthUser, getLeaderboard } from '@/utils/api/api';
 import { Button } from '@/components/ui/button';
 import { FaStar } from 'react-icons/fa';
+import UserCommentsList from '@/components/events/UserCommentsList';
 
 type UserType = {
   id: number;
@@ -15,6 +16,7 @@ type UserType = {
 };
 
 type User = {
+  id: number;
   name: string;
   phoneNumber: string;
   email: string;
@@ -117,6 +119,7 @@ export const UserProfilePage: React.FC = () => {
       </div>
       {showPasswordForm && <ChangePasswordForm />}
       {showUserDataForm && <ChangeUserDataForm />}
+      <UserCommentsList userId={user.id} />{' '}
     </div>
   );
 };

@@ -10,27 +10,23 @@ import { useParams } from 'react-router-dom';
 
 type PostProps = {
   post: EventPostType;
-  refetch: () => void;
 };
 
-export const Post = ({ post, refetch }: PostProps) => {
+export const Post = ({ post }: PostProps) => {
   const { user } = useAuthContext();
   const eventId = useParams().eventId;
   const queryClient = useQueryClient();
   // const eventId = post.event.id;
 
-  console.log('Post:', post);
-
   const deletePostMutation = useMutation({
     mutationFn: deletePost,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['events', eventId, 'posts'] });
+      queryClient.refetchQueries({ queryKey: ['events', eventId, 'posts'] });
       console.log(
         'Post deleted successfully',
         ['events', eventId, 'posts'],
         data,
       );
-      refetch();
     },
   });
 

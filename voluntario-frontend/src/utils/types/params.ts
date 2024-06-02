@@ -39,7 +39,7 @@ export type AddOfferParams = {
   offer: {
     name: string;
     description: string;
-    sponsorID: number;
+    // sponsorID: number;
     endDate: Date;
     pointsCost: number;
   };
@@ -47,7 +47,7 @@ export type AddOfferParams = {
     offerID: number;
     promoCodeType: 'percentage' | 'value';
     discount: number;
-    maxUsages: number;
+    // maxUsages: number;
     expirationDate: Date;
   };
   numberOfPromoCodes: number;

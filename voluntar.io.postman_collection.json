@@ -943,6 +943,14 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "user score",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		},
@@ -956,7 +964,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"organisationName\": \"Fundacja\",\r\n  \"organisationDescription\": \"Pomagamy wszystkim\",\r\n  \"address\": \"\",\r\n  \"organisationPage\": \"\",\r\n  \"krs\": \"0000135921\"\r\n}",
+							"raw": "{\r\n  \"name\": \"Fundacja\",\r\n  \"description\": \"Pomagamy wszystkim\",\r\n  \"address\": \"\",\r\n  \"organisationPage\": \"\",\r\n  \"krs\": \"0000135921\",\r\n  \"website\": \"www.xd.pl\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -964,14 +972,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{basic_url}}/organisations/registerOrganisation/7",
+							"raw": "{{basic_url}}/organizations/registerOrganization/1",
 							"host": [
 								"{{basic_url}}"
 							],
 							"path": [
-								"organisations",
-								"registerOrganisation",
-								"7"
+								"organizations",
+								"registerOrganization",
+								"1"
 							]
 						}
 					},
@@ -1072,67 +1080,41 @@
 			"name": "points shop",
 			"item": [
 				{
-					"name": "sponsors",
+					"name": "for organization",
 					"item": [
 						{
-							"name": "create sponsor",
+							"name": "check promo code",
 							"request": {
-								"method": "POST",
+								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"firma krzak\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{basic_url}}/points-shop/sponsors",
+									"raw": "{{basic_url}}/points-shop/check-promo-code/ZiIQiqZsyA",
 									"host": [
 										"{{basic_url}}"
 									],
 									"path": [
 										"points-shop",
-										"sponsors"
+										"check-promo-code",
+										"ZiIQiqZsyA"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "get all sponsors",
+							"name": "redeem code",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{basic_url}}/points-shop/sponsors",
+									"raw": "{{basic_url}}//redeem-promo-code/ZiIQiqZsyA",
 									"host": [
 										"{{basic_url}}"
 									],
 									"path": [
-										"points-shop",
-										"sponsors"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "get specific sponsor",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{basic_url}}/points-shop/sponsors/1",
-									"host": [
-										"{{basic_url}}"
-									],
-									"path": [
-										"points-shop",
-										"sponsors",
-										"1"
+										"",
+										"redeem-promo-code",
+										"ZiIQiqZsyA"
 									]
 								}
 							},
@@ -1150,7 +1132,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"offerDTO\": {\r\n        \"name\": \"Special Discount Offer\",\r\n        \"description\": \"Get a special discount on our new products\",\r\n        \"sponsorID\": 1,\r\n        \"endDate\": \"2024-12-31\",\r\n        \"pointsCost\": 100\r\n    },\r\n    \"promoCodeDTO\": {\r\n        \"offerID\": 67890,\r\n        \"promoCodeType\": \"percentage\",\r\n        \"discount\": 20.5,\r\n        \"maxUsages\": 50,\r\n        \"expirationDate\": \"2024-12-31\"\r\n    },\r\n    \"numberOfPromoCodes\": 10\r\n}\r\n",
+									"raw": "{\r\n    \"offer\": {\r\n        \"name\": \"Special Discount Offer\",\r\n        \"description\": \"Get a special discount on our new products\",\r\n        \"endDate\": \"2024-12-31\",\r\n        \"pointsCost\": 100\r\n    },\r\n    \"promoCode\": {\r\n        \"promoCodeType\": \"percentage\",\r\n        \"discount\": 20.5,\r\n        \"maxUsages\": 50,\r\n        \"expirationDate\": \"2024-12-31\"\r\n    },\r\n    \"numberOfPromoCodes\": 10\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1171,20 +1153,20 @@
 							"response": []
 						},
 						{
-							"name": "get offers by sponsor id",
+							"name": "get offers by organizer",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{basic_url}}/points-shop/offers/sponsors/1",
+									"raw": "{{basic_url}}/points-shop/offers/organizations/Fundacja",
 									"host": [
 										"{{basic_url}}"
 									],
 									"path": [
 										"points-shop",
 										"offers",
-										"sponsors",
-										"1"
+										"organizations",
+										"Fundacja"
 									]
 								}
 							},

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.annotations.Formula;
+import pl.sumatywny.voluntario.model.user.Organization;
 
 import java.time.LocalDate;
 
@@ -31,7 +32,7 @@ public class Offer {
 
     @NonNull
     @ManyToOne
-    private Sponsor sponsor;
+    private Organization organization;
 
     @NonNull
     private LocalDate endDate;
@@ -46,6 +47,7 @@ public class Offer {
 
     @PrePersist
     @PreUpdate
+    @PostLoad
     private void updateIsRedeemable() {
         this.isActive = !LocalDate.now().isAfter(this.endDate);
     }

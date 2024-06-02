@@ -3,12 +3,10 @@ package pl.sumatywny.voluntario.service.impl;
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.dtos.pointsShop.OfferDTO;
 import pl.sumatywny.voluntario.dtos.pointsShop.PromoCodeDTO;
-import pl.sumatywny.voluntario.dtos.pointsShop.SponsorDTO;
 import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.mapper.PromoCodeMapper;
 import pl.sumatywny.voluntario.model.pointsShop.Offer;
 import pl.sumatywny.voluntario.model.pointsShop.PromoCodePossession;
-import pl.sumatywny.voluntario.model.pointsShop.Sponsor;
 import pl.sumatywny.voluntario.model.pointsShop.promoCodes.PromoCode;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.*;
@@ -16,54 +14,32 @@ import pl.sumatywny.voluntario.repository.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static pl.sumatywny.voluntario.enums.Role.ROLE_VOLUNTEER;
+import java.util.Objects;
 
 @Service
 public class PointsShopService {
     private final PromoCodeRepository promoCodeRepository;
     private final OfferRepository offerRepository;
-    private final SponsorRepository sponsorRepository;
     private final PromoCodePossessionRepository promoCodePossessionRepository;
     private final ScoreRepository scoreRepository;
+    private final OrganizationRepository organizationRepository;
 
-    public PointsShopService(PromoCodeRepository promoCodeRepository, OfferRepository offerRepository, SponsorRepository sponsorRepository, PromoCodePossessionRepository promoCodePossessionRepository, ScoreRepository scoreRepository) {
+    public PointsShopService(PromoCodeRepository promoCodeRepository, OfferRepository offerRepository, PromoCodePossessionRepository promoCodePossessionRepository, ScoreRepository scoreRepository, OrganizationRepository organizationRepository) {
         this.promoCodeRepository = promoCodeRepository;
         this.offerRepository = offerRepository;
-        this.sponsorRepository = sponsorRepository;
         this.promoCodePossessionRepository = promoCodePossessionRepository;
         this.scoreRepository = scoreRepository;
-    }
-
-    /*Sponsors*/
-
-    public Sponsor createSponsor(SponsorDTO sponsorDTO) {
-        Sponsor sponsor = new Sponsor();
-        System.out.println(sponsorDTO.getName());
-        try {
-            sponsor.setName(sponsorDTO.getName());
-        } catch (Exception e) {
-            throw new RuntimeException("Error while creating sponsor", e);
-        }
-        try {
-            return sponsorRepository.save(sponsor);
-        } catch (Exception e) {
-            throw new RuntimeException("Error while saving sponsor", e);
-        }
-    }
-
-    public Sponsor findSponsorById(Long id) {
-        return sponsorRepository.findFirstById(id);
-    }
-
-    public List<Sponsor> findAllSponsors() {
-        return sponsorRepository.findAll();
+        this.organizationRepository = organizationRepository;
     }
 
     /*Offers*/
 
-    public Object[] createOffer(OfferDTO offerDTO, PromoCodeDTO promoCodeDTO, int numberOfPromoCodes) {
+    public Object[] createOffer(OfferDTO offerDTO, PromoCodeDTO promoCodeDTO, int numberOfPromoCodes, User user) {
         Offer offer = new Offer();
+        var organization = organizationRepository.findOrganizationByUserId(user.getId());
+        if (organization == null) {
+            throw new RuntimeException("User is not assigned to organization");
+        }
         if (numberOfPromoCodes < 1) {
             throw new RuntimeException("Number of promo codes must be greater than 0");
         }
@@ -75,7 +51,7 @@ public class PointsShopService {
             offer.setDescription(offerDTO.getDescription());
             offer.setEndDate(offerDTO.getEndDate());
             offer.setPointsCost(offerDTO.getPointsCost());
-            offer.setSponsor(sponsorRepository.findFirstById(offerDTO.getSponsorID()));
+            offer.setOrganization(organization);
         } catch (Exception e) {
             throw new RuntimeException("Error while creating offer", e);
         }
@@ -91,6 +67,7 @@ public class PointsShopService {
         for (PromoCode promoCode : promoCodes) {
             promoCode.setOffer(offer);
             promoCode.setIsAssignedToUser(false);
+            promoCode.setIsNotExpired(true);
             promoCode.setCanBeUsed(true);
             promoCodeRepository.save(promoCode);
         }
@@ -120,40 +97,11 @@ public class PointsShopService {
         return offerRepository.findAll();
     }
 
-    public List<Offer> findAllOffersBySponsorId(Long sponsorId) {
-        return offerRepository.findAllBySponsorId(sponsorId);
+    public List<Offer> findAllOffersByOrganization(String organizationName) {
+        return offerRepository.findAllByOrganizationName(organizationName);
     }
 
     /*PromoCodes*/
-
-//    public PromoCode createPromoCode(PromoCodeDTO promoCodeDTO) {
-//        PromoCode promoCode = PromoCodeMapper.toPromoCode(promoCodeDTO);
-//        if(promoCodeDTO.getExpirationDate().isAfter(LocalDate.now())){
-//            throw new RuntimeException("Expiration date must be after current date");
-//        }
-//        try {
-//            promoCode.setOffer(offerRepository.findFirstById(promoCodeDTO.getOfferID()));
-//        } catch (Exception e) {
-//            throw new RuntimeException("Error while creating promo code", e);
-//        }
-//        try {
-//            return promoCodeRepository.save(promoCode);
-//        } catch (Exception e) {
-//            throw new RuntimeException("Error while saving promo code", e);
-//        }
-//    }
-//
-//    public PromoCode findPromoCodeByCode(String id) {
-//        return promoCodeRepository.findFirstByCode(id);
-//    }
-//
-//    public List<PromoCode> findAllPromoCodes() {
-//        return promoCodeRepository.findAll();
-//    }
-//
-//    public List<PromoCode> findAllPromoCodesByOfferId(Long offerId) {
-//        return promoCodeRepository.findAllByOfferId(offerId);
-//    }
 
     /*PromoCodePossession*/
 
@@ -208,7 +156,7 @@ public class PointsShopService {
         List<PromoCode> promoCodeList = new ArrayList<>();
         var promoCodePossessionList = promoCodePossessionRepository.findAllByVolunteerId(volunteerId);
         if (canBeUsed) {
-            promoCodePossessionList.removeIf(promoCodePossession -> !promoCodePossession.getPromoCode().getCanBeUsed());
+            promoCodePossessionList.removeIf(promoCodePossession -> !promoCodePossession.getPromoCode().getIsNotExpired());
         }
         for (PromoCodePossession promoCodePossession : promoCodePossessionList) {
             promoCodeList.add(promoCodePossession.getPromoCode());
@@ -221,7 +169,7 @@ public class PointsShopService {
         if (promoCodePossession == null) {
             throw new RuntimeException("Promo code possession not found");
         }
-        if (promoCodePossession.getVolunteer().getId() != userID) {
+        if (!Objects.equals(promoCodePossession.getVolunteer().getId(), userID)) {
             throw new RuntimeException("Promo code possession not found");
         }
         return promoCodePossession.getPromoCode();
@@ -231,5 +179,34 @@ public class PointsShopService {
         return scoreRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User does not have a score"))
                 .getPurchasePoints();
+    }
+
+    public PromoCodePossession checkPromoCode(String promoCode, User user) {
+        var organization = organizationRepository.findOrganizationByUserId(user.getId());
+        if (organization == null) {
+            throw new RuntimeException("User is not assigned to organization");
+        }
+        var promoCodePossession = promoCodePossessionRepository.findFirstByPromoCodeCode(promoCode);
+        if (promoCodePossession == null) {
+            throw new RuntimeException("Promo code possession not found");
+        }
+        else if (!Objects.equals(promoCodePossession.getPromoCode().getOffer().getOrganization().getId(), organization.getId())) {
+            throw new RuntimeException("Promo code possession not found");
+        }
+        if(!promoCodePossession.getPromoCode().getIsAssignedToUser()) {
+            throw new RuntimeException("Promo code possession not found");
+        }
+        if(!promoCodePossession.getPromoCode().getIsNotExpired() || !promoCodePossession.getPromoCode().getCanBeUsed()){
+            throw new RuntimeException("Promo code can't be used");
+        }
+        return promoCodePossession;
+    }
+
+    public PromoCodePossession redeemPromoCode(String promoCode, User user) {
+        var promoCodePossession = checkPromoCode(promoCode, user);
+        var promoCodeObject = promoCodePossession.getPromoCode();
+        promoCodeObject.setCanBeUsed(false);
+        promoCodeRepository.save(promoCodeObject);
+        return promoCodePossessionRepository.save(promoCodePossession);
     }
 }

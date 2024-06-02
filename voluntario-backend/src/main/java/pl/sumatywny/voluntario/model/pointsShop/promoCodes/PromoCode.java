@@ -3,7 +3,6 @@ package pl.sumatywny.voluntario.model.pointsShop.promoCodes;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.springframework.lang.NonNull;
@@ -27,10 +26,6 @@ public abstract class PromoCode {
     @NonNull
     private String code;
 
-    @NonNull
-    @Min(1)
-    private Integer maxUsages;
-
     @ManyToOne
     @NonNull
     private Offer offer;
@@ -39,15 +34,19 @@ public abstract class PromoCode {
     private LocalDate expirationDate;
 
     @NonNull
-    @Formula("(CASE WHEN expiration_date >= CURRENT_DATE THEN true ELSE false END)")
+    private Boolean isNotExpired;
+
+    @NonNull
     private Boolean canBeUsed;
 
     @NonNull
-    public Boolean isAssignedToUser;
+    private Boolean isAssignedToUser;
 
     @PrePersist
-    @PreUpdate
-    private void updateIsRedeemable() {
-        this.canBeUsed = !LocalDate.now().isAfter(this.expirationDate);
+    @PostLoad
+    private void fun() {
+        this.isNotExpired = !LocalDate.now().isAfter(this.expirationDate);
+        if(this.canBeUsed)
+            this.canBeUsed = this.isNotExpired && this.isAssignedToUser;
     }
 }

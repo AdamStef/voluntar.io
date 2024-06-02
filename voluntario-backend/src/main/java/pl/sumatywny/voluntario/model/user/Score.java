@@ -1,5 +1,6 @@
 package pl.sumatywny.voluntario.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -24,6 +25,7 @@ public class Score {
     @Max(value = 5, message = "Rating must be between 0 and 5")
     private double overallRating;
 
+    @JsonIgnore
     @OneToOne
     private User user;
 
@@ -31,12 +33,14 @@ public class Score {
     @Min(value=0)
     private int purchasePoints;
 
-    @Transient
+    //TODO: nie wiem czy we frontendzie nie trzeba będzie z powodu tego pola coś zmieniać
+    @Min(value=0)
     private int previousTotalPoints;
 
     @PrePersist
     public void prePersist() {
         this.previousTotalPoints = this.totalPoints;
+        this.purchasePoints = this.totalPoints;
     }
 
     @PreUpdate

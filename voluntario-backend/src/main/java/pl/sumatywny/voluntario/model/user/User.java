@@ -63,6 +63,10 @@ public class User extends AuditingEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "user")
+    private Organization organization;
+
     @Column(nullable = false)
     private Boolean isVerified;
 

@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.sumatywny.voluntario.dtos.OrganizationDTO;
+import pl.sumatywny.voluntario.dtos.oragnization.OrganizationRequestDTO;
+import pl.sumatywny.voluntario.dtos.oragnization.OrganizationResponseDTO;
 import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.OrganizationService;
@@ -19,9 +20,9 @@ public class OrganizationController {
     private final AuthService authService;
 
     @PostMapping("/registerOrganization/{userID}")
-    public ResponseEntity<?> createOrganization(@RequestBody OrganizationDTO organizationDTO, @PathVariable("userID") Long userID) {
+    public ResponseEntity<?> createOrganization(@RequestBody OrganizationRequestDTO organizationRequestDTO, @PathVariable("userID") Long userID) {
         var user = userService.getUserById(userID);
-        organizationService.createOrganization(organizationDTO, user);
+        organizationService.createOrganization(organizationRequestDTO, user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -38,7 +39,12 @@ public class OrganizationController {
     @GetMapping("/user")
     public ResponseEntity<?> getUserOrganization() {
         var user = authService.getUserFromSession();
-        return ResponseEntity.ok().body(organizationService.getUserOrganization(user.getId()));
+        return ResponseEntity.ok().body(new OrganizationResponseDTO(organizationService.getUserOrganization(user.getId())));
+    }
+
+    @PostMapping("/verify/{organizationID}")
+    public ResponseEntity<?> verifyOrganization(@PathVariable("organizationID") Long organizationID) {
+        return ResponseEntity.ok().body(organizationService.verifyOrganization(organizationID));
     }
 
     @PostMapping("/verify/{organizationID}")

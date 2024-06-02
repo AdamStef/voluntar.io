@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { EventPostType, Role } from '@/utils/types/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getEventPosts, postEventPost } from '@/utils/api/api';
-import { Input } from '../../ui/input';
 import { Button } from '../../ui/button';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import { Spinner } from '../../ui/Spinner';
+import { Textarea } from '@/components/ui/textarea';
 
 type EventDetailsDiscussionProps = {
   eventId: string;
@@ -64,8 +64,7 @@ export const EventDetailsDiscussion = () => {
     <div className="flex flex-col gap-2">
       {user?.role === Role.ORGANIZATION && (
         <>
-          <Input
-            type="text"
+          <Textarea
             value={newPostContent}
             onChange={(e) => setNewPostContent(e.target.value)}
             placeholder="Wpisz treść posta..."

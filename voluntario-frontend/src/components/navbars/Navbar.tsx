@@ -17,6 +17,10 @@ const volunteerNavItems: NavbarItemType[] = [
     path: '/home',
   },
   {
+    name: 'Profil',
+    path: '/profile',
+  },
+  {
     name: 'Lista wydarzeń',
     path: '/events',
   },

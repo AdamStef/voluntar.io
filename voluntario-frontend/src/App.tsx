@@ -64,6 +64,7 @@ function App() {
           {/* Volunteer */}
           <Route path="/events" element={<EventsListPage />} />
           <Route path="/events/:eventId" element={<EventDetailsPage />} />
+          <Route path="/profile" element={<UserProfilePage />} />
           {/* Organizer */}
           <Route path="/organizer" element={<OrganizerHomePage />} />
           <Route path="/addevent" element={<AddEventPage />} />
@@ -77,7 +78,6 @@ function App() {
           {/* Common */}
           <Route path="/home" element={<HomePage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
-          <Route path="/profile" element={<UserProfilePage />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

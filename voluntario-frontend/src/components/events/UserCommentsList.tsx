@@ -7,7 +7,6 @@ interface UserCommentsListProps {
 
 const UserCommentsList: React.FC<UserCommentsListProps> = ({ userId }) => {
   const [comments, setComments] = useState<string[]>([]);
-  //   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -28,7 +27,7 @@ const UserCommentsList: React.FC<UserCommentsListProps> = ({ userId }) => {
   }
 
   return (
-    <div className="rounded-lg bg-gray-100 p-4">
+    <div className="rounded-lg bg-gray-100 p-6">
       <h2 className="mb-4 text-2xl font-bold">Twoje komentarze</h2>
       {comments.length === 0 ? (
         <p className="text-center">Nie znaleziono komentarzy</p>

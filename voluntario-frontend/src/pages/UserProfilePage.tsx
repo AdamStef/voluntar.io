@@ -6,6 +6,8 @@ import { getAuthUser, getLeaderboard } from '@/utils/api/api';
 import { Button } from '@/components/ui/button';
 import { FaStar } from 'react-icons/fa';
 import UserCommentsList from '@/components/events/UserCommentsList';
+import { Dialog } from '@headlessui/react';
+import { FaTimes } from 'react-icons/fa';
 
 type UserType = {
   id: number;
@@ -82,14 +84,19 @@ export const UserProfilePage: React.FC = () => {
     setShowUserDataForm(false);
   };
 
+  const handleCloseAndRefresh = () => {
+    setShowUserDataForm(false);
+    window.location.reload();
+  };
+
   if (!user) {
     return <div>Ładowanie</div>;
   }
 
   return (
     <div>
-      <div className="mx-auto w-1/2 border-2 border-black p-4">
-        <div className="mb-4 flex items-center">
+      <div className="mx-auto w-full max-w-4xl border-2 border-black p-4">
+        <div className="mb-4 flex flex-wrap items-center justify-between">
           <div className="flex items-center gap-2">
             <h2>Punkty użytkownika:</h2>
             <div className="flex items-center gap-2">
@@ -110,47 +117,74 @@ export const UserProfilePage: React.FC = () => {
             email={user.email}
           />
         </div>
-        <div className="mb-6">
-          <Button
-            variant="outline"
-            className="mr-2"
-            onClick={handleTogglePasswordForm}
-            // disabled={showUserDataForm}
-          >
+        <div className="mb-6 flex flex-wrap gap-4">
+          <Button variant="outline" onClick={handleTogglePasswordForm}>
             Zmień hasło
           </Button>
-          <Button
-            variant="outline"
-            className="mr-2"
-            onClick={handleToggleUserDataForm}
-            // disabled={showPasswordForm}
-          >
+          <Button variant="outline" onClick={handleToggleUserDataForm}>
             Zmień dane
           </Button>
-          <Button
-            variant="outline"
-            onClick={handleToggleComments}
-            // disabled={showPasswordForm || showUserDataForm}
-          >
+          <Button variant="outline" onClick={handleToggleComments}>
             {!showComments ? 'Pokaż komentarze' : 'Ukryj komentarze'}
           </Button>
         </div>
-        {/* <div className="mb-4">
-          <Button
-            variant="outline"
-            onClick={handleToggleComments}
-            disabled={showPasswordForm || showUserDataForm}
-          >
-            {!showComments ? 'Pokaż komentarze' : 'Ukryj komentarze'}
-          </Button>
-        </div> */}
       </div>
-      {showPasswordForm && <ChangePasswordForm />}
-      {showUserDataForm && <ChangeUserDataForm />}
+
+      {showPasswordForm && (
+        <Dialog
+          open={showPasswordForm}
+          onClose={handleTogglePasswordForm}
+          className="fixed inset-0 z-10 flex items-center justify-center"
+        >
+          <div className="fixed inset-0 bg-black opacity-50"></div>
+          <div className="relative z-20 mx-4 w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
+            <button
+              onClick={handleTogglePasswordForm}
+              className="absolute right-4 top-4 text-gray-600 hover:text-gray-900"
+            >
+              <FaTimes size={24} />
+            </button>
+            <ChangePasswordForm />
+          </div>
+        </Dialog>
+      )}
+
+      {showUserDataForm && (
+        <Dialog
+          open={showUserDataForm}
+          onClose={handleCloseAndRefresh}
+          className="fixed inset-0 z-10 flex items-center justify-center"
+        >
+          <div className="fixed inset-0 bg-black opacity-50"></div>
+          <div className="relative z-20 mx-4 w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
+            <button
+              onClick={handleCloseAndRefresh}
+              className="absolute right-4 top-4 text-gray-600 hover:text-gray-900"
+            >
+              <FaTimes size={24} />
+            </button>
+            <ChangeUserDataForm />
+          </div>
+        </Dialog>
+      )}
+
       {showComments && (
-        <div className="border-1 mx-auto w-1/2 p-4">
-          <UserCommentsList userId={user.id} />
-        </div>
+        <Dialog
+          open={showComments}
+          onClose={handleToggleComments}
+          className="fixed inset-0 z-10 flex items-center justify-center"
+        >
+          <div className="fixed inset-0 bg-black opacity-50"></div>
+          <div className="relative z-20 mx-4 w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
+            <button
+              onClick={handleToggleComments}
+              className="absolute right-4 top-4 p-2 text-gray-600 hover:text-gray-900"
+            >
+              <FaTimes size={24} />
+            </button>
+            <UserCommentsList userId={user.id} />
+          </div>
+        </Dialog>
       )}
     </div>
   );

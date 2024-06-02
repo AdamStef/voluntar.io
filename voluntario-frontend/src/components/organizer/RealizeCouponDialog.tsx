@@ -10,17 +10,23 @@ import {
 import { Button } from '../ui/button';
 import { useState } from 'react';
 
-export const RealizeCouponDialog = () => {
+export const RealizeCouponDialog = ({
+  onClick,
+  disabled,
+}: {
+  onClick: () => void;
+  disabled: boolean;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const handleConfirm = () => {
     setIsOpen(false);
+    onClick();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>Realizuj</Button>
+        <Button disabled={disabled}>Realizuj</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

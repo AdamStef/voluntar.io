@@ -23,7 +23,6 @@ export const EventDetailsDiscussion = () => {
     data: posts,
     isPending,
     isError,
-    refetch,
   } = useQuery({
     queryKey: ['events', eventId, 'posts'],
     queryFn: async () => getEventPosts(eventId).then((res) => res.data),
@@ -76,9 +75,7 @@ export const EventDetailsDiscussion = () => {
       {posts.length === 0 ? (
         <div>Brak postów</div>
       ) : (
-        posts.map((post: EventPostType) => (
-          <Post key={post.id} post={post} refetch={refetch} />
-        ))
+        posts.map((post: EventPostType) => <Post key={post.id} post={post} />)
       )}
     </div>
   );

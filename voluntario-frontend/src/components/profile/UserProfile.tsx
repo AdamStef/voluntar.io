@@ -1,4 +1,3 @@
-// UserProfile.tsx
 import React from 'react';
 import ManAvatar from '@/assets/man_avatar.png';
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { UserProfile } from '@/components/UserProfile';
-import ChangePasswordForm from '@/components/ChangePasswordForm';
-import ChangeUserDataForm from '@/components/ChangeUserDataForm';
+import { UserProfile } from '@/components/profile/UserProfile';
+import ChangePasswordForm from '@/components/profile/ChangePasswordForm';
+import ChangeUserDataForm from '@/components/profile/ChangeUserDataForm';
 import { getAuthUser, getLeaderboard } from '@/utils/api/api';
 import { Button } from '@/components/ui/button';
 import { FaStar } from 'react-icons/fa';

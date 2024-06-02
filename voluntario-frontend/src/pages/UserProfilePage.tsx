@@ -29,6 +29,7 @@ type User = {
 export const UserProfilePage: React.FC = () => {
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [showUserDataForm, setShowUserDataForm] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -66,60 +67,91 @@ export const UserProfilePage: React.FC = () => {
   const handleTogglePasswordForm = () => {
     setShowPasswordForm(!showPasswordForm);
     setShowUserDataForm(false);
+    setShowComments(false);
   };
 
   const handleToggleUserDataForm = () => {
     setShowUserDataForm(!showUserDataForm);
     setShowPasswordForm(false);
+    setShowComments(false);
+  };
+
+  const handleToggleComments = () => {
+    setShowComments(!showComments);
+    setShowPasswordForm(false);
+    setShowUserDataForm(false);
   };
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <div>Ładowanie</div>;
   }
 
   return (
-    <div className="mx-auto w-1/2 border-2 border-black p-4">
-      <div className="mb-4 flex items-center">
-        <div className="flex items-center gap-2">
-          <h2>Punkty użytkownika:</h2>
+    <div>
+      <div className="mx-auto w-1/2 border-2 border-black p-4">
+        <div className="mb-4 flex items-center">
           <div className="flex items-center gap-2">
-            <p>{user.points !== undefined ? user.points : '0'}</p>
+            <h2>Punkty użytkownika:</h2>
+            <div className="flex items-center gap-2">
+              <p>{user.points !== undefined ? user.points : '0'}</p>
+            </div>
           </div>
+          {user.rating !== undefined && (
+            <div className="ml-4 flex items-center gap-2">
+              <FaStar color="gold" size={24} />
+              <p>{user.rating}</p>
+            </div>
+          )}
         </div>
-        {user.rating !== undefined && (
-          <div className="ml-4 flex items-center gap-2">
-            <FaStar color="gold" size={24} />
-            <p>{user.rating}</p>
-          </div>
-        )}
-      </div>
-      <div className="mb-4">
-        <UserProfile
-          name={user.name}
-          phoneNumber={user.phoneNumber}
-          email={user.email}
-        />
-      </div>
-      <div className="mb-4">
-        <Button
-          variant="outline"
-          className="mr-2"
-          onClick={handleTogglePasswordForm}
-          disabled={showUserDataForm}
-        >
-          Zmień hasło
-        </Button>
-        <Button
-          variant="outline"
-          onClick={handleToggleUserDataForm}
-          disabled={showPasswordForm}
-        >
-          Zmień dane
-        </Button>
+        <div className="mb-4">
+          <UserProfile
+            name={user.name}
+            phoneNumber={user.phoneNumber}
+            email={user.email}
+          />
+        </div>
+        <div className="mb-6">
+          <Button
+            variant="outline"
+            className="mr-2"
+            onClick={handleTogglePasswordForm}
+            // disabled={showUserDataForm}
+          >
+            Zmień hasło
+          </Button>
+          <Button
+            variant="outline"
+            className="mr-2"
+            onClick={handleToggleUserDataForm}
+            // disabled={showPasswordForm}
+          >
+            Zmień dane
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleToggleComments}
+            // disabled={showPasswordForm || showUserDataForm}
+          >
+            {!showComments ? 'Pokaż komentarze' : 'Ukryj komentarze'}
+          </Button>
+        </div>
+        {/* <div className="mb-4">
+          <Button
+            variant="outline"
+            onClick={handleToggleComments}
+            disabled={showPasswordForm || showUserDataForm}
+          >
+            {!showComments ? 'Pokaż komentarze' : 'Ukryj komentarze'}
+          </Button>
+        </div> */}
       </div>
       {showPasswordForm && <ChangePasswordForm />}
       {showUserDataForm && <ChangeUserDataForm />}
-      <UserCommentsList userId={user.id} />{' '}
+      {showComments && (
+        <div className="border-1 mx-auto w-1/2 p-4">
+          <UserCommentsList userId={user.id} />
+        </div>
+      )}
     </div>
   );
 };

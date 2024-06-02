@@ -7,7 +7,7 @@ interface UserCommentsListProps {
 
 const UserCommentsList: React.FC<UserCommentsListProps> = ({ userId }) => {
   const [comments, setComments] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  //   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -16,21 +16,15 @@ const UserCommentsList: React.FC<UserCommentsListProps> = ({ userId }) => {
         const commentsData = await getUserComments(userId);
         setComments(commentsData);
       } catch (error) {
-        setError('Failed to fetch comments');
-      } finally {
-        setLoading(false);
+        setError('Bład z komentarzami');
       }
     };
 
     fetchComments();
   }, [userId]);
 
-  if (loading) {
-    return <p className="text-center">Ładowanie komentarzy...</p>;
-  }
-
   if (error) {
-    return <p className="text-center text-red-500">{error}</p>;
+    return <p>{error}</p>;
   }
 
   return (

@@ -51,7 +51,7 @@ public class LocationService {
     public void removeLocation(Long locationId, User user) {
         UserRole role = user.getRole();
         if (role.getRole() == Role.ROLE_VOLUNTEER) {
-            throw new PermissionsException("Volunteers cannot remove events.");
+            throw new PermissionsException("Volunteers cannot remove locations.");
         }
 
         Location location = locationRepository.findFirstById(locationId);
@@ -64,7 +64,7 @@ public class LocationService {
 
     public Location editLocation(Long locationId, LocationDTO locationDTO, User user) {
         if (user.getRole().getRole() == Role.ROLE_VOLUNTEER) {
-            throw new PermissionsException("Volunteers cannot edit events.");
+            throw new PermissionsException("Volunteers cannot edit locations.");
         }
 
         Location location = locationRepository.findFirstById(locationId);

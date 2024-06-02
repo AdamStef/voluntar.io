@@ -65,7 +65,7 @@ public class PostService {
         }
 
         Post post = postRepository.findById(postID).orElseThrow(() -> new NoSuchElementException("Post not found."));
-        if (!Objects.equals(user.getId(), post.getOrganization().getId()) && user.getRole().getRole() != Role.ROLE_ADMIN) {
+        if (!Objects.equals(user.getId(), post.getOrganization().getUser().getId()) && user.getRole().getRole() != Role.ROLE_ADMIN) {
             System.out.println("nie masz uprawnien");
             throw new PermissionsException("You cannot remove this post.");
         }

@@ -251,13 +251,13 @@ public class EventService {
         return user.getRole().getRole() == Role.ROLE_VOLUNTEER;
     }
 
-    private Location getEventLocation(Long eventId) {
+    public Location getEventLocation(Long eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Event %d not found.", eventId)));
         return event.getLocation();
     }
 
-    private EventResponseDTO getEventResponse(Event event) {
+    public EventResponseDTO getEventResponse(Event event) {
         var participants = userParticipationRepository.findByEventId(event.getId());
         return EventResponseDTO.builder()
                 .id(event.getId())

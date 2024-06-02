@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class EventRequestDTO {
     private Long id;
     private String name;

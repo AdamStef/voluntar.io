@@ -13,6 +13,8 @@ import pl.sumatywny.voluntario.model.user.Organization;
 @Entity
 @Table(name = "posts")
 @Data
+@Getter
+@Setter
 public class Post extends AuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

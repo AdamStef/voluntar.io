@@ -5,6 +5,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { Layout } from './pages/Layout';
 import { NotFound } from './pages/NotFound';
 import { OrganizerHomePage } from './pages/organizer/OrganizerHomePage.tsx';
+import { OrganizationProfilePage } from './pages/organizer/OrganizationProfilePage.tsx';
 import { EventsListPage } from './pages/volunteer/EventsListPage';
 import { EventDetailsPage } from './pages/volunteer/EventDetailsPage';
 import { HomePage } from './pages/HomePage';
@@ -71,6 +72,10 @@ function App() {
           <Route path="/addcomplain" element={<AddComplainPage />} />
           <Route path="/realize-coupon" element={<RealizeCouponPage />} />
           <Route path="/offers" element={<OffersPage />} />
+          <Route
+            path="/profile-organizer"
+            element={<OrganizationProfilePage />}
+          />
           {/* Admin */}
           <Route path="/complaints" element={<ComplaintsPage />} />
           <Route path="/shop" element={<ShopManagementPage />} />

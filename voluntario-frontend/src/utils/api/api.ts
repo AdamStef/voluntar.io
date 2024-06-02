@@ -266,3 +266,14 @@ export const getUserComments = async (userId: number) => {
     .get<string[]>(`/users/${userId}/comments`)
     .then((res) => res.data);
 };
+
+export const getOrganizationData = async (organizationId: number) => {
+  return await axios.get(`/api/organizations/${organizationId}`);
+};
+
+export const updateOrganizationData = async (
+  organizationId: number,
+  data: { name: string; website: string },
+) => {
+  return await axios.post(`/api/organizations/${organizationId}`, data);
+};

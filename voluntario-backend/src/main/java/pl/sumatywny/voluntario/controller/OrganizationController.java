@@ -6,9 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sumatywny.voluntario.dtos.oragnization.OrganizationRequestDTO;
 import pl.sumatywny.voluntario.dtos.oragnization.OrganizationResponseDTO;
+import pl.sumatywny.voluntario.model.user.Organization;
 import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.OrganizationService;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,6 +48,20 @@ public class OrganizationController {
     @PostMapping("/verify/{organizationID}")
     public ResponseEntity<?> verifyOrganization(@PathVariable("organizationID") Long organizationID) {
         return ResponseEntity.ok().body(organizationService.verifyOrganization(organizationID));
+    }
+
+//    @PostMapping("/changeData/{organizationID}")
+//    @PutMapping("/changeData/{organizationID}")
+    @PostMapping("/update/{id}")
+    public ResponseEntity<OrganizationResponseDTO> updateOrganizationData(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> request) {
+        String name = request.get("name");
+        String website = request.get("website");
+
+        OrganizationResponseDTO updatedOrganization= authService.getOrganizationFromSession();
+        organizationService.updateOrganizationData(id, name, website);
+        return ResponseEntity.ok(updatedOrganization);
     }
 
 

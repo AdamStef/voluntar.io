@@ -52,6 +52,10 @@ const organizerNavItems: NavbarItemType[] = [
     path: '/realize-coupon',
   },
   {
+    name: 'Ustawienia',
+    path: '/profile-organizer',
+  },
+  {
     name: 'Oferty',
     path: '/offers',
   },

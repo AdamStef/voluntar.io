@@ -20,6 +20,7 @@ import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import pl.sumatywny.voluntario.dtos.oragnization.OrganizationResponseDTO;
 import pl.sumatywny.voluntario.dtos.user.RegisterDTO;
 import pl.sumatywny.voluntario.dtos.auth.AuthRequestDTO;
 import pl.sumatywny.voluntario.enums.Role;
@@ -129,5 +130,18 @@ public class AuthService {
         }
 
         return user.get();
+    }
+    public OrganizationResponseDTO getOrganizationFromSession() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new IllegalStateException("User not authenticated.");
+        }
+
+        var user = userRepository.findByEmail(authentication.getName());
+        if (user.isEmpty()) {
+            throw new IllegalStateException("User not found.");
+        }
+
+        return new OrganizationResponseDTO(user.get().getOrganization());
     }
 }

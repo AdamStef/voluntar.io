@@ -61,5 +61,21 @@ public class OrganizationService {
             throw new NoSuchElementException(String.format("Organization %d not found.", organizationID));
         }
     }
+//    public OrganizationResponseDTO updateOrganizationData(Long organizationID, String name, String website) {
+//        Organization organization = organizationRepository.findById(organizationID)
+//                .orElseThrow(() -> new NoSuchElementException(String.format("Organization %d not found.", organizationID)));
+//        organization.setName(name);
+//        organization.setWebsite(website);
+//        Organization updatedOrganization = organizationRepository.save(organization);
+//        return new OrganizationResponseDTO(updatedOrganization);
+//    }
+    public OrganizationResponseDTO updateOrganizationData(Long organizationID, String name, String website) {
+    Organization organization = organizationRepository.findById(organizationID)
+            .orElseThrow(() -> new NoSuchElementException(String.format("Organization %d not found.", organizationID)));
+    organization.setName(name);
+    organization.setWebsite(website);
+    Organization updatedOrganization = organizationRepository.save(organization);
+    return new OrganizationResponseDTO(updatedOrganization);
+}
 
 }

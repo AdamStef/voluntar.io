@@ -42,11 +42,8 @@ public abstract class PromoCode {
     @NonNull
     private Boolean isAssignedToUser;
 
-    @PrePersist
     @PostLoad
     private void fun() {
         this.isNotExpired = !LocalDate.now().isAfter(this.expirationDate);
-        if(this.canBeUsed)
-            this.canBeUsed = this.isNotExpired && this.isAssignedToUser;
     }
 }

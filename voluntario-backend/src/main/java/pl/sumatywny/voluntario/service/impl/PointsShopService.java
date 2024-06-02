@@ -130,7 +130,7 @@ public class PointsShopService {
             promoCodePossession.setPromoCode(promoCode);
             promoCodePossession.setVolunteer(user);
             promoCode.setIsAssignedToUser(true);
-
+            promoCode.setCanBeUsed(true);
             try {
                 promoCodeRepository.save(promoCodePossession.getPromoCode());
                 scoreRepository.save(score);

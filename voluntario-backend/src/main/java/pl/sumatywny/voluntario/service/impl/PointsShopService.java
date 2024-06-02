@@ -2,7 +2,9 @@ package pl.sumatywny.voluntario.service.impl;
 
 import org.springframework.stereotype.Service;
 import pl.sumatywny.voluntario.dtos.pointsShop.OfferDTO;
+import pl.sumatywny.voluntario.dtos.pointsShop.OfferResponseDTO;
 import pl.sumatywny.voluntario.dtos.pointsShop.PromoCodeDTO;
+import pl.sumatywny.voluntario.dtos.pointsShop.PromoCodeResponseDTO;
 import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.mapper.PromoCodeMapper;
 import pl.sumatywny.voluntario.model.pointsShop.Offer;
@@ -15,7 +17,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 public class PointsShopService {
@@ -79,23 +80,51 @@ public class PointsShopService {
         return offerRepository.findFirstById(id);
     }
 
-    public List<Offer> findAllOffers() {
-        try {
-            var offer_list = offerRepository.findAll();
-        } catch (Exception e) {
-            throw new RuntimeException("Error while finding all offers", e);
-        }
-        return offerRepository.findAll();
+    public List<OfferResponseDTO> findAllOffers() {
+        var offers = offerRepository.findAll();
+        return offers.stream().map(this::getOfferResponseDTO).toList();
+//        {
+//            var promoCodes = promoCodeRepository.findAllByOfferId(offer.getId());
+//            var availablePromoCodes = promoCodes.stream()
+//                    .filter(promoCode -> promoCode.getIsNotExpired() && promoCode.getCanBeUsed())
+//                    .count();
+//
+//            var promoCodesResponse = promoCodes.stream()
+//                    .map(promoCode -> PromoCodeResponseDTO.builder()
+//                            .code(promoCode.getCode())
+//                            .expirationDate(promoCode.getExpirationDate())
+//                            .isNotExpired(promoCode.getIsNotExpired())
+//                            .canBeUsed(promoCode.getCanBeUsed())
+//                            .isAssignedToUser(promoCode.getIsAssignedToUser())
+//                            .build())
+//                    .toList();
+//
+//            return OfferResponseDTO.builder()
+//                    .id(offer.getId())
+//                    .name(offer.getName())
+//                    .description(offer.getDescription())
+//                    .organization(offer.getOrganization())
+//                    .endDate(offer.getEndDate())
+//                    .pointsCost(offer.getPointsCost())
+//                    .promoCodes(promoCodesResponse)
+//                    .isActive(offer.getIsActive())
+//                    .availablePromoCodes((int) availablePromoCodes)
+//                    .build();
+//        }).toList();
     }
 
-    public List<Offer> findAllActiveOffers() {
-        try {
-            var offer_list = offerRepository.findAll();
-            offer_list.removeIf(offer -> !offer.getIsActive());
-        } catch (Exception e) {
-            throw new RuntimeException("Error while finding all offers", e);
-        }
-        return offerRepository.findAll();
+    public List<OfferResponseDTO> findAllActiveOffers() {
+//        try {
+//            var offer_list = offerRepository.findAll();
+//            offer_list.removeIf(offer -> !offer.getIsActive());
+//        } catch (Exception e) {
+//            throw new RuntimeException("Error while finding all offers", e);
+//        }
+//        return offerRepository.findAll();
+        return offerRepository.findAll().stream()
+                .filter(Offer::getIsActive)
+                .map(this::getOfferResponseDTO)
+                .toList();
     }
 
     public List<Offer> findAllOffersByOrganization(String organizationName) {
@@ -265,4 +294,33 @@ public class PointsShopService {
 //        promoCode.setCanBeUsed(false);
 //        promoCodeRepository.save(promoCode);
 //    }
+
+    private OfferResponseDTO getOfferResponseDTO(Offer offer) {
+        var promoCodes = promoCodeRepository.findAllByOfferId(offer.getId());
+        var availablePromoCodes = promoCodes.stream()
+                .filter(promoCode -> !promoCode.getIsAssignedToUser())
+                .count();
+
+//        var promoCodesResponse = promoCodes.stream()
+//                .map(promoCode -> PromoCodeResponseDTO.builder()
+//                        .code(promoCode.getCode())
+//                        .expirationDate(promoCode.getExpirationDate())
+//                        .isNotExpired(promoCode.getIsNotExpired())
+//                        .canBeUsed(promoCode.getCanBeUsed())
+//                        .isAssignedToUser(promoCode.getIsAssignedToUser())
+//                        .build())
+//                .toList();
+
+        return OfferResponseDTO.builder()
+                .id(offer.getId())
+                .name(offer.getName())
+                .description(offer.getDescription())
+                .organization(offer.getOrganization())
+                .endDate(offer.getEndDate())
+                .pointsCost(offer.getPointsCost())
+                .promoCodes(promoCodes)
+                .isActive(offer.getIsActive())
+                .availablePromoCodes((int) availablePromoCodes)
+                .build();
+    }
 }

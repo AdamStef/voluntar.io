@@ -28,6 +28,8 @@ export const Offers = () => {
     },
   });
 
+  console.log(offers);
+
   return (
     <Panel className="flex flex-col gap-4 bg-gray-200">
       <div className="flex items-center justify-between">

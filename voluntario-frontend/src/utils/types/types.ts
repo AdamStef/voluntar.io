@@ -186,9 +186,11 @@ export type OfferType = {
   description: string;
   // sponsor: SponsorType;
   organization: OrganizationType;
+  promoCodes: PromoCodeType[];
   endDate: Date;
   pointsCost: number;
   isActive: boolean;
+  availablePromoCodes: number;
 };
 
 export type PromoCodeType = {

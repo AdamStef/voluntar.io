@@ -51,15 +51,19 @@ export const AvailableOffers = ({
     claimOfferMutate(offerId);
   };
 
+  console.log(offers);
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead>Nazwa</TableHead>
           <TableHead>Opis</TableHead>
+          <TableHead>Zniżka</TableHead>
           <TableHead>Organizator</TableHead>
           <TableHead>Data końcowa</TableHead>
           <TableHead>Potrzebne punkty</TableHead>
+          <TableHead>Dostępne do odebrania</TableHead>
           <TableHead></TableHead>
         </TableRow>
       </TableHeader>
@@ -68,12 +72,22 @@ export const AvailableOffers = ({
           <TableRow key={index}>
             <TableCell>{offer.name}</TableCell>
             <TableCell>{offer.description}</TableCell>
+            <TableCell>
+              {offer.promoCodes.length !== 0 &&
+                (offer.promoCodes[0].discountPercentage
+                  ? `${offer.promoCodes[0].discountPercentage}%`
+                  : `${offer.promoCodes[0].discountValue} zł`)}
+            </TableCell>
             <TableCell>{offer.organization.name}</TableCell>
             <TableCell>{offer.endDate.toLocaleDateString()}</TableCell>
             <TableCell>{offer.pointsCost}</TableCell>
+            <TableCell>{offer.availablePromoCodes}</TableCell>
             <TableCell>
               <Button
-                disabled={currentPoints < offer.pointsCost}
+                disabled={
+                  currentPoints < offer.pointsCost ||
+                  offer.availablePromoCodes === 0
+                }
                 onClick={() => handleClaimOffer(offer.id)}
               >
                 Odbierz

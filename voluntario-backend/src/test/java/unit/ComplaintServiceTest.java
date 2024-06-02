@@ -54,10 +54,10 @@ public class ComplaintServiceTest {
 
     private ComplaintRequestDTO complaintRequestDTO;
     private User reporter = new User(1L, "test@test.com", "testpassword", new UserRole(Role.ROLE_ORGANIZATION),
-            "Jan", "Kowalski", "555111222", new ArrayList<>(), new Score(), Gender.MALE,
+            "Jan", "Kowalski", "555111222", new ArrayList<>(), new Score(), Gender.MALE, null,
             true, false, false);
     private User reported = new User(2L, "vol@test.com", "password", new UserRole(Role.ROLE_VOLUNTEER),
-            "Marian", "Kowalczyk", "789456123", new ArrayList<>(), new Score(), Gender.MALE,
+            "Marian", "Kowalczyk", "789456123", new ArrayList<>(), new Score(), Gender.MALE, null,
             true, false, false);
 
     private Complaint complaint = new Complaint(1L, reporter, "skarga", reported, LocalDateTime.now().minusDays(2), null, null, Status.TO_REVIEW, null, null, 1);
@@ -69,7 +69,7 @@ public class ComplaintServiceTest {
         ComplaintRequestDTO complaintRequestDTO = new ComplaintRequestDTO(2L,"skarga");
         when(userRepository.findById(complaintRequestDTO.getReportedID())).thenReturn(Optional.of(reported));
 
-        Complaint result = complaintService.createComplaint(complaintRequestDTO, reporter);
+        ComplaintResponseDTO result = complaintService.createComplaint(complaintRequestDTO, reporter);
 
         verify(userRepository, times(1)).findById(complaintRequestDTO.getReportedID());
         verify(complaintRepository, times(1)).save(complaintCaptor.capture());
@@ -79,7 +79,13 @@ public class ComplaintServiceTest {
         assertEquals(reported, savedComplaint.getReported());
         assertEquals(complaintRequestDTO.getText(), savedComplaint.getTextComplaint());
         assertEquals(Status.TO_REVIEW, savedComplaint.getStatus());
-        assertEquals(result, savedComplaint);
+        assertEquals(result.getId(), savedComplaint.getId());
+        assertEquals(result.getTextComplaint(), savedComplaint.getTextComplaint());
+        assertEquals(result.getReportDate(), savedComplaint.getReportDate());
+        assertEquals(result.getClaimDate(), savedComplaint.getClaimDate());
+        assertEquals(result.getResolveDate(), savedComplaint.getResolveDate());
+        assertEquals(result.getStatus(), savedComplaint.getStatus());
+        assertEquals(result.getResponse(), savedComplaint.getResponse());
         assertEquals(LocalDateTime.now().getYear(), savedComplaint.getReportDate().getYear());
         assertEquals(LocalDateTime.now().getMonth(), savedComplaint.getReportDate().getMonth());
         assertEquals(LocalDateTime.now().getDayOfMonth(), savedComplaint.getReportDate().getDayOfMonth());
@@ -119,7 +125,7 @@ public class ComplaintServiceTest {
     public void testResolveComplaint() throws IllegalAccessException {
         when(complaintRepository.findById(complaint.getId())).thenReturn(Optional.of(complaint));
 
-        ComplaintResponseDTO complaintResponseDTO = new ComplaintResponseDTO("odpowiedź");
+        ComplaintResponseDTO complaintResponseDTO = new ComplaintResponseDTO(complaint);
         complaint.setAdminID(1L);
         complaint.setStatus(Status.UNDER_REVIEW);
         String result = complaintService.resolveComplaint(complaint.getId(), complaintResponseDTO, reporter);
@@ -142,7 +148,7 @@ public class ComplaintServiceTest {
         when(complaintRepository.findById(complaint.getId())).thenReturn(Optional.empty());
 
         assertThrows(NoSuchElementException.class, () -> {
-            complaintService.resolveComplaint(complaint.getId(), new ComplaintResponseDTO("odpowiedź"), reporter);
+            complaintService.resolveComplaint(complaint.getId(), new ComplaintResponseDTO(complaint), reporter);
         });
 
         verify(complaintRepository, times(1)).findById(complaint.getId());
@@ -154,8 +160,13 @@ public class ComplaintServiceTest {
         when(complaintRepository.findAll()).thenReturn(List.of(complaint, complaint2));
         var result = complaintService.getAllComplaints();
         assertEquals(2, result.size());
-        assertEquals(complaint, result.get(0));
-        assertEquals(complaint2, result.get(1));
+        assertEquals(result.get(0).getId(), complaint.getId());
+        assertEquals(result.get(0).getTextComplaint(), complaint.getTextComplaint());
+        assertEquals(result.get(0).getReportDate(), complaint.getReportDate());
+        assertEquals(result.get(0).getClaimDate(), complaint.getClaimDate());
+        assertEquals(result.get(0).getResolveDate(), complaint.getResolveDate());
+        assertEquals(result.get(0).getStatus(), complaint.getStatus());
+        assertEquals(result.get(0).getResponse(), complaint.getResponse());
         verify(complaintRepository, times(1)).findAll();
     }
 
@@ -167,7 +178,14 @@ public class ComplaintServiceTest {
             complaintService.getComplaint(3L);
         });
         assertEquals("Complaint not found",noSuchElementException.getMessage());
-        assertEquals(complaint, complaintService.getComplaint(1L));
+        var result = complaintService.getComplaint(1L);
+        assertEquals(result.getId(), complaint.getId());
+        assertEquals(result.getTextComplaint(), complaint.getTextComplaint());
+        assertEquals(result.getReportDate(), complaint.getReportDate());
+        assertEquals(result.getClaimDate(), complaint.getClaimDate());
+        assertEquals(result.getResolveDate(), complaint.getResolveDate());
+        assertEquals(result.getStatus(), complaint.getStatus());
+        assertEquals(result.getResponse(), complaint.getResponse());
         verify(complaintRepository, times(2)).findById(any());
     }
 
@@ -178,29 +196,38 @@ public class ComplaintServiceTest {
         when(complaintRepository.getComplaintByStatus(Status.TO_REVIEW)).thenReturn(List.of(complaint, complaint2));
         var result = complaintService.getComplaintsByStatus(Status.TO_REVIEW);
         assertEquals(2, result.size());
-        assertEquals(complaint, result.get(0));
-        assertEquals(complaint2, result.get(1));
         complaint.setStatus(Status.UNDER_REVIEW);
         when(complaintRepository.getComplaintByStatus(Status.UNDER_REVIEW)).thenReturn(List.of(complaint));
         result = complaintService.getComplaintsByStatus(Status.UNDER_REVIEW);
         assertEquals(1, result.size());
-        assertEquals(complaint, result.get(0));
+        assertEquals(result.get(0).getId(), complaint.getId());
+        assertEquals(result.get(0).getTextComplaint(), complaint.getTextComplaint());
+        assertEquals(result.get(0).getReportDate(), complaint.getReportDate());
+        assertEquals(result.get(0).getClaimDate(), complaint.getClaimDate());
+        assertEquals(result.get(0).getResolveDate(), complaint.getResolveDate());
+        assertEquals(result.get(0).getStatus(), complaint.getStatus());
+        assertEquals(result.get(0).getResponse(), complaint.getResponse());
 
         complaint2.setStatus(Status.RESOLVED);
         when(complaintRepository.getComplaintByStatus(Status.RESOLVED)).thenReturn(List.of(complaint2));
         result = complaintService.getComplaintsByStatus(Status.RESOLVED);
         assertEquals(1, result.size());
-        assertEquals(complaint2, result.get(0));
-
+        assertEquals(result.get(0).getId(), complaint2.getId());
+        assertEquals(result.get(0).getTextComplaint(), complaint2.getTextComplaint());
+        assertEquals(result.get(0).getReportDate(), complaint2.getReportDate());
+        assertEquals(result.get(0).getClaimDate(), complaint2.getClaimDate());
+        assertEquals(result.get(0).getResolveDate(), complaint2.getResolveDate());
+        assertEquals(result.get(0).getStatus(), complaint2.getStatus());
+        assertEquals(result.get(0).getResponse(), complaint2.getResponse());
     }
 
     @Test
     public void allReporterComplaints() {
         when(complaintRepository.getComplaintByReporter(reporter)).thenReturn(List.of(complaint, complaint2));
         when(complaintRepository.getComplaintByReported(reported)).thenReturn(List.of(complaint, complaint2));
-        var result = complaintService.allReporterComplaints(reporter);
+        var result = complaintService.allComplaintsByUser(reporter);
         assertEquals(2, result.size());
-        result = complaintService.allReportedComplaints(reported);
+        result = complaintService.allComplaintsOnUser(reported);
         assertEquals(2, result.size());
 
     }

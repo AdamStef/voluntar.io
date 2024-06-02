@@ -44,13 +44,13 @@ public class LocationServiceTest {
     private LocationService locationService;
 
     private final User user = new User(1L, "test@test.com", "testpassword", new UserRole(Role.ROLE_ORGANIZATION),
-            "Jan", "Kowalski", "555111222", new ArrayList<>(), new Score(), Gender.MALE,
+            "Jan", "Kowalski", "555111222", new ArrayList<>(), new Score(), Gender.MALE, null,
             true, false, false);
 
-    private LocationDTO locationDTO = new LocationDTO("DPS", "Lodz", "93-001", "Kwiatowa",
+    private final LocationDTO locationDTO = new LocationDTO("DPS", "Lodz", "93-001", "Kwiatowa",
             "2", "1", 14.01,12.57,"brak");
 
-    private Location location = new Location(1L,"DPS", "Lodz", "Kwiatowa", "Kwiatowa",
+    private final Location location = new Location(1L,"DPS", "Lodz", "Kwiatowa", "Kwiatowa",
             "2", "1", 14.01,12.57,"brak");
     private final Location location2 = new Location(2L, "Schroniskao", "Lodz", "93-000", "Kwiatowa",
             "40", "2", 14.10, 12.00, "wejscie od Lisciastej");

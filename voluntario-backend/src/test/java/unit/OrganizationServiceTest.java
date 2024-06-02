@@ -10,7 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import pl.sumatywny.voluntario.dtos.OrganizationDTO;
+import pl.sumatywny.voluntario.dtos.oragnization.*;
 import pl.sumatywny.voluntario.dtos.oragnization.OrganizationRequestDTO;
 import pl.sumatywny.voluntario.enums.Gender;
 import pl.sumatywny.voluntario.enums.Role;

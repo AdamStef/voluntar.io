@@ -27,16 +27,10 @@ import pl.sumatywny.voluntario.repository.EventRepository;
 import pl.sumatywny.voluntario.repository.LocationRepository;
 import pl.sumatywny.voluntario.repository.UserParticipationRepository;
 import pl.sumatywny.voluntario.repository.UserRepository;
-import pl.sumatywny.voluntario.service.impl.EventService;
-import pl.sumatywny.voluntario.service.impl.LeaderboardService;
-import pl.sumatywny.voluntario.service.impl.LocationService;
-import pl.sumatywny.voluntario.service.impl.PostService;
+import pl.sumatywny.voluntario.service.impl.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -47,7 +41,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class EventServiceTest {
     private final User user = new User(1L, "test@test.com", "testpassword", new UserRole(Role.ROLE_ORGANIZATION),
-            "Jan", "Kowalski", "555111222", new ArrayList<>(), new Score(), Gender.MALE,
+            "Jan", "Kowalski", "555111222", new ArrayList<>(), new Score(), Gender.MALE, null,
             true, false, false);
     private final Organization organization = new Organization(1L, user, "Wolontariaty", "pomagamy", "00000000",
             "Lodz, piotrkowska", "help.org.pl", true,
@@ -70,12 +64,14 @@ public class EventServiceTest {
             LocalDateTime.now().plusDays(3),
             new ArrayList<>(), location2, EventStatus.NOT_COMPLETED);
     private final User volunteer = new User(2L, "vol@test.com", "password", new UserRole(Role.ROLE_VOLUNTEER),
-            "Marian", "Kowalczyk", "789456123", new ArrayList<>(), new Score(), Gender.MALE,
+            "Marian", "Kowalczyk", "789456123", new ArrayList<>(), new Score(), Gender.MALE, null,
             true, false, false);
     @InjectMocks
     private EventService eventService;
     @Mock
     private PostService postService;
+    @Mock
+    private EmailService emailService;
     @Mock
     private EventRepository eventRepository;
     @Mock
@@ -125,33 +121,28 @@ public class EventServiceTest {
 
     @Test
     public void addParticipantErrors() {
+        var error = assertThrows(NoSuchElementException.class, () -> eventService.addParticipant(event, user));
+        assertEquals("Only volunteers can participate in events.", error.getMessage());
+
         when(userParticipationRepository.findAll()).thenReturn(List.of(
                 new UserParticipation(1L, volunteer, event, 0, null)));
-
-        assertThrows(NoSuchElementException.class, () -> {
-            eventService.addParticipant(event, user);
-        });
-
         eventService.addParticipant(event, volunteer);
         assertEquals(1, userParticipationRepository.findAll().size());
 
         event.setStatus(EventStatus.COMPLETED);
-        assertThrows(IllegalStateException.class, () -> {
-            eventService.addParticipant(event, volunteer);
-        });
+        var error2 = assertThrows(IllegalStateException.class, () -> eventService.addParticipant(event, volunteer));
+        assertEquals("Cannot add participant to completed event.", error2.getMessage());
         event.setStatus(EventStatus.NOT_COMPLETED);
 
         event.setStartDate(LocalDateTime.now().minusDays(2));
-        assertThrows(IllegalStateException.class, () -> {
-            eventService.addParticipant(event, volunteer);
-        });
+        var error3 = assertThrows(IllegalStateException.class, () -> eventService.addParticipant(event, volunteer));
+        assertEquals("Cannot add participant to past event.", error3.getMessage());
         event.setStartDate(LocalDateTime.now().plusDays(2));
 
-        when(userParticipationRepository.findByUserIdAndEventId(volunteer.getId(), event.getId()))
-                .thenReturn(Optional.of(new UserParticipation(1L, volunteer, event, 0, null)));
-        assertThrows(IllegalStateException.class, () -> {
-            eventService.addParticipant(event, volunteer);
-        });
+        when(userParticipationRepository.findByUserId(volunteer.getId()))
+                .thenReturn(List.of(new UserParticipation(1L, volunteer, event, 0, null)));
+        var error4 = assertThrows(IllegalStateException.class, () -> eventService.addParticipant(event, volunteer));
+        assertEquals("User 2 already in event 1.", error4.getMessage());
     }
 
     @Test
@@ -162,13 +153,9 @@ public class EventServiceTest {
 
     @Test
     public void removeParticipant() {
-        UserParticipation userParticipation = new UserParticipation(1L, user, event, 0, null);
-        when(userParticipationRepository.findByUserIdAndEventId(1L, 1L)).thenReturn(Optional.of(userParticipation));
-
         eventService.removeParticipant(event, user);
 
-        verify(userParticipationRepository, times(1)).findByUserIdAndEventId(1L, 1L);
-        verify(userParticipationRepository, times(1)).delete(userParticipation);
+        verify(userParticipationRepository, times(1)).deleteByEventIdAndUserId(1L, 1L);
     }
 
     @Test
@@ -179,15 +166,6 @@ public class EventServiceTest {
         verify(userParticipationRepository, never()).findByUserIdAndEventId(1L, 1L);
         verify(userParticipationRepository, never()).delete(userParticipation);
         event.setStatus(EventStatus.NOT_COMPLETED);
-    }
-
-    @Test
-    public void removeParticipationNoUser() {
-        UserParticipation userParticipation = new UserParticipation(1L, user, event, 0, null);
-
-        assertThrows(NoSuchElementException.class, () -> eventService.removeParticipant(event, user));
-        verify(userParticipationRepository, times(1)).findByUserIdAndEventId(1L, 1L);
-        verify(userParticipationRepository, never()).delete(userParticipation);
     }
 
     @Test
@@ -461,6 +439,38 @@ public class EventServiceTest {
         assertEquals(EventStatus.NOT_COMPLETED, savedEvent.getStatus());
     }
 
+    @Test
+    public void getSoonEvents() {
+        event.setStartDate(LocalDateTime.now().plusDays(1));
+        when(eventRepository.findAllByStartDateLessThanEqualAndStartDateGreaterThanEqual(
+                any(LocalDateTime.class), any(LocalDateTime.class)
+        )).thenReturn(Arrays.asList(event));
+
+        List<EventResponseDTO> result = eventService.getSoonEvents();
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(event.getId(), result.get(0).getId());
+        assertEquals(event.getName(), result.get(0).getName());
+        assertEquals(event.getDescription(), result.get(0).getDescription());
+        assertEquals(event.getStartDate(), result.get(0).getStartDate());
+        assertEquals(event.getStatus(), result.get(0).getStatus());
+
+        verify(eventRepository, times(1)).findAllByStartDateLessThanEqualAndStartDateGreaterThanEqual(
+                any(LocalDateTime.class), any(LocalDateTime.class)
+        );
+    }
+
+    @Test
+    public void doEventDatesOverlap() {
+        event.setStartDate(LocalDateTime.now().plusDays(1));
+        event.setEndDate(LocalDateTime.now().plusDays(2));
+        event2.setStartDate(LocalDateTime.now().plusDays(3));
+        event2.setEndDate(LocalDateTime.now().plusDays(4));
+        assertFalse(eventService.doEventDatesOverlap(event2, event));
+        event2.setStartDate(LocalDateTime.now().plusDays(1));
+        assertTrue(eventService.doEventDatesOverlap(event, event2));
+    }
 
 
 }

@@ -76,7 +76,7 @@ public class EventService {
         }
 
         if (!event.getStatus().equals(EventStatus.NOT_COMPLETED)) {
-            throw new IllegalStateException("Cannot remove participant from completed event.");
+            throw new IllegalStateException("Cannot add participant to completed event.");
         }
 
         var participations = userParticipationRepository.findByUserId(user.getId());
@@ -313,7 +313,7 @@ public class EventService {
         return result;
     }
   
-    private boolean doEventDatesOverlap(Event event1, Event event2) {
+    public boolean doEventDatesOverlap(Event event1, Event event2) {
         return event1.getStartDate().isBefore(event2.getEndDate()) && event1.getEndDate().isAfter(event2.getStartDate());
     }
 }

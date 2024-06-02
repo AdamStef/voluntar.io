@@ -50,11 +50,11 @@ public class PostServiceTest {
     private final PostRequestDTO postRequestDTO = new PostRequestDTO(new StringBuilder("PostEDIT"));
 
     private final User user = new User(1L, "test@test.com", "testpassword", new UserRole(Role.ROLE_ORGANIZATION),
-            "Jan", "Kowalski", "555111222", new ArrayList<>(), new Score(), Gender.MALE,
+            "Jan", "Kowalski", "555111222", new ArrayList<>(), new Score(), Gender.MALE, null,
             true, false, false);
 
     private final User user2 = new User(2L, "vol@test.com", "password", new UserRole(Role.ROLE_ORGANIZATION),
-            "Marian", "Kowalczyk", "789456123", new ArrayList<>(), new Score(), Gender.MALE,
+            "Marian", "Kowalczyk", "789456123", new ArrayList<>(), new Score(), Gender.MALE, null,
             true, false, false);
     private final Organization organization = new Organization(1L, user, "Wolontariaty", "pomagamy", "00000000",
             "Lodz, piotrkowska", "help.org.pl", true,

@@ -32,7 +32,7 @@ const UserEventsList: React.FC = () => {
 
   return (
     <div className="rounded-lg bg-gray-100 p-4">
-      <h2 className="mb-4 text-2xl font-bold">Twoje wydarzenia</h2>
+      {/* <h2 className="mb-4 text-2xl font-bold">Twoje wydarzenia</h2> */}
       {events.length === 0 ? (
         <p className="text-center">Nie znaleziono wydarzeń</p>
       ) : (

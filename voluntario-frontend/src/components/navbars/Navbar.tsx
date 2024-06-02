@@ -39,9 +39,17 @@ const organizerNavItems: NavbarItemType[] = [
     name: 'Panel',
     path: '/organizer',
   },
+  // {
+  //   name: 'Dodaj wydarzenie',
+  //   path: '/addevent',
+  // },
   {
-    name: 'Dodaj wydarzenie',
-    path: '/addevent',
+    name: 'Zrealizuj kupon',
+    path: '/realize-coupon',
+  },
+  {
+    name: 'Oferty',
+    path: '/offers',
   },
   {
     name: 'Dodaj skargę',

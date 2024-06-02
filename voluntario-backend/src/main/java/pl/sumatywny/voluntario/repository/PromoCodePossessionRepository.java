@@ -16,6 +16,8 @@ public interface PromoCodePossessionRepository extends JpaRepository<PromoCodePo
     @Query("SELECT p FROM PromoCodePossession p WHERE p.volunteer.id = ?1")
     List<PromoCodePossession> findAllByVolunteerId(Long volunteerId);
 
+    boolean existsByVolunteerIdAndPromoCodeOfferId(Long volunteerId, Long offerId);
+
     @Query("SELECT p FROM PromoCodePossession p WHERE p.promoCode.code = ?1")
     Optional<PromoCodePossession> findByPromoCodeCode(String promoCode);
 

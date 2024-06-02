@@ -120,6 +120,10 @@ public class PointsShopService {
         if (!(user.getRole().getRole() == Role.ROLE_VOLUNTEER)) {
             throw new RuntimeException("Only volunteers can have promo codes");
         }
+
+        if (promoCodePossessionRepository.existsByVolunteerIdAndPromoCodeOfferId(user.getId(), offerID)) {
+            throw new RuntimeException("User already has a promo code for this offer");
+        }
         PromoCodePossession promoCodePossession = new PromoCodePossession();
         var promoCodes = promoCodeRepository.findFirstAssignablePromoCodeByOfferId(offerID);
         if (promoCodes.isEmpty()) {

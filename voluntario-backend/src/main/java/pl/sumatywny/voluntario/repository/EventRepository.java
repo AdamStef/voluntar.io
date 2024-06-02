@@ -19,7 +19,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
 //    @Query("SELECT e FROM Event e LEFT JOIN FETCH e.participations WHERE e.id = :id")
-    @EntityGraph(attributePaths = {"participations", "organization", "location"})
+    @EntityGraph(attributePaths = {"participations", "organization", "location", "organization.user"})
     Optional<Event> findById(Long id);
 
     @Query("SELECT e FROM Event e JOIN FETCH e.organization WHERE e.organization.id = :id ORDER BY e.startDate ASC")

@@ -9,12 +9,16 @@ import {
 } from '@/components/ui/table';
 import { claimOffer, getActiveOffers } from '@/utils/api/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useToast } from '../ui/use-toast';
+import { AxiosError } from 'axios';
+import { BackendErrorResponse } from '@/utils/types/types';
 
 export const AvailableOffers = ({
   currentPoints,
 }: {
   currentPoints: number;
 }) => {
+  const { toast } = useToast();
   const queryClient = useQueryClient();
   const { data: offers } = useQuery({
     queryKey: ['offers'],
@@ -27,6 +31,18 @@ export const AvailableOffers = ({
       console.log('Offer claimed');
       queryClient.refetchQueries({ queryKey: ['offers'] });
       queryClient.refetchQueries({ queryKey: ['current-points'] });
+      queryClient.refetchQueries({ queryKey: ['promo-codes'] });
+    },
+    onError: (error) => {
+      const err = error as AxiosError;
+      console.error('Error claiming offer', error);
+      toast({
+        title: 'Błąd',
+        description:
+          (err.response?.data as BackendErrorResponse).message ||
+          'Nie udało się zrealizować oferty',
+        variant: 'destructive',
+      });
     },
   });
 
@@ -41,7 +57,7 @@ export const AvailableOffers = ({
         <TableRow>
           <TableHead>Nazwa</TableHead>
           <TableHead>Opis</TableHead>
-          <TableHead>Sponsor</TableHead>
+          <TableHead>Organizator</TableHead>
           <TableHead>Data końcowa</TableHead>
           <TableHead>Potrzebne punkty</TableHead>
           <TableHead></TableHead>
@@ -52,7 +68,7 @@ export const AvailableOffers = ({
           <TableRow key={index}>
             <TableCell>{offer.name}</TableCell>
             <TableCell>{offer.description}</TableCell>
-            <TableCell>{offer.sponsor.name}</TableCell>
+            <TableCell>{offer.organization.name}</TableCell>
             <TableCell>{offer.endDate.toLocaleDateString()}</TableCell>
             <TableCell>{offer.pointsCost}</TableCell>
             <TableCell>

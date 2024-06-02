@@ -53,6 +53,14 @@ public class PointsShopController {
         return ResponseEntity.ok(pointsShopService.findOfferById(offerId));
     }
 
+    @DeleteMapping("/offers/{offerID}")
+    @IsOrganization
+    public ResponseEntity<?> deleteOffer(@PathVariable("offerID") Long offerId) {
+        var user = authService.getUserFromSession();
+        pointsShopService.deleteOffer(offerId, user);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/offers/{offerID}/assign")
     @IsVolunteer
     public ResponseEntity<?> assignPromoCode(@PathVariable("offerID") Long offerID) {
@@ -62,22 +70,26 @@ public class PointsShopController {
 
 
     @GetMapping("/my-promo-codes")
-    public ResponseEntity<?> getMyPromoCodes(@RequestParam(value = "active", required=false) Boolean active) {
+    public ResponseEntity<?> getMyPromoCodes(@RequestParam(value = "active", required = false, defaultValue = "false") Boolean active) {
         var user = authService.getUserFromSession();
-        if(active == null || !active) {
-            System.out.println("test");
-            return ResponseEntity.ok(pointsShopService.findAllUsersPromoCodes(user.getId(), false));
-        }
-        else {
-            return ResponseEntity.ok(pointsShopService.findAllUsersPromoCodes(user.getId(), active));
-
-        }
+        return ResponseEntity.ok(pointsShopService.findAllUsersPromoCodes(user.getId(), active));
+//        if (active == null || !active) {
+//            System.out.println("test");
+//            return ResponseEntity.ok(pointsShopService.findAllUsersPromoCodes(user.getId(), false));
+//        } else {
+//
+//        }
     }
 
     @GetMapping("/my-promo-codes/{promoCode}")
     public ResponseEntity<?> getMyPromoCode(@PathVariable("promoCode") String promoCode) {
         var user = authService.getUserFromSession();
         return ResponseEntity.ok(pointsShopService.findPromoCodeByCode(user.getId(), promoCode));
+    }
+
+    @GetMapping("/promo-codes/{promoCode}")
+    public ResponseEntity<?> getPromoCode(@PathVariable("promoCode") String promoCode) {
+        return ResponseEntity.ok(pointsShopService.findPromoCodeByCode(promoCode));
     }
 
     @GetMapping("/current-points")
@@ -87,18 +99,23 @@ public class PointsShopController {
     }
 
     @IsOrganization
-    @GetMapping("/check-promo-code/{promoCode}")
+    @GetMapping("/promo-codes/{promoCode}/check")
     public ResponseEntity<?> checkPromoCode(@PathVariable("promoCode") String promoCode) {
         var user = authService.getUserFromSession();
         return ResponseEntity.ok(pointsShopService.checkPromoCode(promoCode, user));
     }
 
     @IsOrganization
-    @PutMapping("/redeem-promo-code/{promoCode}")
+    @PostMapping("/promo-codes/{promoCode}/redeem")
     public ResponseEntity<?> redeemPromoCode(@PathVariable("promoCode") String promoCode) {
         var user = authService.getUserFromSession();
         return ResponseEntity.ok(pointsShopService.redeemPromoCode(promoCode, user));
     }
 
 
+//    @PostMapping("/promo-codes/{promoCode}/use")
+//    public ResponseEntity<?> usePromoCode(@PathVariable("promoCode") String promoCode) {
+////        pointsShopService.usePromoCode(promoCode);
+//        return ResponseEntity.ok().build();
+//    }
 }

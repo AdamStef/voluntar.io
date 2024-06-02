@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class PointsShopService {
@@ -101,6 +102,21 @@ public class PointsShopService {
         return offerRepository.findAllByOrganizationName(organizationName);
     }
 
+    public void deleteOffer(Long offerId, User user) {
+        var organization = organizationRepository.findOrganizationByUserId(user.getId());
+        if (organization == null) {
+            throw new RuntimeException("User is not assigned to organization");
+        }
+        var offer = offerRepository.findFirstById(offerId);
+        if (offer == null) {
+            throw new RuntimeException("Offer not found");
+        }
+        if (!Objects.equals(offer.getOrganization().getId(), organization.getId())) {
+            throw new RuntimeException("Offer not found");
+        }
+        offerRepository.delete(offer);
+    }
+
     /*PromoCodes*/
 
     /*PromoCodePossession*/
@@ -110,37 +126,32 @@ public class PointsShopService {
             throw new RuntimeException("Only volunteers can have promo codes");
         }
         PromoCodePossession promoCodePossession = new PromoCodePossession();
+        var promoCodes = promoCodeRepository.findFirstAssignablePromoCodeByOfferId(offerID);
+        if (promoCodes.isEmpty()) {
+            throw new RuntimeException("No promo codes available for this offer");
+        }
+
+        var promoCode = promoCodes.getFirst();
+
+        var score = scoreRepository.findAll().stream()
+                .filter(score1 -> score1.getUser().getId().equals(user.getId()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("User does not have a score"));
+
+        if (score.getPurchasePoints() < promoCode.getOffer().getPointsCost()) {
+            throw new RuntimeException("User does not have enough points to get this promo code");
+        }
+        score.setPurchasePoints(score.getPurchasePoints() - promoCode.getOffer().getPointsCost());
+        promoCodePossession.setPromoCode(promoCode);
+        promoCodePossession.setVolunteer(user);
+        promoCode.setIsAssignedToUser(true);
+
         try {
-            var promoCodes = promoCodeRepository.findFirstAssignablePromoCodeByOfferId(offerID);
-            if (promoCodes.isEmpty()) {
-                throw new RuntimeException("No promo codes available for this offer");
-            }
-
-            var promoCode = promoCodes.getFirst();
-
-            var score = scoreRepository.findAll().stream()
-                    .filter(score1 -> score1.getUser().getId().equals(user.getId())).
-                    findFirst()
-                    .orElseThrow(() -> new RuntimeException("User does not have a score"));
-
-            if (score.getPurchasePoints() < promoCode.getOffer().getPointsCost()) {
-                throw new RuntimeException("User does not have enough points to get this promo code");
-            }
-            score.setPurchasePoints(score.getPurchasePoints() - promoCode.getOffer().getPointsCost());
-            promoCodePossession.setPromoCode(promoCode);
-            promoCodePossession.setVolunteer(user);
-            promoCode.setIsAssignedToUser(true);
-
-            try {
-                promoCodeRepository.save(promoCodePossession.getPromoCode());
-                scoreRepository.save(score);
-                return promoCodePossessionRepository.save(promoCodePossession).getPromoCode();
-            } catch (Exception e) {
-                throw new RuntimeException("Error while saving promo code possession", e);
-            }
-
+            promoCodeRepository.save(promoCodePossession.getPromoCode());
+            scoreRepository.save(score);
+            return promoCodePossessionRepository.save(promoCodePossession).getPromoCode();
         } catch (Exception e) {
-            throw new RuntimeException("Error while assigning promo code to user", e);
+            throw new RuntimeException("Error while saving promo code possession", e);
         }
     }
 
@@ -164,14 +175,44 @@ public class PointsShopService {
         return promoCodeList;
     }
 
+//    public PromoCode findPromoCodeByCode(Long userID, String code) {
+//        var promoCodePossession = promoCodePossessionRepository.findFirstByPromoCodeCode(code);
+//        if (promoCodePossession == null) {
+//            throw new RuntimeException("Promo code possession not found");
+//        }
+//
+////        List<PromoCode> promoCodeList = new ArrayList<>();
+////        var promoCodePossessionList = promoCodePossessionRepository.findAllByVolunteerId(volunteerId);
+////        if (canBeUsed) {
+////            promoCodePossessionList.removeIf(promoCodePossession -> !promoCodePossession.getPromoCode().getCanBeUsed() && promoCodePossession.getPromoCode().getIsUsed());
+////        }
+////        for (PromoCodePossession promoCodePossession : promoCodePossessionList) {
+////            promoCodeList.add(promoCodePossession.getPromoCode());
+////        }
+////        return promoCodeList;
+//
+//        return promoCodePossessionRepository.findAllByVolunteerId(volunteerId).stream()
+//                .map(PromoCodePossession::getPromoCode)
+//                .filter(promoCode -> canBeUsed ? promoCode.getCanBeUsed() && !promoCode.getIsUsed() : true)
+//                .collect(Collectors.toList());
+//    }
+
     public PromoCode findPromoCodeByCode(Long userID, String code) {
-        var promoCodePossession = promoCodePossessionRepository.findFirstByPromoCodeCode(code);
-        if (promoCodePossession == null) {
-            throw new RuntimeException("Promo code possession not found");
-        }
+        var promoCodePossession = promoCodePossessionRepository
+                .findByPromoCodeCode(code)
+                .orElseThrow(() -> new RuntimeException("Promo code possession not found"));
+
         if (!Objects.equals(promoCodePossession.getVolunteer().getId(), userID)) {
             throw new RuntimeException("Promo code possession not found");
         }
+        return promoCodePossession.getPromoCode();
+    }
+
+    public PromoCode findPromoCodeByCode(String code) {
+        var promoCodePossession = promoCodePossessionRepository
+                .findByPromoCodeCode(code)
+                .orElseThrow(() -> new RuntimeException("Promo code possession not found"));
+
         return promoCodePossession.getPromoCode();
     }
 
@@ -189,14 +230,13 @@ public class PointsShopService {
         var promoCodePossession = promoCodePossessionRepository.findFirstByPromoCodeCode(promoCode);
         if (promoCodePossession == null) {
             throw new RuntimeException("Promo code possession not found");
-        }
-        else if (!Objects.equals(promoCodePossession.getPromoCode().getOffer().getOrganization().getId(), organization.getId())) {
+        } else if (!Objects.equals(promoCodePossession.getPromoCode().getOffer().getOrganization().getId(), organization.getId())) {
             throw new RuntimeException("Promo code possession not found");
         }
-        if(!promoCodePossession.getPromoCode().getIsAssignedToUser()) {
+        if (!promoCodePossession.getPromoCode().getIsAssignedToUser()) {
             throw new RuntimeException("Promo code possession not found");
         }
-        if(!promoCodePossession.getPromoCode().getIsNotExpired() || !promoCodePossession.getPromoCode().getCanBeUsed()){
+        if (!promoCodePossession.getPromoCode().getIsNotExpired() || !promoCodePossession.getPromoCode().getCanBeUsed()) {
             throw new RuntimeException("Promo code can't be used");
         }
         return promoCodePossession;
@@ -209,4 +249,20 @@ public class PointsShopService {
         promoCodeRepository.save(promoCodeObject);
         return promoCodePossessionRepository.save(promoCodePossession);
     }
+
+//    public void usePromoCode(String code) {
+//        var promoCodePossession = promoCodePossessionRepository
+//                .findByPromoCodeCode(code)
+//                .orElseThrow(() -> new RuntimeException("Promo code possession not found"));
+//
+//        var promoCode = promoCodePossession.getPromoCode();
+//
+//        if (promoCode.getIsUsed()) {
+//            throw new RuntimeException("Promo code already used");
+//        }
+//
+////        promoCode.setIsUsed(true);
+//        promoCode.setCanBeUsed(false);
+//        promoCodeRepository.save(promoCode);
+//    }
 }

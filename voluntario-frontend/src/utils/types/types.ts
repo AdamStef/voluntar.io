@@ -184,7 +184,8 @@ export type OfferType = {
   id: number;
   name: string;
   description: string;
-  sponsor: SponsorType;
+  // sponsor: SponsorType;
+  organization: OrganizationType;
   endDate: Date;
   pointsCost: number;
   isActive: boolean;
@@ -194,9 +195,22 @@ export type PromoCodeType = {
   id: number;
   code: string;
   offer: OfferType;
-  promoCodeType: 'percentage' | 'value';
+  // promoCodeType: 'percentage' | 'value';
   discountPercentage?: number;
   discountValue?: number;
-  maxUsages: number;
+  // maxUsages: number;
+  canBeUsed: boolean;
   expirationDate: Date;
+};
+
+export type PromoCodePossessionType = {
+  id: number;
+  promoCode: PromoCodeType;
+  user: UserType;
+};
+
+export type BackendErrorResponse = {
+  message: string;
+  httpStatus: string;
+  timestamp: string;
 };

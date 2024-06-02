@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.sumatywny.voluntario.dtos.OrganizationDTO;
+import pl.sumatywny.voluntario.dtos.oragnization.OrganizationRequestDTO;
 import pl.sumatywny.voluntario.enums.Gender;
 import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.model.user.Organization;
@@ -41,10 +42,10 @@ public class OrganizationServiceTest {
     private OrganizationService organizationService;
 
     private final User user = new User(1L, "test@test.com", "testpassword", new UserRole(Role.ROLE_ORGANIZATION),
-            "Jan", "Kowalski", "555111222", new ArrayList<>(), new Score(), Gender.MALE,
+            "Jan", "Kowalski", "555111222", new ArrayList<>(), new Score(), Gender.MALE, null,
             true, false, false);
 
-    private final OrganizationDTO organizationDTO = new OrganizationDTO(1L, "Organizacja", "opis",
+    private final OrganizationRequestDTO organizationRequestDTO = new OrganizationRequestDTO(1L, "Organizacja", "opis",
             "00001111", "Piotrkowska 111 Lodz", "www.strona.org.pl");
 
 
@@ -58,14 +59,14 @@ public class OrganizationServiceTest {
             return org;
         });
 
-        Organization createdOrganization = organizationService.createOrganization(organizationDTO, user);
+        Organization createdOrganization = organizationService.createOrganization(organizationRequestDTO, user);
 
         assertNotNull(createdOrganization.getId());
-        assertEquals(organizationDTO.getName(), createdOrganization.getName());
-        assertEquals(organizationDTO.getDescription(), createdOrganization.getDescription());
-        assertEquals(organizationDTO.getWebsite(), createdOrganization.getWebsite());
-        assertEquals(organizationDTO.getAddress(), createdOrganization.getAddress());
-        assertEquals(organizationDTO.getKrs(), createdOrganization.getKrs());
+        assertEquals(organizationRequestDTO.getName(), createdOrganization.getName());
+        assertEquals(organizationRequestDTO.getDescription(), createdOrganization.getDescription());
+        assertEquals(organizationRequestDTO.getWebsite(), createdOrganization.getWebsite());
+        assertEquals(organizationRequestDTO.getAddress(), createdOrganization.getAddress());
+        assertEquals(organizationRequestDTO.getKrs(), createdOrganization.getKrs());
         assertEquals(user, createdOrganization.getUser());
         assertFalse(createdOrganization.isVerified());
         assertNull(createdOrganization.getVerificationDate());

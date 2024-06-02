@@ -32,7 +32,6 @@ export const AdminPage = () => {
                     ))}
                 </div>
             </div>
-            {/*<UnconfirmedOrganizationsList/>*/}
         </div>
     )
 }

@@ -50,6 +50,10 @@ public class OrganizationService {
         return organizationRepository.findOrganizationByUserId(userID);
     }
 
+    public List<OrganizationResponseDTO> getUnverifiedOrganizations() {
+        return organizationRepository.findByVerifiedFalse().stream().map(OrganizationResponseDTO::new).collect(Collectors.toList());
+    }
+
     public String verifyOrganization(Long organizationID) {
         var organization = organizationRepository.findById(organizationID);
         if (!organization.isEmpty()) {
@@ -61,5 +65,16 @@ public class OrganizationService {
             throw new NoSuchElementException(String.format("Organization %d not found.", organizationID));
         }
     }
+
+//    public String verifyOrganization(Long userID) {
+//        Organization organization = organizationRepository.findOrganizationByUserId(userID);
+//        if (organization != null) {
+//            organization.getUser().setIsVerified(true);
+//            organizationRepository.save(organization);
+//            return "Organization verified";
+//        } else {
+//            throw new RuntimeException("Organization not found for user id: " + userID);
+//        }
+//    }
 
 }

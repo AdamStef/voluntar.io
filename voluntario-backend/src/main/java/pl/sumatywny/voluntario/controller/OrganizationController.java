@@ -31,6 +31,11 @@ public class OrganizationController {
         return ResponseEntity.ok().body(organizationService.getAllOrganizations());
     }
 
+    @GetMapping("/unverified")
+    public ResponseEntity<?> getUnverifiedOrganizations() {
+        return ResponseEntity.ok().body(organizationService.getUnverifiedOrganizations());
+    }
+
     @GetMapping("/{organizationID}")
     public ResponseEntity<?> getOrganization(@PathVariable("organizationID") Long organizationID) {
         return ResponseEntity.ok().body(organizationService.getOrganization(organizationID));
@@ -51,6 +56,8 @@ public class OrganizationController {
     public ResponseEntity<?> verifyOrganization(@PathVariable("organizationID") Long organizationID) {
         return ResponseEntity.ok().body(organizationService.verifyOrganization(organizationID));
     }
+
+
 
 
 }

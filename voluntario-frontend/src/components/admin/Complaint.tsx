@@ -112,7 +112,7 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
           <div className="mb-4 flex flex-col">
             <div className="flex flex-row">
               <Flag className="h-8 w-8" />
-              <p className="ml-3 w-full text-xl flex justify-between">
+              <div className="ml-3 w-full text-xl flex justify-between">
                 <div className="flex flex-col">
                 <span>
                   <span className="font-normal">Od: </span>
@@ -145,7 +145,7 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
                     </div>
                   }
                 </div>
-              </p>
+              </div>
             </div>
           </div>
           <div>

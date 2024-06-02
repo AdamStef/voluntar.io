@@ -40,8 +40,6 @@ export const OrganizerHomePage = () => {
   if (!events || events.length == 0)
     return <p className="mx-auto mt-5 w-fit">Brak wydarzeń</p>;
 
-  // console.log(events);
-
   const eventsGroupedByStatus: GroupedEventsType = events
     .sort((a, b) => a.startDate.getDate() - b.startDate.getDate())
     .reduce((acc, event) => {
@@ -55,8 +53,6 @@ export const OrganizerHomePage = () => {
 
       return acc;
     }, {} as GroupedEventsType);
-
-  console.log(events);
 
   return (
     <div className="container mt-5 flex flex-col gap-3 md:flex-row">

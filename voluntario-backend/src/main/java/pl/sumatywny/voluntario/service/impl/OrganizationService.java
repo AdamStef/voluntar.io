@@ -66,15 +66,4 @@ public class OrganizationService {
         }
     }
 
-//    public String verifyOrganization(Long userID) {
-//        Organization organization = organizationRepository.findOrganizationByUserId(userID);
-//        if (organization != null) {
-//            organization.getUser().setIsVerified(true);
-//            organizationRepository.save(organization);
-//            return "Organization verified";
-//        } else {
-//            throw new RuntimeException("Organization not found for user id: " + userID);
-//        }
-//    }
-
 }

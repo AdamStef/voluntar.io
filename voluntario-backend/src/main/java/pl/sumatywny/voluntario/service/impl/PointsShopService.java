@@ -83,47 +83,13 @@ public class PointsShopService {
     public List<OfferResponseDTO> findAllOffers() {
         var offers = offerRepository.findAll();
         return offers.stream().map(this::getOfferResponseDTO).toList();
-//        {
-//            var promoCodes = promoCodeRepository.findAllByOfferId(offer.getId());
-//            var availablePromoCodes = promoCodes.stream()
-//                    .filter(promoCode -> promoCode.getIsNotExpired() && promoCode.getCanBeUsed())
-//                    .count();
-//
-//            var promoCodesResponse = promoCodes.stream()
-//                    .map(promoCode -> PromoCodeResponseDTO.builder()
-//                            .code(promoCode.getCode())
-//                            .expirationDate(promoCode.getExpirationDate())
-//                            .isNotExpired(promoCode.getIsNotExpired())
-//                            .canBeUsed(promoCode.getCanBeUsed())
-//                            .isAssignedToUser(promoCode.getIsAssignedToUser())
-//                            .build())
-//                    .toList();
-//
-//            return OfferResponseDTO.builder()
-//                    .id(offer.getId())
-//                    .name(offer.getName())
-//                    .description(offer.getDescription())
-//                    .organization(offer.getOrganization())
-//                    .endDate(offer.getEndDate())
-//                    .pointsCost(offer.getPointsCost())
-//                    .promoCodes(promoCodesResponse)
-//                    .isActive(offer.getIsActive())
-//                    .availablePromoCodes((int) availablePromoCodes)
-//                    .build();
-//        }).toList();
     }
 
     public List<OfferResponseDTO> findAllActiveOffers() {
-//        try {
-//            var offer_list = offerRepository.findAll();
-//            offer_list.removeIf(offer -> !offer.getIsActive());
-//        } catch (Exception e) {
-//            throw new RuntimeException("Error while finding all offers", e);
-//        }
-//        return offerRepository.findAll();
         return offerRepository.findAll().stream()
                 .filter(Offer::getIsActive)
                 .map(this::getOfferResponseDTO)
+                .filter(offer -> offer.getAvailablePromoCodes() > 0)
                 .toList();
     }
 

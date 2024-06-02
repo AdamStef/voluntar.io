@@ -45,6 +45,7 @@ export const OrganizationToVerify: React.FC<OrganizationProps> = ({ organization
             console.log(response.data);
             setKrsCorrect(true);
         } catch (err: any) {
+            setLoading(false);
             if (err.response.status == 404) {
                 setKrsCorrect(false);
             }

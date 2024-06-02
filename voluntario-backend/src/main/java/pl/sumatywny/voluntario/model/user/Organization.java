@@ -3,6 +3,8 @@ package pl.sumatywny.voluntario.model.user;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,5 +23,8 @@ public class Organization {
     private String krs;
     private String address;
     private String website;
+    private boolean verified;
+    private LocalDateTime verificationDate;
+    private LocalDateTime creationDate;
 
 }

@@ -21,9 +21,6 @@ public class OfferDTO {
     private String description;
 
     @NonNull
-    private Long sponsorID;
-
-    @NonNull
     private LocalDate endDate;
 
     @NonNull

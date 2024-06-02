@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import pl.sumatywny.voluntario.dtos.user.RegisterDTO;
 import pl.sumatywny.voluntario.dtos.auth.AuthRequestDTO;
 import pl.sumatywny.voluntario.dtos.user.UserResponseDTO;
+import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.model.user.userdetails.CustomUserDetails;
 import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
+import pl.sumatywny.voluntario.service.impl.OrganizationService;
 
 import java.util.Map;
 
@@ -24,6 +26,7 @@ import java.util.Map;
 public class AuthController {
     private final AuthService authService;
     private final UserService userService;
+    private final OrganizationService organizationService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO registerDTO) {
@@ -36,6 +39,12 @@ public class AuthController {
             @RequestBody @Valid AuthRequestDTO authDTO,
             HttpServletRequest request,
             HttpServletResponse response) {
+        var userOrg = userService.getUserByEmail(authDTO.getEmail());
+        if (userOrg.getRole().getRole()== Role.ROLE_ORGANIZATION) {
+            if (!organizationService.getUserOrganization(userOrg.getId()).isVerified()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("The organization has not yet been verified by an administrator");
+            }
+        }
         var authentication = authService.login(authDTO, request, response);
         if (authentication == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

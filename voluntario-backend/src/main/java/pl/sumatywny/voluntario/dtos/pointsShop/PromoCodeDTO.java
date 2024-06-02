@@ -14,8 +14,8 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 public class PromoCodeDTO {
-    @NonNull
-    private Long offerID;
+//    @NonNull
+//    private Long offerID;
     @NonNull
     @Pattern(regexp = "percentage|value")
     private String promoCodeType;
@@ -23,10 +23,6 @@ public class PromoCodeDTO {
     @NonNull
     @Positive
     private BigDecimal discount;
-
-    @NonNull
-    @Min(1)
-    private Integer maxUsages;
 
     @NonNull
     private LocalDate expirationDate;

@@ -5,8 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sumatywny.voluntario.config.roleAnnotations.IsAdmin;
+import pl.sumatywny.voluntario.config.roleAnnotations.IsOrganization;
+import pl.sumatywny.voluntario.config.roleAnnotations.IsVolunteer;
 import pl.sumatywny.voluntario.dtos.pointsShop.OfferCreationRequestDTO;
-import pl.sumatywny.voluntario.dtos.pointsShop.SponsorDTO;
 import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.PointsShopService;
@@ -19,42 +20,27 @@ public class PointsShopController {
     private final UserService userService;
     private final AuthService authService;
 
-    /*Sponsors*/
-
-    @PostMapping("/sponsors")
-    @IsAdmin
-    public ResponseEntity<?> createSponsor(@RequestBody SponsorDTO sponsorDTO) {
-        return ResponseEntity.ok(pointsShopService.createSponsor(sponsorDTO));
-    }
-
-    @GetMapping("/sponsors")
-    public ResponseEntity<?> getAllSponsors() {
-        return ResponseEntity.ok(pointsShopService.findAllSponsors());
-    }
-
-    @GetMapping("/sponsors/{sponsorId}")
-    public ResponseEntity<?> getSponsor(@PathVariable("sponsorId") Long sponsorId) {
-        return ResponseEntity.ok(pointsShopService.findSponsorById(sponsorId));
-    }
 
     /*Offers*/
     @PostMapping("/offers")
-    @IsAdmin
+    @IsOrganization
     public ResponseEntity<?> createOffer(@RequestBody OfferCreationRequestDTO offerCreationRequestDTO) {
         var offerDTO = offerCreationRequestDTO.getOffer();
         var promoCodeDTO = offerCreationRequestDTO.getPromoCode();
         var numberOfPromoCodes = offerCreationRequestDTO.getNumberOfPromoCodes();
-        return ResponseEntity.ok(pointsShopService.createOffer(offerDTO, promoCodeDTO, numberOfPromoCodes));
+        var user = authService.getUserFromSession();
+        return ResponseEntity.ok(pointsShopService.createOffer(offerDTO, promoCodeDTO, numberOfPromoCodes, user));
     }
+
 
     @GetMapping("/offers")
     public ResponseEntity<?> getAllOffers() {
         return ResponseEntity.ok(pointsShopService.findAllOffers());
     }
 
-    @GetMapping("/offers/sponsors/{sponsorID}")
-    public ResponseEntity<?> getOffersBySponsor(@PathVariable("sponsorID") Long sponsorId) {
-        return ResponseEntity.ok(pointsShopService.findAllOffersBySponsorId(sponsorId));
+    @GetMapping("/offers/organizations/{organizationName}")
+    public ResponseEntity<?> getOffersByOrganization(@PathVariable("organizationName") String organizationName) {
+        return ResponseEntity.ok(pointsShopService.findAllOffersByOrganization(organizationName));
     }
 
     @GetMapping("/offers/active")
@@ -67,12 +53,13 @@ public class PointsShopController {
         return ResponseEntity.ok(pointsShopService.findOfferById(offerId));
     }
 
-
     @PostMapping("/offers/{offerID}/assign")
+    @IsVolunteer
     public ResponseEntity<?> assignPromoCode(@PathVariable("offerID") Long offerID) {
         var user = authService.getUserFromSession();
         return ResponseEntity.ok(pointsShopService.assignCodeToUser(offerID, user));
     }
+
 
     @GetMapping("/my-promo-codes")
     public ResponseEntity<?> getMyPromoCodes(@RequestParam(value = "active", required=false) Boolean active) {
@@ -98,4 +85,20 @@ public class PointsShopController {
         var user = authService.getUserFromSession();
         return ResponseEntity.ok(pointsShopService.getPointsForUser(user.getId()));
     }
+
+    @IsOrganization
+    @GetMapping("/check-promo-code/{promoCode}")
+    public ResponseEntity<?> checkPromoCode(@PathVariable("promoCode") String promoCode) {
+        var user = authService.getUserFromSession();
+        return ResponseEntity.ok(pointsShopService.checkPromoCode(promoCode, user));
+    }
+
+    @IsOrganization
+    @PutMapping("/redeem-promo-code/{promoCode}")
+    public ResponseEntity<?> redeemPromoCode(@PathVariable("promoCode") String promoCode) {
+        var user = authService.getUserFromSession();
+        return ResponseEntity.ok(pointsShopService.redeemPromoCode(promoCode, user));
+    }
+
+
 }

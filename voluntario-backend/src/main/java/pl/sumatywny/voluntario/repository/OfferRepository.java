@@ -12,6 +12,6 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     Offer findFirstById(Long id);
     List<Offer> findAll();
 
-    @Query("SELECT o FROM Offer o WHERE o.sponsor.id = ?1")
-    List<Offer> findAllBySponsorId(Long sponsorId);
+    @Query("SELECT o FROM Offer o WHERE o.organization.name = ?1")
+    List<Offer> findAllByOrganizationName(String organizationName);
 }

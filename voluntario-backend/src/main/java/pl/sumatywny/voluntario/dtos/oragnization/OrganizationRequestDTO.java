@@ -1,4 +1,4 @@
-package pl.sumatywny.voluntario.dtos;
+package pl.sumatywny.voluntario.dtos.oragnization;
 
 import lombok.*;
 import pl.sumatywny.voluntario.model.user.Organization;
@@ -8,7 +8,7 @@ import pl.sumatywny.voluntario.model.user.Organization;
 @AllArgsConstructor
 @ToString
 @Builder
-public class OrganizationDTO {
+public class OrganizationRequestDTO {
     private Long id;
     private String name;
     private String description;
@@ -16,7 +16,7 @@ public class OrganizationDTO {
     private String address;
     private String website;
 
-    public OrganizationDTO(Organization organization) {
+    public OrganizationRequestDTO(Organization organization) {
         this.id = organization.getId();
         this.name = organization.getName();
         this.description = organization.getDescription();

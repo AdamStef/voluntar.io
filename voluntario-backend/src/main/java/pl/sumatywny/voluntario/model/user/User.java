@@ -64,6 +64,7 @@ public class User extends AuditingEntity implements Serializable {
     private Gender gender;
 
     @JsonIgnore
+    @ToString.Exclude
     @OneToOne(mappedBy = "user")
     private Organization organization;
 

@@ -1,6 +1,7 @@
 package pl.sumatywny.voluntario.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.dtos.pointsShop.OfferDTO;
 import pl.sumatywny.voluntario.dtos.pointsShop.OfferResponseDTO;
 import pl.sumatywny.voluntario.dtos.pointsShop.PromoCodeDTO;
@@ -115,7 +116,7 @@ public class PointsShopService {
     /*PromoCodes*/
 
     /*PromoCodePossession*/
-
+    @Transactional
     public PromoCode assignCodeToUser(Long offerID, User user) {
         if (!(user.getRole().getRole() == Role.ROLE_VOLUNTEER)) {
             throw new RuntimeException("Only volunteers can have promo codes");
@@ -211,7 +212,6 @@ public class PointsShopService {
         var promoCodePossession = promoCodePossessionRepository
                 .findByPromoCodeCode(code)
                 .orElseThrow(() -> new RuntimeException("Promo code possession not found"));
-
         return promoCodePossession.getPromoCode();
     }
 
@@ -222,7 +222,9 @@ public class PointsShopService {
     }
 
     public PromoCodePossession checkPromoCode(String promoCode, User user) {
+        System.out.println("Jestem w checkPromoCode");
         var organization = organizationRepository.findOrganizationByUserId(user.getId());
+        System.out.println("Przed: " + organization);
         if (organization == null) {
             throw new RuntimeException("User is not assigned to organization");
         }
@@ -241,11 +243,17 @@ public class PointsShopService {
         return promoCodePossession;
     }
 
+    @Transactional
     public PromoCodePossession redeemPromoCode(String promoCode, User user) {
+        System.out.println("Debug message");
         var promoCodePossession = checkPromoCode(promoCode, user);
+        System.out.println("Debug message 2");
         var promoCodeObject = promoCodePossession.getPromoCode();
+        System.out.println("Debug message 3");
         promoCodeObject.setCanBeUsed(false);
+        System.out.println("Debug message 4");
         promoCodeRepository.save(promoCodeObject);
+        System.out.println("Debug message 5");
         return promoCodePossessionRepository.save(promoCodePossession);
     }
 

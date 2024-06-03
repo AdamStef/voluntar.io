@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.springframework.lang.NonNull;
+import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.model.pointsShop.Offer;
 import pl.sumatywny.voluntario.model.pointsShop.PromoCodePossession;
 
@@ -51,11 +52,10 @@ public abstract class PromoCode {
 //    @NonNull
 //    public Boolean isUsed = false;
 
-    @PrePersist
     @PostLoad
     private void fun() {
         this.isNotExpired = !LocalDate.now().isAfter(this.expirationDate);
-        if(this.canBeUsed)
-            this.canBeUsed = this.isNotExpired && this.isAssignedToUser;
+        if(!isNotExpired)
+            this.canBeUsed = false;
     }
 }

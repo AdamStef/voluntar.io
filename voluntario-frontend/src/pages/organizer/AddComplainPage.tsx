@@ -11,6 +11,9 @@ import { ChangeEvent, useState } from 'react';
 import { Button } from '@/components/ui/button.tsx';
 import { ComplaintPostType } from '@/utils/types/types.ts';
 import { useNavigate } from 'react-router-dom';
+import { Panel } from '@/components/ui/Panel';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 type Option = {
   value: number;
@@ -86,59 +89,60 @@ export const AddComplainPage = () => {
   if (!events || events.length == 0) return <p>Brak wydarzeń</p>;
 
   return (
-    <div className="flex flex-col">
+    <div className="container mt-5 max-w-4xl">
       <p className="mx-auto my-2 text-center text-xl font-bold">
         Dodawanie skargi
       </p>
-      <div className="flex flex-col justify-evenly md:flex-row">
-        <div className="flex flex-col">
-          <p className="mx-auto my-2 text-center text-xl">Wybierz wydarzenie</p>
-          <Select
-            placeholder="Wybierz wydarzenie..."
-            onChange={handleEventChange}
-            options={events.map((event) => ({
-              value: event.id,
-              label: `${event.name} - ${format(event.startDate, 'dd.MM.yyyy')}`,
-            }))}
-            noOptionsMessage={() => 'Brak wydarzeń'}
-            className="mx-auto my-2 w-80"
-          />
-        </div>
-        <div className="flex flex-col">
-          <p className="mx-auto my-2 text-center text-xl">
-            Wybierz wolontariusza
-          </p>
-          <Select
-            placeholder="Wybierz wolontariusza..."
-            onChange={handleParticipantChange}
-            options={
-              participants
-                ? participants.map((participant) => ({
-                    value: participant.userId,
-                    label: participant.name,
-                  }))
-                : []
-            }
-            noOptionsMessage={() => 'Brak wolontariuszy'}
-            className="mx-auto my-2 w-80"
-          />
-        </div>
-      </div>
-      <div className="mx-auto">
-        <form onSubmit={(e) => e.preventDefault()}>
-          <label>
-            Opis skargi:
-            <br />
-            <textarea
-              value={description}
-              onChange={handleDescriptionChange}
-              className="my-3 h-32 w-80 border-2 p-1"
+      <Panel className="flex flex-col gap-2">
+        <div className="flex flex-col justify-evenly md:flex-row">
+          <div className="flex flex-col">
+            <p className="mx-auto my-2 text-center text-xl">
+              Wybierz wydarzenie
+            </p>
+            <Select
+              placeholder="Wybierz wydarzenie..."
+              onChange={handleEventChange}
+              options={events.map((event) => ({
+                value: event.id,
+                label: `${event.name} - ${format(event.startDate, 'dd.MM.yyyy')}`,
+              }))}
+              noOptionsMessage={() => 'Brak wydarzeń'}
+              className="mx-auto my-2 w-80"
             />
-            <br />
-          </label>
-          <Button onClick={handleSubmit}>Dodaj skargę</Button>
-        </form>
-      </div>
+          </div>
+          <div className="flex flex-col">
+            <p className="mx-auto my-2 text-center text-xl">
+              Wybierz wolontariusza
+            </p>
+            <Select
+              placeholder="Wybierz wolontariusza..."
+              onChange={handleParticipantChange}
+              options={
+                participants
+                  ? participants.map((participant) => ({
+                      value: participant.userId,
+                      label: participant.name,
+                    }))
+                  : []
+              }
+              noOptionsMessage={() => 'Brak wolontariuszy'}
+              className="mx-auto my-2 w-80"
+            />
+          </div>
+        </div>
+        <div className="mx-auto flex flex-col items-center">
+          <Label>Opis skargi:</Label>
+          <Textarea
+            value={description}
+            onChange={handleDescriptionChange}
+            className="my-3 h-32 w-80 border-2 p-1"
+          />
+
+          <Button className="mx-auto" onClick={handleSubmit}>
+            Dodaj skargę
+          </Button>
+        </div>
+      </Panel>
     </div>
   );
 };

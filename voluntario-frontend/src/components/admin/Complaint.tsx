@@ -1,10 +1,15 @@
 import ManAvatar from '@/assets/man_avatar.png';
-import { Flag } from 'lucide-react';
+import { Flag, SquareCheckBig, PenLine, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { resolveComplaint, claimComplaint } from '@/utils/api/api.ts';
-import { ChangeEvent, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  resolveComplaint,
+  claimComplaint,
+  getUserOrganization,
+} from '@/utils/api/api.ts';
+import React, { ChangeEvent, useState } from 'react';
 import { ComplaintStatusType, ComplaintType } from '@/utils/types/types.ts';
+import { format } from 'date-fns';
 
 type ComplaintProps = {
   complaint: ComplaintType;
@@ -12,6 +17,11 @@ type ComplaintProps = {
 
 export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
   const queryClient = useQueryClient();
+
+  const { data: organization } = useQuery({
+    queryKey: ['complaint', 'organizer', complaint.reporter.id],
+    queryFn: () => getUserOrganization(complaint.reporter.id),
+  });
 
   const [showInput, setShowInput] = useState(false);
   const [responseToSend, setResponseToSend] = useState('');
@@ -26,7 +36,7 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
     mutationFn: claimComplaint,
     onSuccess: () => {
       console.log('claimed');
-      queryClient.invalidateQueries({ queryKey: ['complaints'] });
+      queryClient.refetchQueries({ queryKey: ['complaints'] });
     },
   });
 
@@ -34,7 +44,7 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
     mutationFn: resolveComplaint,
     onSuccess: () => {
       console.log('resolved');
-      queryClient.invalidateQueries({ queryKey: ['complaints'] });
+      queryClient.refetchQueries({ queryKey: ['complaints'] });
     },
   });
 
@@ -74,10 +84,12 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
     setResponseToSend(e.target.value);
   };
 
+  console.log(organization);
+
   return (
-    <div className="relative my-4 flex h-auto flex-col bg-gray-400 md:flex-row">
+    <div className="relative my-4 flex h-auto flex-col bg-gray-400 lg:flex-row">
       {/* volunteer */}
-      <div className="mx-2 my-2 flex w-full flex-col items-center md:w-1/4">
+      <div className="mx-2 my-2 flex w-full flex-col items-center lg:w-1/4">
         <img
           className="my-2 rounded-sm border bg-white"
           src={ManAvatar}
@@ -92,22 +104,65 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
       </div>
       {/* right */}
       <div className="mx-4 my-2 flex flex-1 flex-col justify-between">
+        {/*center*/}
         <div>
-          <div className="mb-4 flex">
-            <Flag className="h-8 w-8" />
-            <p className="ml-3 w-fit text-xl font-bold">
-              Od: {complaint.reporter.firstName} {complaint.reporter.lastName}
-            </p>
+          <div className="mb-4 flex flex-col">
+            <div className="flex flex-row">
+              <Flag className="h-8 w-8" />
+              <div className="ml-3 flex w-full justify-between text-xl">
+                <div className="flex flex-col">
+                  <span>
+                    <span className="font-normal">Od: </span>
+                    <span className="font-bold">
+                      {complaint.reporter.firstName}{' '}
+                      {complaint.reporter.lastName}
+                    </span>
+                  </span>
+                  {organization && (
+                    <div className="flex flex-row">
+                      <p className="w-fit text-sm">
+                        <span className="font-normal">Organizacja: </span>
+                        <span className="font-bold">{organization.name}</span>
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col">
+                  <div className="flex flex-row">
+                    <PenLine className="mx-2 h-5 w-5" />
+                    <span className="text-sm">
+                      {format(complaint.reportDate, 'dd.MM.yyyy HH:mm')}
+                    </span>
+                  </div>
+                  {claimed && complaint.claimDate && (
+                    <div className="flex flex-row">
+                      <SquareCheckBig className="mx-2 h-5 w-5" />
+                      <span className="text-sm">
+                        {format(complaint.claimDate, 'dd.MM.yyyy HH:mm')}
+                      </span>
+                    </div>
+                  )}
+                  {responseSent && complaint.resolveDate && (
+                    <div className="flex flex-row">
+                      <Send className="mx-2 h-5 w-5" />
+                      <span className="text-sm">
+                        {format(complaint.resolveDate, 'dd.MM.yyyy HH:mm')}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
           <div>
-            <p>Uwagi:</p>
+            <p className="font-bold">Uwagi:</p>
             <p>{complaint.textComplaint}</p>
           </div>
           {/*wyslana odpowiedz??*/}
           {responseSent && (
             <div>
               <br />
-              <p>Wysłana odpowiedź:</p>
+              <p className="font-bold">Wysłana odpowiedź:</p>
               <p>{complaint.response}</p>
             </div>
           )}
@@ -116,30 +171,40 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
         {/* buttons */}
         <div className="mt-4 flex justify-end">
           {responseSent && (
-            <Button className="mx-3 w-40 bg-gray-600 hover:bg-green-800">
-              Wysłano odpowiedź
-            </Button>
+            <>
+              <Button className="mx-3 w-40 bg-gray-600 hover:bg-green-800">
+                Wysłano odpowiedź
+              </Button>
+              <Button className="mx-3 w-48 bg-gray-600 hover:bg-gray-600">
+                Potwierdzono otrzymanie
+              </Button>
+            </>
           )}
           {!responseSent && !showInput && (
             <>
               {!claimed && (
-                <Button
-                  className="mx-3 w-40 bg-green-600 hover:bg-green-800"
-                  onClick={submitClaimComplaint}
-                >
-                  Potwierdź otrzymanie
-                </Button>
+                <>
+                  {/*<Button className="mx-3 w-40 bg-gray-600 hover:bg-gray-600">*/}
+                  {/*  /!*Wyślij odpowiedź*!/*/}
+                  {/*</Button>*/}
+                  <Button
+                    className="mx-3 w-48 bg-green-600 hover:bg-green-800"
+                    onClick={submitClaimComplaint}
+                  >
+                    Potwierdź otrzymanie
+                  </Button>
+                </>
               )}
               {claimed && (
                 <>
-                  <Button className="mx-3 w-48 bg-gray-600 hover:bg-gray-600">
-                    Potwierdzono otrzymanie
-                  </Button>
                   <Button
-                    className="mx-3 w-32 bg-green-600 hover:bg-green-800"
+                    className="mx-3 w-40 bg-green-600 hover:bg-green-800"
                     onClick={openResponse}
                   >
                     Wyślij odpowiedź
+                  </Button>
+                  <Button className="mx-3 w-48 bg-gray-600 hover:bg-gray-600">
+                    Potwierdzono otrzymanie
                   </Button>
                 </>
               )}

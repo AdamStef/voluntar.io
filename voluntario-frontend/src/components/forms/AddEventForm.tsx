@@ -7,6 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { fromAddress, OutputFormat, setDefaults } from 'react-geocode';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,22 +15,27 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import { z } from 'zod';
-import React, { HTMLProps, useState } from 'react';
+import React, { HTMLProps } from 'react';
 import { cn } from '@/lib/utils';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
-import { useMapEvents } from 'react-leaflet/hooks';
 import 'leaflet/dist/leaflet.css';
 import { EventFormType } from '@/utils/types/types';
 import { postEvent } from '@/utils/api/api';
 import { Spinner } from '../ui/Spinner';
-import 'react-toastify/dist/ReactToastify.css'; // Import CSS for styles
+import 'react-toastify/dist/ReactToastify.css';
+
+setDefaults({
+  key: 'AIzaSyB6ePRA6ILkM7mjRbQ-9OoPYZiKUQz-ZB8',
+  language: 'pl',
+  region: 'pl',
+  outputFormat: OutputFormat.JSON,
+});
 
 const locationSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1, 'Nazwa lokalizacji jest wymagana'),
   postalCode: z.string(),
-  city: z.string(),
-  street: z.string(),
-  number: z.string(),
+  city: z.string().min(1, 'Nazwa miasta jest wymagana'),
+  street: z.string().min(1, 'Nazwa ulicy jest wymagana'),
+  number: z.string().min(1, 'Numer ulicy jest wymagany'),
   flatNumber: z.string(), // może być np. 2A więc lepiej string
   latitude: z.coerce.number(),
   longitude: z.coerce.number(),
@@ -38,11 +44,13 @@ const locationSchema = z.object({
 
 const eventSchema = z
   .object({
-    name: z.string(),
-    description: z.string(),
+    name: z.string().min(1, 'Nazwa wydarzenia jest wymagana'),
+    description: z.string().min(1, 'Opis wydarzenia jest wymagany'),
     startDate: z.date(),
     endDate: z.date(),
-    numberOfVolunteersNeeded: z.coerce.number().min(1),
+    numberOfVolunteersNeeded: z.coerce
+      .number()
+      .min(1, 'Liczba wolontariuszy musi być większa od 0'),
     location: locationSchema,
   })
   .refine((data) => data.startDate < data.endDate, {
@@ -64,7 +72,7 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
       description: '',
       startDate: new Date(),
       endDate: new Date(),
-      numberOfVolunteersNeeded: 5,
+      numberOfVolunteersNeeded: 0,
       location: {
         additionalInformation: '',
         name: '',
@@ -87,32 +95,39 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
 
   const onSubmit = async (data: EventFormType) => {
     const req: EventFormType = { ...data };
-    if (req.location !== undefined) {
-      req.location.latitude = currentPos.lat;
-      req.location.longitude = currentPos.lng;
-    }
-    console.log('Add event:  ' + JSON.stringify(req));
+
+    console.log(
+      `location to find: ${req.location.city}, ${req.location.street} ${req.location.number}`,
+    );
+
     try {
+      try {
+        const { results } = await fromAddress(
+          `${req.location.city}, ${req.location.street} ${req.location.number}`,
+        );
+        const { lat, lng } = results[0].geometry.location;
+        console.log(lat, lng);
+        req.location.latitude = lat;
+        req.location.longitude = lng;
+      } catch (error) {
+        console.error('Error fetching address:', error);
+        form.setError('root.serverError', {
+          type: 'manual',
+          message: 'Failed to fetch address coordinates',
+        });
+        // return;
+      }
+
+      console.log('Add event: ' + JSON.stringify(req));
       await postEvent(req);
       navigate('/organizer');
     } catch (error) {
-      console.error(error);
+      console.error('Error posting event:', error);
       form.setError('root.serverError', {
         type: 'manual',
         message: 'Something went wrong',
       });
     }
-  };
-
-  const [currentPos, setCurrentPos] = useState({ lat: 52, lng: 19 });
-  const LocationFinder = () => {
-    useMapEvents({
-      click(e) {
-        setCurrentPos(e.latlng);
-        console.log(currentPos);
-      },
-    });
-    return null;
   };
 
   return (
@@ -122,13 +137,109 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
+          name="name"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="col-span-2">
+              <FormLabel>Nazwa wydarzenia</FormLabel>
+              <FormControl>
+                <Input type="text" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="description"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="col-span-2">
+              <FormLabel>Opis wydarzenia</FormLabel>
+              <FormControl>
+                <Input type="text" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="startDate"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Data rozpoczęcia
+                <br />
+              </FormLabel>
+              <FormControl>
+                <DatePicker
+                  selected={field.value}
+                  onChange={field.onChange}
+                  showTimeSelect
+                  timeFormat="HH:mm"
+                  dateFormat="dd.MM.yyyy HH:mm"
+                  className="rounded-lg border p-2"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="endDate"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Data zakończenia
+                <br />
+              </FormLabel>
+              <FormControl>
+                <DatePicker
+                  selected={field.value}
+                  onChange={field.onChange}
+                  showTimeSelect
+                  timeFormat="HH:mm"
+                  dateFormat="dd.MM.yyyy HH:mm"
+                  className="rounded-lg border p-2"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="numberOfVolunteersNeeded"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Liczba wolontariuszy</FormLabel>
+              <FormControl>
+                <Input className="w-1/3" type="number" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <p></p>
+        <p className="font-bold">Informacje dotyczące miejsca: </p>
+
+        <FormField
           name="location.name"
           control={form.control}
           render={({ field }) => (
             <FormItem className="col-span-2">
               <FormLabel>Miejsce wydarzenia</FormLabel>
               <FormControl>
-                <Input type="text" {...field} />
+                <Input
+                  type="text"
+                  placeholder="Nazwa miejsca, nie adres..."
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -215,173 +326,65 @@ const AddEventForm: React.FC<Props> = ({ className }) => {
           )}
         />
 
-        {/*<Map/>*/}
-        <div className="col-span-2">
-          <p className="my-2 text-sm">Dokładna lokalizacja na mapie</p>
-          <MapContainer
-            center={currentPos}
-            zoom={6}
-            scrollWheelZoom={true}
-            style={{ width: '100%', height: '405px' }}
-            className="z-10"
-          >
-            <>
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <Marker position={currentPos} />
-            </>
-            <LocationFinder />
-          </MapContainer>
-        </div>
-
         {/*hidden bo bez nich nie działało a po co to pokazywać*/}
-        <FormField
-          name="location.latitude"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="hidden">
-              <FormLabel>Szerokość geograficzna</FormLabel>
-              <FormControl>
-                <Input
-                  disabled
-                  placeholder=""
-                  type="text"
-                  {...field}
-                  value={currentPos.lat}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/*<FormField*/}
+        {/*  name="location.latitude"*/}
+        {/*  control={form.control}*/}
+        {/*  render={({ field }) => (*/}
+        {/*    <FormItem className="hidden">*/}
+        {/*      <FormLabel>Szerokość geograficzna</FormLabel>*/}
+        {/*      <FormControl>*/}
+        {/*        <Input*/}
+        {/*          disabled*/}
+        {/*          placeholder=""*/}
+        {/*          type="text"*/}
+        {/*          {...field}*/}
+        {/*          value={currentPos.lat}*/}
+        {/*        />*/}
+        {/*      </FormControl>*/}
+        {/*      <FormMessage />*/}
+        {/*    </FormItem>*/}
+        {/*  )}*/}
+        {/*/>*/}
 
-        <FormField
-          name="location.longitude"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="hidden">
-              <FormLabel>Długość geograficzna</FormLabel>
-              <FormControl>
-                <Input
-                  disabled
-                  placeholder=""
-                  type="number"
-                  {...field}
-                  value={currentPos.lng}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/*<FormField*/}
+        {/*  name="location.longitude"*/}
+        {/*  control={form.control}*/}
+        {/*  render={({ field }) => (*/}
+        {/*    <FormItem className="hidden">*/}
+        {/*      <FormLabel>Długość geograficzna</FormLabel>*/}
+        {/*      <FormControl>*/}
+        {/*        <Input*/}
+        {/*          disabled*/}
+        {/*          placeholder=""*/}
+        {/*          type="number"*/}
+        {/*          {...field}*/}
+        {/*          value={currentPos.lng}*/}
+        {/*        />*/}
+        {/*      </FormControl>*/}
+        {/*      <FormMessage />*/}
+        {/*    </FormItem>*/}
+        {/*  )}*/}
+        {/*/>*/}
 
-        <FormField
-          name="location.additionalInformation"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel>Dodatkowe informacje</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="np. wskazówki jak dotrzeć..."
-                  type="text"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/*<FormField*/}
+        {/*  name="location.additionalInformation"*/}
+        {/*  control={form.control}*/}
+        {/*  render={({ field }) => (*/}
+        {/*    <FormItem className="col-span-2">*/}
+        {/*      <FormLabel>Dodatkowe informacje</FormLabel>*/}
+        {/*      <FormControl>*/}
+        {/*        <Input*/}
+        {/*          placeholder="np. wskazówki jak dotrzeć..."*/}
+        {/*          type="text"*/}
+        {/*          {...field}*/}
+        {/*        />*/}
+        {/*      </FormControl>*/}
+        {/*      <FormMessage />*/}
+        {/*    </FormItem>*/}
+        {/*  )}*/}
+        {/*/>*/}
 
-        <FormField
-          name="name"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel>Nazwa wydarzenia</FormLabel>
-              <FormControl>
-                <Input type="text" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="description"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel>Opis wydarzenia</FormLabel>
-              <FormControl>
-                <Input type="text" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="startDate"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Data rozpoczęcia
-                <br />
-              </FormLabel>
-              <FormControl>
-                <DatePicker
-                  selected={field.value}
-                  onChange={field.onChange}
-                  showTimeSelect
-                  dateFormat="dd.MM.yyyy hh:mm"
-                  className="rounded-lg border p-2"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="endDate"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Data zakończenia
-                <br />
-              </FormLabel>
-              <FormControl>
-                <DatePicker
-                  selected={field.value}
-                  onChange={field.onChange}
-                  showTimeSelect
-                  dateFormat="dd.MM.yyyy hh:mm"
-                  className="rounded-lg border p-2"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          name="numberOfVolunteersNeeded"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Liczba wolontariuszy</FormLabel>
-              <FormControl>
-                <Input className="w-1/3" type="number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <div className="col-span-2 flex justify-center">
           <Button className="col-span-2 mx-auto my-2 w-40" type="submit">
             {isSubmitting && <Spinner className="mr-1 text-white" />}

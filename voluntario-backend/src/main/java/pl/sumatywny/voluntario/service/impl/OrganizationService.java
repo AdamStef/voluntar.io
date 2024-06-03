@@ -50,6 +50,10 @@ public class OrganizationService {
         return organizationRepository.findOrganizationByUserId(userID);
     }
 
+    public List<OrganizationResponseDTO> getUnverifiedOrganizations() {
+        return organizationRepository.findByVerifiedFalse().stream().map(OrganizationResponseDTO::new).collect(Collectors.toList());
+    }
+
     public String verifyOrganization(Long organizationID) {
         var organization = organizationRepository.findById(organizationID);
         if (!organization.isEmpty()) {

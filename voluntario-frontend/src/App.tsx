@@ -26,6 +26,7 @@ import { PointExchangePage } from './pages/volunteer/PointExchangePage.tsx';
 import { Toaster } from './components/ui/toaster.tsx';
 import { RealizeCouponPage } from './pages/organizer/RealizeCouponPage.tsx';
 import { OffersPage } from './pages/organizer/OffersPage.tsx';
+import { VerifyOrganizationsPage } from '@/pages/admin/VerifyOrganizationsPage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -72,6 +73,7 @@ function App() {
           {/* Admin */}
           <Route path="/complaints" element={<ComplaintsPage />} />
           <Route path="/shop" element={<ShopManagementPage />} />
+          <Route path="/verify" element={<VerifyOrganizationsPage />} />
           <Route path="/point-exchange" element={<PointExchangePage />} />
           {/* Common */}
           <Route path="/home" element={<HomePage />} />

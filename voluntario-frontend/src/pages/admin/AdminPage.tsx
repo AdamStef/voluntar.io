@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getComplaints } from '@/utils/api/api.ts';
 import { Spinner } from '@/components/ui/Spinner.tsx';
 
-export const ComplaintsPage = () => {
+export const AdminPage = () => {
   const {
     data: complaints,
     isError,
@@ -27,14 +27,11 @@ export const ComplaintsPage = () => {
         {/*complainty*/}
         <div className="mx-4">
           <p className="mt-4 text-xl font-bold"> Skargi od organizatorów: </p>
-          {complaints
-            .sort((a, b) => b.reportDate.getTime() - a.reportDate.getTime())
-            .map((complaint) => (
-              <Complaint key={complaint.id} complaint={complaint} />
-            ))}
+          {complaints.map((complaint, index: number) => (
+            <Complaint key={index} complaint={complaint}></Complaint>
+          ))}
         </div>
       </div>
-      {/*<UnconfirmedOrganizationsList/>*/}
     </div>
   );
 };

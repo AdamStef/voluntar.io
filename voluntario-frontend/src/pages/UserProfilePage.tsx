@@ -9,6 +9,7 @@ import UserCommentsList from '@/components/events/UserCommentsList';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { FaTimes } from 'react-icons/fa';
 import { Panel } from '@/components/ui/Panel';
+import { H3 } from '@/components/ui/typography/heading';
 
 type UserType = {
   id: number;
@@ -95,8 +96,9 @@ const UserProfilePage: React.FC = () => {
   }
 
   return (
-    <>
-      <Panel className="container mt-5 max-w-4xl">
+    <div className="container mt-5 max-w-4xl">
+      <H3 className="mb-5">Profil użytkownika</H3>
+      <Panel>
         <div className="mb-4 flex flex-wrap items-center justify-between">
           <div className="flex items-center gap-2">
             <h2>Punkty użytkownika:</h2>
@@ -181,7 +183,7 @@ const UserProfilePage: React.FC = () => {
           </DialogContent>
         </Dialog>
       )}
-    </>
+    </div>
   );
 };
 

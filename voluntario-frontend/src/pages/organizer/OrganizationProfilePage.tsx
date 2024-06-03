@@ -6,6 +6,7 @@ import { getAuthUser } from '@/utils/api/api';
 import { Button } from '@/components/ui/button';
 import { Panel } from '@/components/ui/Panel';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { H3 } from '@/components/ui/typography/heading';
 
 type UserType = {
   id: number;
@@ -70,8 +71,9 @@ export const OrganizationProfilePage: React.FC = () => {
   }
 
   return (
-    <>
-      <Panel className="container mt-5 max-w-4xl">
+    <div className="container mt-5 max-w-4xl">
+      <H3 className="mb-5">Profil użytkownika</H3>
+      <Panel>
         <div className="mb-4">
           <UserProfile
             name={user.name}
@@ -104,6 +106,6 @@ export const OrganizationProfilePage: React.FC = () => {
           </DialogContent>
         </Dialog>
       )}
-    </>
+    </div>
   );
 };

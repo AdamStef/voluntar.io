@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { Panel } from '@/components/ui/Panel';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { H3 } from '@/components/ui/typography/heading';
 
 type Option = {
   value: number;
@@ -90,7 +91,7 @@ export const AddComplainPage = () => {
 
   return (
     <div className="container mt-5 max-w-4xl">
-      <p className="my-2 text-xl font-bold">Dodawanie skargi</p>
+      <H3 className="mb-5">Dodawanie skargi</H3>
       <Panel className="flex flex-col gap-2">
         <div className="flex flex-col justify-evenly md:flex-row">
           <div className="flex flex-col">

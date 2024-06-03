@@ -26,7 +26,7 @@ import { PointExchangePage } from './pages/volunteer/PointExchangePage.tsx';
 import { Toaster } from './components/ui/toaster.tsx';
 import { RealizeCouponPage } from './pages/organizer/RealizeCouponPage.tsx';
 import { OffersPage } from './pages/organizer/OffersPage.tsx';
-import { VerifyOrganizationsPage } from "@/pages/admin/VerifyOrganizationsPage.tsx";
+import { VerifyOrganizationsPage } from '@/pages/admin/VerifyOrganizationsPage.tsx';
 
 const queryClient = new QueryClient();
 

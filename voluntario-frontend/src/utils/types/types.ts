@@ -57,7 +57,6 @@ export interface OrganizationType {
   owner: UserType;
 }
 
-
 export type ParticipantType = {
   userId: number;
   eventId: number;

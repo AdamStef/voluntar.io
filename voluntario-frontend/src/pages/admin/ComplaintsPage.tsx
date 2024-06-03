@@ -28,10 +28,10 @@ export const ComplaintsPage = () => {
         <div className="mx-4">
           <p className="mt-4 text-xl font-bold"> Skargi od organizatorów: </p>
           {complaints
-              .sort((a, b) => b.reportDate.getTime() - a.reportDate.getTime())
-              .map((complaint) => (
-                  <Complaint key={complaint.id} complaint={complaint} />
-              ))}
+            .sort((a, b) => b.reportDate.getTime() - a.reportDate.getTime())
+            .map((complaint) => (
+              <Complaint key={complaint.id} complaint={complaint} />
+            ))}
         </div>
       </div>
       {/*<UnconfirmedOrganizationsList/>*/}

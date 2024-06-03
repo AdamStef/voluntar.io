@@ -208,14 +208,13 @@ export const getOrganizations = async () =>
   axiosClient.get(`/organizations`).then((res) => res.data);
 
 export const getUnverifiedOrganizations = async () =>
-    axiosClient.get(`/organizations/unverified`).then((res) => res.data);
+  axiosClient.get(`/organizations/unverified`).then((res) => res.data);
 
 export const getUserOrganization = async (userId: number) =>
-    axiosClient.get(`/organizations/user/${userId}`).then((res) => res.data);
+  axiosClient.get(`/organizations/user/${userId}`).then((res) => res.data);
 
 export const verifyOrganization = async (organizationId: number) =>
-    axiosClient.post(`/organizations/verify/${organizationId}`);
-
+  axiosClient.post(`/organizations/verify/${organizationId}`);
 
 //sponsors
 

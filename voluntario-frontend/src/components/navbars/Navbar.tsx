@@ -17,6 +17,10 @@ const volunteerNavItems: NavbarItemType[] = [
     path: '/home',
   },
   {
+    name: 'Profil',
+    path: '/profile',
+  },
+  {
     name: 'Lista wydarzeń',
     path: '/events',
   },
@@ -46,6 +50,10 @@ const organizerNavItems: NavbarItemType[] = [
   {
     name: 'Zrealizuj kupon',
     path: '/realize-coupon',
+  },
+  {
+    name: 'Ustawienia',
+    path: '/profile-organizer',
   },
   {
     name: 'Oferty',

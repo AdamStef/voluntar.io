@@ -269,3 +269,38 @@ export const getPromoCode = async (code: string) =>
 
 export const redeemPromoCode = async (code: string) =>
   axiosClient.post(`/points-shop/promo-codes/${code}/redeem`);
+
+export const changeUserPassword = async (newPassword: string) => {
+  return axiosClient.post('/auth/change-password', { newPassword });
+};
+
+export const changeUserData = async (userData: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+}) => {
+  return axiosClient.post('/auth/change-data', userData);
+};
+export const getUserScores = async (userId: number) => {
+  return axiosClient
+    .get<ScoreType[]>(`/users/${userId}/scores`)
+    .then((res) => res.data);
+};
+
+export const getUserComments = async (userId: number) => {
+  return axiosClient
+    .get<string[]>(`/users/${userId}/comments`)
+    .then((res) => res.data);
+};
+
+export const getOrganizationData = async (organizationId: number) => {
+  return await axios.get(`/api/organizations/${organizationId}`);
+};
+
+export const updateOrganizationData = async (
+  organizationId: number,
+  data: { name: string; website: string },
+) => {
+  return await axios.post(`/api/organizations/${organizationId}`, data);
+};

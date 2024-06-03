@@ -18,6 +18,8 @@ import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.OrganizationService;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
@@ -67,4 +69,34 @@ public class AuthController {
 
         return ResponseEntity.ok().body(UserResponseDTO.mapFromUser(user));
     }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> request) {
+        String newPassword = request.get("newPassword");
+
+        User user = authService.getUserFromSession();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Użytkownik niezalogowany.");
+        }
+
+        userService.changePassword(user, newPassword);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/change-data")
+    public ResponseEntity<?> changeData(@RequestBody Map<String, String> request) {
+        String firstName = request.get("firstName");
+        String lastName = request.get("lastName");
+        String email = request.get("email");
+        String phoneNumber = request.get("phoneNumber");
+
+        User user = authService.getUserFromSession();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Użytkownik niezalogowany");
+        }
+
+        userService.changeData(user, firstName, lastName, email, phoneNumber);
+        return ResponseEntity.ok().build();
+    }
+
 }

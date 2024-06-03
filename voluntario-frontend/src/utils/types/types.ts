@@ -11,7 +11,7 @@ export type UserType = {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  gender: 'male' | 'female';
+  gender: 'MALE' | 'FEMALE';
   organization?: OrganizationType;
 };
 

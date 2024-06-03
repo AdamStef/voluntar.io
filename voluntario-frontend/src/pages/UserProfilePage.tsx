@@ -17,6 +17,7 @@ type UserType = {
   lastName: string;
   phoneNumber: string;
   email: string;
+  gender: string;
 };
 
 type User = {
@@ -24,6 +25,7 @@ type User = {
   name: string;
   phoneNumber: string;
   email: string;
+  gender: string;
   firstName: string;
   lastName: string;
   rating?: number;
@@ -118,6 +120,7 @@ const UserProfilePage: React.FC = () => {
             name={user.name}
             phoneNumber={user.phoneNumber}
             email={user.email}
+            gender={user.gender}
           />
         </div>
         <div className="mb-6 flex flex-wrap gap-4">

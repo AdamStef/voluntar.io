@@ -1,4 +1,5 @@
 import ManAvatar from '@/assets/man_avatar.png';
+import WomanAvatar from '@/assets/woman_avatar.png';
 import { Flag, SquareCheckBig, PenLine, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -17,7 +18,7 @@ type ComplaintProps = {
 
 export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
   const queryClient = useQueryClient();
-
+  const avatarSrc = complaint.reported.gender == 'MALE' ? ManAvatar : WomanAvatar;
   const { data: organization } = useQuery({
     queryKey: ['complaint', 'organizer', complaint.reporter.id],
     queryFn: () => getUserOrganization(complaint.reporter.id),
@@ -92,7 +93,7 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
       <div className="mx-2 my-2 flex w-full flex-col items-center lg:w-1/4">
         <img
           className="my-2 rounded-sm border bg-white"
-          src={ManAvatar}
+          src={avatarSrc}
           width={95}
           height={95}
           alt="Avatar"

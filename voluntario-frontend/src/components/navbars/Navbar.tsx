@@ -39,10 +39,10 @@ const organizerNavItems: NavbarItemType[] = [
     name: 'Strona główna',
     path: '/home',
   },
-  {
-    name: 'Panel',
-    path: '/organizer',
-  },
+  // {
+  //   name: 'Panel',
+  //   path: '/organizer',
+  // },
   // {
   //   name: 'Dodaj wydarzenie',
   //   path: '/addevent',
@@ -74,10 +74,10 @@ const adminNavItems: NavbarItemType[] = [
     name: 'Strona główna',
     path: '/home',
   },
-  {
-    name: 'Skargi',
-    path: '/complaints',
-  },
+  // {
+  //   name: 'Skargi',
+  //   path: '/complaints',
+  // },
   {
     name: 'Weryfikacja',
     path: '/verify',

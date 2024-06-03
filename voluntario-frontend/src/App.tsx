@@ -29,6 +29,9 @@ import { Toaster } from './components/ui/toaster.tsx';
 import { RealizeCouponPage } from './pages/organizer/RealizeCouponPage.tsx';
 import { OffersPage } from './pages/organizer/OffersPage.tsx';
 import { VerifyOrganizationsPage } from '@/pages/admin/VerifyOrganizationsPage.tsx';
+import { useAuthContext } from './hooks/useAuthContext.ts';
+import { Role } from './utils/types/types.ts';
+import { WhichHomePage } from './pages/WhichHomePage.tsx';
 
 const queryClient = new QueryClient();
 
@@ -83,7 +86,7 @@ function App() {
           <Route path="/verify" element={<VerifyOrganizationsPage />} />
           <Route path="/point-exchange" element={<PointExchangePage />} />
           {/* Common */}
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/home" element={<WhichHomePage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
         </Route>
 

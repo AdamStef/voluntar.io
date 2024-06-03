@@ -34,5 +34,10 @@ public class UserController {
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
+    //    @IsAdmin
+    @PostMapping("/ban/{userID}")
+    public ResponseEntity<?> banUser(@PathVariable("userID") Long userID) {
+        return ResponseEntity.ok().body(userServiceImpl.setBanned(userID, true));
+    }
 
 }

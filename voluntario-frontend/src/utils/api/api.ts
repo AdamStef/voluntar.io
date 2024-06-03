@@ -294,6 +294,9 @@ export const getUserComments = async (userId: number) => {
     .then((res) => res.data);
 };
 
+export const banUser = async (userId: number) =>
+    axiosClient.post(`/users/ban/${userId}`);
+
 export const getOrganizationData = async (organizationId: number) => {
   return await axios.get(`/api/organizations/${organizationId}`);
 };

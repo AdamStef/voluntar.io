@@ -4,6 +4,8 @@ import org.hibernate.Hibernate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import java.util.Optional;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,6 +51,16 @@ public class UserServiceImpl implements UserService {
 //        user.setPassword(newPassword);
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    public String setBanned(Long userID, boolean banned) {
+        Optional<User> user = userRepository.findById(userID);
+        if (user.isEmpty()) {
+            throw new NoSuchElementException("User not found");
+        }
+        user.get().setIsBanned(banned);
+        userRepository.save(user.get());
+        return "user banned";
     }
 
     public void changeData(User user, String firstName, String lastName, String email, String phoneNumber) {

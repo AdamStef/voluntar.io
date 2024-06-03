@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   resolveComplaint,
   claimComplaint,
-  getUserOrganization,
+  getUserOrganization, banUser,
 } from '@/utils/api/api.ts';
 import React, { ChangeEvent, useState } from 'react';
 import { ComplaintStatusType, ComplaintType } from '@/utils/types/types.ts';
@@ -19,7 +19,7 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
   const queryClient = useQueryClient();
 
   const { data: organization } = useQuery({
-    queryKey: ['complaint', 'organizer', complaint.reporter.id],
+    queryKey: ['complaints', 'organizer', complaint.reporter.id],
     queryFn: () => getUserOrganization(complaint.reporter.id),
   });
 
@@ -48,6 +48,16 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
     },
   });
 
+  const { mutate: banVolunteerMutate} = useMutation({
+    mutationFn: banUser,
+    onSuccess: () => {
+      console.log('banned');
+      queryClient.refetchQueries({ queryKey: ['complaints', 'organizer', complaint.reporter.id] });
+      queryClient.refetchQueries({ queryKey: ['complaints'] });
+      // window.location.reload();
+    },
+  });
+
   const submitClaimComplaint = () => {
     setClaimed(true);
     claimComplaintMutate(complaint.id.toString());
@@ -72,6 +82,11 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
     setResponseSent(true);
   };
 
+  const submitBanVolunteer = () => {
+    banVolunteerMutate(complaint.reported.id);
+    console.log('user banned');
+  }
+
   const openResponse = () => {
     setShowInput(true);
   };
@@ -84,7 +99,7 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
     setResponseToSend(e.target.value);
   };
 
-  console.log(organization);
+  // console.log(organization);
 
   return (
     <div className="relative my-4 flex h-auto flex-col bg-gray-400 lg:flex-row">
@@ -100,6 +115,14 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
         <div className="font-bold">
           {complaint.reported.firstName} {complaint.reported.lastName}
         </div>
+        {!complaint.reported.banned && <Button className="mx-3 mt-3 w-24 bg-red-600 hover:bg-red-800" onClick={submitBanVolunteer}>
+          Banuj
+        </Button>
+        }
+        {complaint.reported.banned && <Button className="mx-3 mt-3 w-24 bg-red-800 hover:bg-red-900">
+          Zbanowano
+        </Button>
+        }
         {/*<div className="w-20 mx-auto">Wiek: {complaint.volunteer.age}</div>*/}
       </div>
       {/* right */}

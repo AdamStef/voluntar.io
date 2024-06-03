@@ -90,9 +90,7 @@ export const AddComplainPage = () => {
 
   return (
     <div className="container mt-5 max-w-4xl">
-      <p className="mx-auto my-2 text-center text-xl font-bold">
-        Dodawanie skargi
-      </p>
+      <p className="my-2 text-xl font-bold">Dodawanie skargi</p>
       <Panel className="flex flex-col gap-2">
         <div className="flex flex-col justify-evenly md:flex-row">
           <div className="flex flex-col">

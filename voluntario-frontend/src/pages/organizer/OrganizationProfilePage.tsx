@@ -103,7 +103,7 @@ export const OrganizationProfilePage: React.FC = () => {
             >
               <FaTimes size={24} />
             </button>
-            <ChangePasswordForm />
+            <ChangePasswordForm onClose={handleTogglePasswordForm} />
           </div>
         </Dialog>
       )}
@@ -122,7 +122,7 @@ export const OrganizationProfilePage: React.FC = () => {
             >
               <FaTimes size={24} />
             </button>
-            <ChangeUserDataForm />
+            <ChangeUserDataForm onClose={handleCloseAndRefresh} user={user} />
           </div>
         </Dialog>
       )}

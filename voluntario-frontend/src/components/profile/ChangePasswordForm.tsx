@@ -35,9 +35,10 @@ type ChangePasswordFormSchema = z.infer<typeof validationSchema>;
 
 type Props = {
   className?: HTMLProps<HTMLElement>['className'];
+  onClose: () => void;
 };
 
-const ChangePasswordForm: React.FC<Props> = ({ className }) => {
+const ChangePasswordForm: React.FC<Props> = ({ className, onClose }) => {
   const form = useForm<ChangePasswordFormSchema>({
     resolver: zodResolver(validationSchema),
     defaultValues: {
@@ -55,6 +56,7 @@ const ChangePasswordForm: React.FC<Props> = ({ className }) => {
         title: 'Sukces!',
         description: 'Hasło zostało zmienione.',
       });
+      onClose();
     } catch (error) {
       form.setError('root.serverError', {
         type: 'manual',

@@ -6,7 +6,7 @@ import { getAuthUser, getLeaderboard } from '@/utils/api/api';
 import { Button } from '@/components/ui/button';
 import { FaStar } from 'react-icons/fa';
 import UserCommentsList from '@/components/events/UserCommentsList';
-import { Dialog } from '@headlessui/react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { FaTimes } from 'react-icons/fa';
 
 type UserType = {
@@ -28,7 +28,7 @@ type User = {
   points?: number;
 };
 
-export const UserProfilePage: React.FC = () => {
+const UserProfilePage: React.FC = () => {
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [showUserDataForm, setShowUserDataForm] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -67,19 +67,19 @@ export const UserProfilePage: React.FC = () => {
   }, []);
 
   const handleTogglePasswordForm = () => {
-    setShowPasswordForm(!showPasswordForm);
+    setShowPasswordForm((prev) => !prev);
     setShowUserDataForm(false);
     setShowComments(false);
   };
 
   const handleToggleUserDataForm = () => {
-    setShowUserDataForm(!showUserDataForm);
+    setShowUserDataForm((prev) => !prev);
     setShowPasswordForm(false);
     setShowComments(false);
   };
 
   const handleToggleComments = () => {
-    setShowComments(!showComments);
+    setShowComments((prev) => !prev);
     setShowPasswordForm(false);
     setShowUserDataForm(false);
   };
@@ -131,61 +131,57 @@ export const UserProfilePage: React.FC = () => {
       </div>
 
       {showPasswordForm && (
-        <Dialog
-          open={showPasswordForm}
-          onClose={handleTogglePasswordForm}
-          className="fixed inset-0 z-10 flex items-center justify-center"
-        >
-          <div className="fixed inset-0 bg-black opacity-50"></div>
-          <div className="relative z-20 mx-4 w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
+        <Dialog open={showPasswordForm} onOpenChange={handleTogglePasswordForm}>
+          <DialogContent className="bg-white p-6">
+            <ChangePasswordForm onClose={handleTogglePasswordForm} />
             <button
               onClick={handleTogglePasswordForm}
-              className="absolute right-4 top-4 text-gray-600 hover:text-gray-900"
+              className="absolute right-4 top-4 text-gray-500 hover:text-gray-700"
             >
-              <FaTimes size={24} />
+              <FaTimes />
             </button>
-            <ChangePasswordForm />
-          </div>
+          </DialogContent>
         </Dialog>
       )}
 
       {showUserDataForm && (
-        <Dialog
-          open={showUserDataForm}
-          onClose={handleCloseAndRefresh}
-          className="fixed inset-0 z-10 flex items-center justify-center"
-        >
-          <div className="fixed inset-0 bg-black opacity-50"></div>
-          <div className="relative z-20 mx-4 w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
+        <Dialog open={showUserDataForm} onOpenChange={handleToggleUserDataForm}>
+          <DialogContent className="bg-white p-6">
+            <ChangeUserDataForm
+              onClose={handleCloseAndRefresh}
+              user={{
+                id: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                phoneNumber: user.phoneNumber,
+              }}
+            />
             <button
-              onClick={handleCloseAndRefresh}
-              className="absolute right-4 top-4 text-gray-600 hover:text-gray-900"
+              onClick={handleToggleUserDataForm}
+              className="absolute right-4 top-4 text-gray-500 hover:text-gray-700"
             >
-              <FaTimes size={24} />
+              <FaTimes />
             </button>
-            <ChangeUserDataForm />
-          </div>
+          </DialogContent>
         </Dialog>
       )}
 
       {showComments && (
-        <Dialog
-          open={showComments}
-          onClose={handleToggleComments}
-          className="fixed inset-0 z-10 flex items-center justify-center"
-        >
-          <div className="fixed inset-0 bg-black opacity-50"></div>
-          <div className="relative z-20 mx-4 w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
+        <Dialog open={showComments} onOpenChange={handleToggleComments}>
+          <DialogContent className="bg-white p-6">
+            <UserCommentsList userId={user.id} />
             <button
               onClick={handleToggleComments}
-              className="absolute right-4 top-4 p-2 text-gray-600 hover:text-gray-900"
+              className="absolute right-4 top-4 text-gray-500 hover:text-gray-700"
             >
-              <FaTimes size={24} />
+              <FaTimes />
             </button>
-            <UserCommentsList userId={user.id} />
-          </div>
+          </DialogContent>
         </Dialog>
       )}
     </div>
   );
 };
+
+export default UserProfilePage;

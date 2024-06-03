@@ -1,8 +1,8 @@
-import React, { HTMLProps, useEffect, useState } from 'react';
+import React, { HTMLProps, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { changeUserData, getAuthUser } from '@/utils/api/api';
+import { changeUserData } from '@/utils/api/api';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -26,60 +26,41 @@ const validationSchema = z.object({
 
 type ChangeUserDataFormSchema = z.infer<typeof validationSchema>;
 
-type Props = {
-  className?: HTMLProps<HTMLElement>['className'];
+type User = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
 };
 
-const ChangeUserDataForm: React.FC<Props> = ({ className }) => {
-  const [initialData, setInitialData] =
-    useState<ChangeUserDataFormSchema | null>(null);
+type Props = {
+  className?: HTMLProps<HTMLElement>['className'];
+  onClose: () => void;
+  user: User;
+};
 
+const ChangeUserDataForm: React.FC<Props> = ({ className, onClose, user }) => {
   const form = useForm<ChangeUserDataFormSchema>({
     resolver: zodResolver(validationSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phoneNumber: '',
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
     },
   });
 
   const { toast } = useToast();
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await getAuthUser();
-        const userData = response.data;
-        setInitialData({
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          email: userData.email,
-          phoneNumber: userData.phoneNumber,
-        });
-        form.reset({
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          email: userData.email,
-          phoneNumber: userData.phoneNumber,
-        });
-      } catch (error) {
-        console.error(
-          'Nie udało się pobrać danych użytkownika. Spróbuj ponownie później.',
-          error,
-        );
-        toast({
-          title: 'Błąd',
-          description:
-            'Nie udało się pobrać danych użytkownika. Spróbuj ponownie później.',
-        });
-      }
-    };
-
-    fetchUserData();
-  }, [form, toast]);
-
-  console.log(initialData);
+    form.reset({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+    });
+  }, [form, user]);
 
   const onSubmit = async (data: ChangeUserDataFormSchema) => {
     try {
@@ -88,6 +69,7 @@ const ChangeUserDataForm: React.FC<Props> = ({ className }) => {
         title: 'Sukces!',
         description: 'Dane użytkownika zostały zmienione.',
       });
+      onClose();
     } catch (error) {
       form.setError('root.serverError', {
         type: 'manual',

@@ -16,7 +16,7 @@ import { AccountType } from './components/AccountType';
 import RegisterVolunteerForm from './components/forms/RegisterVolunteerForm';
 import { LandingPage } from './pages/LandingPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
-import { UserProfilePage } from './pages/UserProfilePage';
+import UserProfilePage from './pages/UserProfilePage';
 import { Provider } from 'react-redux';
 import { store } from './utils/context/store';
 import { AddEventPage } from '@/pages/organizer/AddEventPage.tsx';

@@ -90,7 +90,7 @@ const MapEvents: React.FC = () => {
               icon={customMarkerIcon}
             >
               <Popup>
-                <EventMini event={event} />
+                <EventMini event={event} isPopup={true} />{' '}
               </Popup>
             </Marker>
           );

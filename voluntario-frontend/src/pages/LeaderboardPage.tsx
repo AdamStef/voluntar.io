@@ -4,7 +4,7 @@ import { Leaderboard } from '../components/ranking/Leaderboard';
 export const LeaderboardPage = () => {
   return (
     <div className="container mt-5 max-w-4xl">
-      <H3>Ranking wolontariuszy</H3>
+      <H3 className="mb-5">Ranking wolontariuszy</H3>
       <Leaderboard />
     </div>
   );

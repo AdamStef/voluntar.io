@@ -78,6 +78,10 @@ const adminNavItems: NavbarItemType[] = [
     name: 'Skargi',
     path: '/complaints',
   },
+  {
+    name: 'Weryfikacja',
+    path: '/verify',
+  },
   // {
   //   name: 'Zarządzanie sklepem',
   //   path: '/shop',
@@ -188,7 +192,7 @@ const Navbar: React.FC = () => {
           </h1>
         </div>
       </Link>
-      <div className="mr-8 hidden items-center md:flex lg:mr-24">
+      <div className="mr-8 hidden items-center lg:mr-24 lg:flex">
         {/* <ul className="mr-8 flex justify-between gap-8 text-lg text-secondary">
           {navItems.map((item) => (
             <NavbarItem key={item.name} name={item.name} path={item.path} />
@@ -245,7 +249,7 @@ const Navbar: React.FC = () => {
         {/* <Button onClick={handleLogout}>Wyloguj się</Button> */}
       </div>
 
-      <div className="mr-4 block md:hidden">
+      <div className="mr-4 block lg:hidden">
         <Hamburger toggled={showNavbar} toggle={handleShowNavbar} />
       </div>
       <div

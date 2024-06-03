@@ -11,6 +11,7 @@ import pl.sumatywny.voluntario.mapper.PromoCodeMapper;
 import pl.sumatywny.voluntario.model.pointsShop.Offer;
 import pl.sumatywny.voluntario.model.pointsShop.PromoCodePossession;
 import pl.sumatywny.voluntario.model.pointsShop.promoCodes.PromoCode;
+import pl.sumatywny.voluntario.model.user.Score;
 import pl.sumatywny.voluntario.model.user.User;
 import pl.sumatywny.voluntario.repository.*;
 
@@ -216,9 +217,7 @@ public class PointsShopService {
     }
 
     public int getPointsForUser(Long userId) {
-        return scoreRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("User does not have a score"))
-                .getPurchasePoints();
+        return scoreRepository.findByUserId(userId).map(Score::getPurchasePoints).orElse(0);
     }
 
     public PromoCodePossession checkPromoCode(String promoCode, User user) {

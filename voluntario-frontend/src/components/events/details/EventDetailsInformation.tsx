@@ -30,9 +30,10 @@ export const EventDetailsInformation: React.FC<
   EventDetailsInformationProps
 > = ({ event }) => {
   const numberOfParticipants = event.participants.length ?? 0;
-  const timeDiff = moment.duration(
-    moment(event.endDate).diff(moment(event.startDate)),
-  );
+  const timeDiff = moment
+    .duration(moment(event.endDate).diff(moment(event.startDate)))
+    .asHours()
+    .toFixed(0);
 
   return (
     <Panel className="flex flex-col gap-1">
@@ -56,7 +57,7 @@ export const EventDetailsInformation: React.FC<
         <p className="font-semibold">{getLocationString(event.location)}</p>
       </Info>
       <Info icon={<ClockIcon size={24} />} header="Czas trwania:">
-        <p className="font-semibold">{timeDiff.hours()}h</p>
+        <p className="font-semibold">{timeDiff}h</p>
       </Info>
       <div className="mt-4">
         <H4>Opis</H4>

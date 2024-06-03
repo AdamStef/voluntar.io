@@ -7,4 +7,6 @@ public interface UserService {
     User getUserById(Long id);
     void changePassword(User user, String newPassword);
     void changeData(User user, String firstName, String lastName, String email, String phoneNumber);
+
+    boolean isUserBanned(String email);
 }

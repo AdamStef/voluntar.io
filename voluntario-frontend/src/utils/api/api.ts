@@ -165,6 +165,14 @@ export const postEventPost = async ({
 export const deletePost = async (postId: number) =>
   axiosClient.delete(`/posts/${postId}`);
 
+export const putEventPost = async ({
+  postId,
+  content,
+}: {
+  postId: number;
+  content: string;
+}) => axiosClient.put<EventPostType>(`/posts/${postId}`, { content });
+
 // Leaderboard
 export const getLeaderboard = async (): Promise<Page<ScoreType>> =>
   axiosClient.get<Page<ScoreType>>('/scores').then((res) => res.data);

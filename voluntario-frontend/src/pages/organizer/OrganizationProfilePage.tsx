@@ -4,8 +4,9 @@ import ChangePasswordForm from '@/components/profile/ChangePasswordForm';
 import ChangeUserDataForm from '@/components/profile/ChangeUserDataForm';
 import { getAuthUser } from '@/utils/api/api';
 import { Button } from '@/components/ui/button';
-import { Dialog } from '@headlessui/react';
-import { FaTimes } from 'react-icons/fa';
+import { Panel } from '@/components/ui/Panel';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { H3 } from '@/components/ui/typography/heading';
 
 type UserType = {
   id: number;
@@ -62,7 +63,7 @@ export const OrganizationProfilePage: React.FC = () => {
 
   const handleCloseAndRefresh = () => {
     setShowUserDataForm(false);
-    window.location.reload();
+    // window.location.reload();
   };
 
   if (!user) {
@@ -70,8 +71,9 @@ export const OrganizationProfilePage: React.FC = () => {
   }
 
   return (
-    <div>
-      <div className="mx-auto w-full max-w-4xl border-2 border-black p-4">
+    <div className="container mt-5 max-w-4xl">
+      <H3 className="mb-5">Profil użytkownika</H3>
+      <Panel>
         <div className="mb-4">
           <UserProfile
             name={user.name}
@@ -87,43 +89,21 @@ export const OrganizationProfilePage: React.FC = () => {
             Zmień dane
           </Button>
         </div>
-      </div>
+      </Panel>
 
       {showPasswordForm && (
-        <Dialog
-          open={showPasswordForm}
-          onClose={handleTogglePasswordForm}
-          className="fixed inset-0 z-10 flex items-center justify-center"
-        >
-          <div className="fixed inset-0 bg-black opacity-50"></div>
-          <div className="relative z-20 mx-4 w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
-            <button
-              onClick={handleTogglePasswordForm}
-              className="absolute right-4 top-4 text-gray-600 hover:text-gray-900"
-            >
-              <FaTimes size={24} />
-            </button>
+        <Dialog open={showPasswordForm} onOpenChange={handleTogglePasswordForm}>
+          <DialogContent>
             <ChangePasswordForm onClose={handleTogglePasswordForm} />
-          </div>
+          </DialogContent>
         </Dialog>
       )}
 
       {showUserDataForm && (
-        <Dialog
-          open={showUserDataForm}
-          onClose={handleCloseAndRefresh}
-          className="fixed inset-0 z-10 flex items-center justify-center"
-        >
-          <div className="fixed inset-0 bg-black opacity-50"></div>
-          <div className="relative z-20 mx-4 w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
-            <button
-              onClick={handleCloseAndRefresh}
-              className="absolute right-4 top-4 text-gray-600 hover:text-gray-900"
-            >
-              <FaTimes size={24} />
-            </button>
+        <Dialog open={showUserDataForm} onOpenChange={handleCloseAndRefresh}>
+          <DialogContent>
             <ChangeUserDataForm onClose={handleCloseAndRefresh} user={user} />
-          </div>
+          </DialogContent>
         </Dialog>
       )}
     </div>

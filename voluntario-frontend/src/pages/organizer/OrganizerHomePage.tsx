@@ -29,15 +29,17 @@ export const OrganizerHomePage = () => {
     queryFn: getOrganizerEvents,
   });
 
-  if (isPending) return <Spinner className="h-16 w-16" />;
-  if (isError)
-    return (
-      <div className="mx-auto mt-5 w-fit">
-        Wystąpił błąd podczas pobierania wydarzeń
-      </div>
-    );
-  if (!events || events.length == 0)
-    return <p className="mx-auto mt-5 w-fit">Brak wydarzeń</p>;
+  if (!events) return null;
+
+  // if (isPending) return <Spinner className="h-16 w-16" />;
+  // if (isError)
+  //   return (
+  //     <div className="mx-auto mt-5 w-fit">
+  //       Wystąpił błąd podczas pobierania wydarzeń
+  //     </div>
+  //   );
+  // if (!events || events.length == 0)
+  //   return <p className="mx-auto mt-5 w-fit">Brak wydarzeń</p>;
 
   const eventsGroupedByStatus: GroupedEventsType = events
     .sort((a, b) => a.startDate.getDate() - b.startDate.getDate())

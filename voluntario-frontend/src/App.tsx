@@ -8,7 +8,6 @@ import { OrganizerHomePage } from './pages/organizer/OrganizerHomePage.tsx';
 import { OrganizationProfilePage } from './pages/organizer/OrganizationProfilePage.tsx';
 import { EventsListPage } from './pages/volunteer/EventsListPage';
 import { EventDetailsPage } from './pages/volunteer/EventDetailsPage';
-import { HomePage } from './pages/HomePage';
 import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RegisterPage } from './pages/auth/RegisterPage';
@@ -29,8 +28,6 @@ import { Toaster } from './components/ui/toaster.tsx';
 import { RealizeCouponPage } from './pages/organizer/RealizeCouponPage.tsx';
 import { OffersPage } from './pages/organizer/OffersPage.tsx';
 import { VerifyOrganizationsPage } from '@/pages/admin/VerifyOrganizationsPage.tsx';
-import { useAuthContext } from './hooks/useAuthContext.ts';
-import { Role } from './utils/types/types.ts';
 import { WhichHomePage } from './pages/WhichHomePage.tsx';
 
 const queryClient = new QueryClient();

@@ -63,7 +63,7 @@ export type ParticipantType = {
   email: string;
   name: string;
   phoneNumber: string;
-  gender: 'male' | 'female';
+  gender: 'MALE' | 'FEMALE';
 };
 
 export enum ComplaintStatusType {

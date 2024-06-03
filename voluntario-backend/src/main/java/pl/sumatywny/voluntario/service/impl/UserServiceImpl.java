@@ -2,6 +2,7 @@ package pl.sumatywny.voluntario.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +66,23 @@ public class UserServiceImpl implements UserService {
                 .map(UserParticipation::getComment)
                 .filter(comment -> comment != null && !comment.isEmpty())   // bez tego mi nie działało
                 .collect(Collectors.toList());
+    }
+
+    public boolean isUserBanned(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            throw new IllegalStateException("User with email %s not found".formatted(email));
+        }
+        return user.get().getIsBanned();
+    }
+
+    public String banUser(Long userID) {
+        Optional<User> user = userRepository.findById(userID);
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException("User with id %d not found".formatted(userID));
+        }
+        user.get().setIsBanned(true);
+        userRepository.save(user.get());
+        return "Successfully baned user with id %d".formatted(userID);
     }
 }

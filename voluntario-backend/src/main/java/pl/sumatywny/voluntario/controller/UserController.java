@@ -39,5 +39,4 @@ public class UserController {
         return ResponseEntity.ok().body(userServiceImpl.banUser(userID));
     }
 
-
 }

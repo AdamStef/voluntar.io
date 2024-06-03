@@ -8,8 +8,8 @@ import pl.sumatywny.voluntario.model.user.Organization;
 
 public interface OrganizationRepository extends JpaRepository<Organization, Long> {
 
-    @Query("SELECT o FROM Organization o WHERE o.user.id = :id")
-    Organization findOrganizationByUserId(@Param("id") Long id);
+    @Query("SELECT o FROM Organization o WHERE o.user.id = ?1")
+    Organization findOrganizationByUserId(Long id);
 
     // New method to find unverified organizations
     List<Organization> findByVerifiedFalse();

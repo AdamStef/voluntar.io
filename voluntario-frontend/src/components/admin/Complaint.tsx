@@ -5,11 +5,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   resolveComplaint,
   claimComplaint,
-  getUserOrganization, banUser,
+  getUserOrganization,
+  banUser,
 } from '@/utils/api/api.ts';
 import React, { ChangeEvent, useState } from 'react';
 import { ComplaintStatusType, ComplaintType } from '@/utils/types/types.ts';
 import { format } from 'date-fns';
+import { Panel } from '../ui/Panel';
 
 type ComplaintProps = {
   complaint: ComplaintType;
@@ -48,11 +50,13 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
     },
   });
 
-  const { mutate: banVolunteerMutate} = useMutation({
+  const { mutate: banVolunteerMutate } = useMutation({
     mutationFn: banUser,
     onSuccess: () => {
       console.log('banned');
-      queryClient.refetchQueries({ queryKey: ['complaints', 'organizer', complaint.reporter.id] });
+      queryClient.refetchQueries({
+        queryKey: ['complaints', 'organizer', complaint.reporter.id],
+      });
       queryClient.refetchQueries({ queryKey: ['complaints'] });
       // window.location.reload();
     },
@@ -85,7 +89,7 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
   const submitBanVolunteer = () => {
     banVolunteerMutate(complaint.reported.id);
     console.log('user banned');
-  }
+  };
 
   const openResponse = () => {
     setShowInput(true);
@@ -102,7 +106,7 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
   // console.log(organization);
 
   return (
-    <div className="relative my-4 flex h-auto flex-col bg-gray-400 lg:flex-row">
+    <Panel className="flex h-auto flex-col lg:flex-row">
       {/* volunteer */}
       <div className="mx-2 my-2 flex w-full flex-col items-center lg:w-1/4">
         <img
@@ -115,14 +119,19 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
         <div className="font-bold">
           {complaint.reported.firstName} {complaint.reported.lastName}
         </div>
-        {!complaint.reported.banned && <Button className="mx-3 mt-3 w-24 bg-red-600 hover:bg-red-800" onClick={submitBanVolunteer}>
-          Banuj
-        </Button>
-        }
-        {complaint.reported.banned && <Button className="mx-3 mt-3 w-24 bg-red-800 hover:bg-red-900">
-          Zbanowano
-        </Button>
-        }
+        {!complaint.reported.banned && (
+          <Button
+            className="mx-3 mt-3 w-24 bg-red-600 hover:bg-red-800"
+            onClick={submitBanVolunteer}
+          >
+            Banuj
+          </Button>
+        )}
+        {complaint.reported.banned && (
+          <Button className="mx-3 mt-3 w-24 bg-red-800 hover:bg-red-900">
+            Zbanowano
+          </Button>
+        )}
         {/*<div className="w-20 mx-auto">Wiek: {complaint.volunteer.age}</div>*/}
       </div>
       {/* right */}
@@ -192,7 +201,7 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
         </div>
 
         {/* buttons */}
-        <div className="mt-4 flex justify-end">
+        <div className="mt-4 flex flex-col items-center justify-center gap-2 md:flex-row md:justify-end">
           {responseSent && (
             <>
               <Button className="mx-3 w-40 bg-gray-600 hover:bg-green-800">
@@ -262,6 +271,6 @@ export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
           </form>
         )}
       </div>
-    </div>
+    </Panel>
   );
 };

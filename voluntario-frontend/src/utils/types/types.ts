@@ -13,7 +13,7 @@ export type UserType = {
   phoneNumber: string;
   gender: 'male' | 'female';
   organization?: OrganizationType;
-  banned: boolean
+  banned: boolean;
 };
 
 export type NavbarItemType = {

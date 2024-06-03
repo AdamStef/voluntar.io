@@ -295,7 +295,7 @@ export const getUserComments = async (userId: number) => {
 };
 
 export const banUser = async (userId: number) =>
-    axiosClient.post(`/users/ban/${userId}`);
+  axiosClient.post(`/users/ban/${userId}`);
 
 export const getOrganizationData = async (organizationId: number) => {
   return await axios.get(`/api/organizations/${organizationId}`);

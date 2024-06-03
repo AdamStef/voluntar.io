@@ -307,7 +307,7 @@ const RegisterOrganizationForm: React.FC<Props> = ({ className }) => {
 
         <Button className="w-full" type="submit">
           {isSubmitting && <Spinner className="mr-1 text-white" />}
-          Register
+          Zarejestruj się
         </Button>
         {errors.root?.serverError && (
           <p className="text-center text-sm text-destructive">

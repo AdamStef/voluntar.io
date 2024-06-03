@@ -60,14 +60,14 @@ export const LoginForm: React.FC<Props> = ({ className }) => {
         form.reset({ password: '' });
         form.setError('root.serverError', {
           type: 'manual',
-          message: 'Wrong credentials.',
+          message: 'Złe informacje.',
         });
       } else {
         console.error(err);
         form.resetField('password', { keepDirty: true });
         form.setError('root.serverError', {
           type: 'manual',
-          message: 'Something has gone wrong. Try again.',
+          message: 'Coś poszło nie tak. Spróbuj ponownie.',
         });
       }
     }
@@ -112,7 +112,7 @@ export const LoginForm: React.FC<Props> = ({ className }) => {
         />
         <Button className="w-full" type="submit">
           {isSubmitting && <Spinner className="mr-1 text-white" />}
-          Login
+          Zaloguj się
         </Button>
         {errors.root?.serverError && (
           <p className="text-center text-sm text-destructive">

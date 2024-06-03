@@ -24,7 +24,6 @@ import pl.sumatywny.voluntario.service.impl.LocationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -114,9 +113,7 @@ public class LocationServiceTest {
     public void removeLocation() {
         when(locationRepository.findFirstById(1L)).thenReturn(location);
 
-        assertDoesNotThrow(() -> {
-            locationService.removeLocation(1L, user);
-        });
+        assertDoesNotThrow(() -> locationService.removeLocation(1L, user));
 
         verify(locationRepository, times(1)).delete(location);
     }

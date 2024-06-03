@@ -1,7 +1,6 @@
 package unit;
 
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -45,8 +44,8 @@ public class EventServiceTest {
             true, false, false);
     private final Organization organization = new Organization(1L, user, "Wolontariaty", "pomagamy", "00000000",
             "Lodz, piotrkowska", "help.org.pl", true,
-            LocalDateTime.of(2024, 05, 30, 12, 00, 00),
-            LocalDateTime.of(2024, 05, 31, 12, 00, 00));
+            LocalDateTime.of(2024, 5, 30, 12, 0, 0),
+            LocalDateTime.of(2024, 5, 31, 12, 0, 0));
     private final Location location = new Location(1L, "DPS", "Lodz", "93-000", "Kwiatowa",
             "1", "2", 14.01, 12.00, "wejscie od Lisciastej");
 
@@ -58,7 +57,7 @@ public class EventServiceTest {
             LocalDateTime.now().plusDays(3),
             new ArrayList<>(), location, EventStatus.NOT_COMPLETED);
 
-    private final Event event2 = new Event(1L, "Pomoc schronisku", "wyprowadzenie zwierząt", organization,
+    private final Event event2 = new Event(2L, "Pomoc schronisku", "wyprowadzenie zwierząt", organization,
             5, new ArrayList<>(),
             LocalDateTime.now().plusDays(2),
             LocalDateTime.now().plusDays(3),
@@ -90,24 +89,6 @@ public class EventServiceTest {
     @Captor
     private ArgumentCaptor<Event> eventCaptor;
 
-    @BeforeAll
-    public void setup() {
-//        event
-//        event.setId(1L);
-//        event.setName("Pomoc starszym");
-//        event.setDescription("pomoc w DPSie");
-//        user
-//        organization
-//        event.setOrganization(organization);
-//        event.setNumberOfVolunteersNeeded(10);
-//        event.setParticipations(new ArrayList<>());
-//        event.setStartDate(LocalDateTime.of(2024, 06, 01, 12, 00, 00));
-//        event.setEndDate(LocalDateTime.of(2024, 06, 01, 18, 00, 00));
-//        event.setPosts(new ArrayList<>());
-//        location
-//        event.setLocation(location);
-    }
-
     @Test
     public void findUserById() {
         when(eventRepository.findById(1L)).thenReturn(Optional.of(event));
@@ -138,6 +119,17 @@ public class EventServiceTest {
         var error3 = assertThrows(IllegalStateException.class, () -> eventService.addParticipant(event, volunteer));
         assertEquals("Cannot add participant to past event.", error3.getMessage());
         event.setStartDate(LocalDateTime.now().plusDays(2));
+
+        event.setNumberOfVolunteersNeeded(0);
+        var error5 = assertThrows(IllegalStateException.class, ()-> eventService.addParticipant(event, volunteer));
+        assertEquals("Event is full.", error5.getMessage());
+        event.setNumberOfVolunteersNeeded(4);
+
+        event2.setStartDate(LocalDateTime.now().plusDays(1));
+        when(userParticipationRepository.findByUserId(volunteer.getId()))
+                .thenReturn(List.of(new UserParticipation(2L, volunteer, event2, 0, null)));
+        var error6 = assertThrows(IllegalStateException.class, ()-> eventService.addParticipant(event, volunteer));
+        assertEquals("User 2 already in another event at the same time.", error6.getMessage());
 
         when(userParticipationRepository.findByUserId(volunteer.getId()))
                 .thenReturn(List.of(new UserParticipation(1L, volunteer, event, 0, null)));
@@ -181,9 +173,7 @@ public class EventServiceTest {
     public void removeNoSuchEvent() {
         when(eventRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> {
-            eventService.removeEvent(2L);
-        });
+        assertThrows(NoSuchElementException.class, () -> eventService.removeEvent(2L));
         verify(eventRepository, times(1)).findById(2L);
     }
 
@@ -262,9 +252,7 @@ public class EventServiceTest {
         when(eventRepository.findById(2L)).thenReturn(Optional.empty());
 
         assertEquals(event, eventService.getEvent(1L));
-        assertThrows(NoSuchElementException.class, () -> {
-            eventService.getEvent(2L);
-        });
+        assertThrows(NoSuchElementException.class, () -> eventService.getEvent(2L));
         verify(eventRepository, times(2)).findById(any());
     }
 
@@ -274,9 +262,7 @@ public class EventServiceTest {
         when(eventRepository.findById(2L)).thenReturn(Optional.empty());
 
         assertEquals(EventResponseDTO.class, eventService.getEventDTO(1L).getClass());
-        assertThrows(NoSuchElementException.class, () -> {
-            eventService.getEventDTO(2L);
-        });
+        assertThrows(NoSuchElementException.class, () -> eventService.getEventDTO(2L));
         verify(eventRepository, times(2)).findById(any());
     }
 
@@ -284,13 +270,9 @@ public class EventServiceTest {
     public void assignNewLocationError() {
         when(eventRepository.findById(1L)).thenReturn(Optional.of(event));
         when(eventRepository.findById(2L)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, () -> {
-            eventService.assignNewLocation(2L, 1L);
-        });
+        assertThrows(NoSuchElementException.class, () -> eventService.assignNewLocation(2L, 1L));
         when(locationRepository.findById(2L)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, () -> {
-            eventService.assignNewLocation(1L, 2L);
-        });
+        assertThrows(NoSuchElementException.class, () -> eventService.assignNewLocation(1L, 2L));
         verify(eventRepository, times(2)).findById(any());
         verify(locationRepository, times(1)).findById(any());
 
@@ -312,9 +294,7 @@ public class EventServiceTest {
     @Test
     public void completeEvent() {
         event.setStatus(EventStatus.COMPLETED);
-        assertThrows(IllegalStateException.class, () -> {
-            eventService.completeEvent(event, new ArrayList<>());
-        });
+        assertThrows(IllegalStateException.class, () -> eventService.completeEvent(event, new ArrayList<>()));
         event.setStatus(EventStatus.NOT_COMPLETED);
         eventService.completeEvent(event, new ArrayList<>());
         assertEquals(EventStatus.COMPLETED, event.getStatus());
@@ -323,41 +303,29 @@ public class EventServiceTest {
     @Test
     public void evaluateUserError() {
         UserEvaluationDTO userEvaluationDTO = new UserEvaluationDTO(1L, 0, "super");
-        IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, ()->{
-            eventService.evaluateUser(1L, userEvaluationDTO);
-        });
+        IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class, ()-> eventService.evaluateUser(1L, userEvaluationDTO));
 
         assertEquals("Rating must be between 1 and 5.",illegalArgumentException.getMessage());
         userEvaluationDTO.setRating(6);
-        IllegalArgumentException illegalArgumentException2 = assertThrows(IllegalArgumentException.class, ()->{
-            eventService.evaluateUser(1L, userEvaluationDTO);
-        });
+        IllegalArgumentException illegalArgumentException2 = assertThrows(IllegalArgumentException.class, ()-> eventService.evaluateUser(1L, userEvaluationDTO));
         assertEquals("Rating must be between 1 and 5.",illegalArgumentException2.getMessage());
 
         userEvaluationDTO.setRating(5);
-        NoSuchElementException noSuchElementException = assertThrows(NoSuchElementException.class, ()->{
-            eventService.evaluateUser(1L, userEvaluationDTO);
-        });
+        NoSuchElementException noSuchElementException = assertThrows(NoSuchElementException.class, ()-> eventService.evaluateUser(1L, userEvaluationDTO));
         assertEquals("Event 1 not found.",noSuchElementException.getMessage());
 
         when(eventRepository.findById(1L)).thenReturn(Optional.of(event));
-        IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, ()->{
-            eventService.evaluateUser(1L, userEvaluationDTO);
-        });
+        IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, ()-> eventService.evaluateUser(1L, userEvaluationDTO));
         assertEquals("Cannot evaluate user in not completed event.", illegalStateException.getMessage());
 
         event.setStatus(EventStatus.COMPLETED);
-        NoSuchElementException noSuchElementException2 = assertThrows(NoSuchElementException.class, () -> {
-            eventService.evaluateUser(1L, userEvaluationDTO);
-        });
+        NoSuchElementException noSuchElementException2 = assertThrows(NoSuchElementException.class, () -> eventService.evaluateUser(1L, userEvaluationDTO));
         assertEquals("User not found in event.",noSuchElementException2.getMessage());
 
 
         when(userParticipationRepository.findByUserIdAndEventId(1L,1L))
                 .thenReturn(Optional.of(new UserParticipation(1L, volunteer, event, 5, "super")));
-        IllegalStateException illegalStateException2 = assertThrows(IllegalStateException.class, ()->{
-            eventService.evaluateUser(1L, userEvaluationDTO);
-        });
+        IllegalStateException illegalStateException2 = assertThrows(IllegalStateException.class, ()-> eventService.evaluateUser(1L, userEvaluationDTO));
         assertEquals("User already evaluated.", illegalStateException2.getMessage());
 
     }
@@ -376,9 +344,7 @@ public class EventServiceTest {
 
     @Test
     public void getEventLocation() {
-        NoSuchElementException noSuchElementException = assertThrows(NoSuchElementException.class, ()->{
-           eventService.getEventLocation(1L);
-        });
+        NoSuchElementException noSuchElementException = assertThrows(NoSuchElementException.class, ()-> eventService.getEventLocation(1L));
         assertEquals("Event 1 not found.", noSuchElementException.getMessage());
         when(eventRepository.findById(1L)).thenReturn(Optional.of(event));
         assertEquals(event.getLocation(), eventService.getEventLocation(1L));

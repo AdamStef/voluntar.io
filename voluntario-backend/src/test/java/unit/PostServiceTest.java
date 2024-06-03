@@ -58,8 +58,8 @@ public class PostServiceTest {
             true, false, false);
     private final Organization organization = new Organization(1L, user, "Wolontariaty", "pomagamy", "00000000",
             "Lodz, piotrkowska", "help.org.pl", true,
-            LocalDateTime.of(2024, 05, 30, 12, 00, 00),
-            LocalDateTime.of(2024, 05, 31, 12, 00, 00));
+            LocalDateTime.of(2024, 5, 30, 12, 0, 0),
+            LocalDateTime.of(2024, 5, 31, 12, 0, 0));
     private final Location location = new Location(1L, "DPS", "Lodz", "93-000", "Kwiatowa",
             "1", "2", 14.01, 12.00, "wejscie od Lisciastej");
     private final Location location2 = new Location(1L, "Schroniskao", "Lodz", "93-000", "Kwiatowa",

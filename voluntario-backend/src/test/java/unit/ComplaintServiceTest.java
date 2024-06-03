@@ -53,15 +53,15 @@ public class ComplaintServiceTest {
     private ArgumentCaptor<Complaint> complaintCaptor;
 
     private ComplaintRequestDTO complaintRequestDTO;
-    private User reporter = new User(1L, "test@test.com", "testpassword", new UserRole(Role.ROLE_ORGANIZATION),
+    private final User reporter = new User(1L, "test@test.com", "testpassword", new UserRole(Role.ROLE_ORGANIZATION),
             "Jan", "Kowalski", "555111222", new ArrayList<>(), new Score(), Gender.MALE, null,
             true, false, false);
-    private User reported = new User(2L, "vol@test.com", "password", new UserRole(Role.ROLE_VOLUNTEER),
+    private final User reported = new User(2L, "vol@test.com", "password", new UserRole(Role.ROLE_VOLUNTEER),
             "Marian", "Kowalczyk", "789456123", new ArrayList<>(), new Score(), Gender.MALE, null,
             true, false, false);
 
-    private Complaint complaint = new Complaint(1L, reporter, "skarga", reported, LocalDateTime.now().minusDays(2), null, null, Status.TO_REVIEW, null, null, 1);
-    private Complaint complaint2 = new Complaint(2L, reporter, "skarga2", reported, LocalDateTime.now(), null, null, Status.TO_REVIEW, null, null, 1);
+    private final Complaint complaint = new Complaint(1L, reporter, "skarga", reported, LocalDateTime.now().minusDays(2), null, null, Status.TO_REVIEW, null, null, 1);
+    private final Complaint complaint2 = new Complaint(2L, reporter, "skarga2", reported, LocalDateTime.now(), null, null, Status.TO_REVIEW, null, null, 1);
 
 
     @Test
@@ -113,9 +113,7 @@ public class ComplaintServiceTest {
     public void testClaimComplaintNotFound() {
         when(complaintRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> {
-            complaintService.claimComplaint(2L, 1L);
-        });
+        assertThrows(NoSuchElementException.class, () -> complaintService.claimComplaint(2L, 1L));
 
         verify(complaintRepository, times(1)).findById(2L);
         verify(complaintRepository, times(0)).save(any(Complaint.class));
@@ -147,9 +145,7 @@ public class ComplaintServiceTest {
     public void testResolveComplaint_ComplaintNotFound() {
         when(complaintRepository.findById(complaint.getId())).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> {
-            complaintService.resolveComplaint(complaint.getId(), new ComplaintResponseDTO(complaint), reporter);
-        });
+        assertThrows(NoSuchElementException.class, () -> complaintService.resolveComplaint(complaint.getId(), new ComplaintResponseDTO(complaint), reporter));
 
         verify(complaintRepository, times(1)).findById(complaint.getId());
         verify(complaintRepository, times(0)).save(any(Complaint.class));
@@ -174,9 +170,7 @@ public class ComplaintServiceTest {
     public void getComplaint() {
         when(complaintRepository.findById(1L)).thenReturn(Optional.of(complaint));
         when(complaintRepository.findById(3L)).thenReturn(Optional.empty());
-        var noSuchElementException = assertThrows(NoSuchElementException.class, ()->{
-            complaintService.getComplaint(3L);
-        });
+        var noSuchElementException = assertThrows(NoSuchElementException.class, ()-> complaintService.getComplaint(3L));
         assertEquals("Complaint not found",noSuchElementException.getMessage());
         var result = complaintService.getComplaint(1L);
         assertEquals(result.getId(), complaint.getId());

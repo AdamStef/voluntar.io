@@ -40,6 +40,10 @@ public class AuthController {
             HttpServletRequest request,
             HttpServletResponse response) {
         var userOrg = userService.getUserByEmail(authDTO.getEmail());
+        if (userService.isUserBanned(authDTO.getEmail())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("This account has been banned");
+        }
+
         if (userOrg.getRole().getRole()== Role.ROLE_ORGANIZATION) {
             if (!organizationService.getUserOrganization(userOrg.getId()).isVerified()) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("The organization has not yet been verified by an administrator");

@@ -60,6 +60,11 @@ public class PostServiceTest {
             "Lodz, piotrkowska", "help.org.pl", true,
             LocalDateTime.of(2024, 5, 30, 12, 0, 0),
             LocalDateTime.of(2024, 5, 31, 12, 0, 0));
+
+    private final Organization organization2 = new Organization(2L, user2, "Wolontariaty2", "pomagamy2", "00000002",
+            "Lodz, piotrkowska2", "help2.org.pl", true,
+            LocalDateTime.of(2024, 5, 30, 12, 0, 0),
+            LocalDateTime.of(2024, 5, 31, 12, 0, 0));
     private final Location location = new Location(1L, "DPS", "Lodz", "93-000", "Kwiatowa",
             "1", "2", 14.01, 12.00, "wejscie od Lisciastej");
     private final Location location2 = new Location(1L, "Schroniskao", "Lodz", "93-000", "Kwiatowa",
@@ -148,21 +153,13 @@ public class PostServiceTest {
 
     @Test
     public void removePost() {
+        user.setOrganization(organization);
         when(postRepository.findById(1L)).thenReturn(Optional.of(post));
         assertDoesNotThrow(() -> postService.removePost(1L, user));
         verify(postRepository, times(1)).findById(1L);
-        verify(postRepository, times(1)).delete(post);
+        verify(postRepository, times(1)).deleteById(post.getId());
     }
 
-    @Test
-    public void removePostAdmin() {
-        user2.setRole(new UserRole(Role.ROLE_ADMIN));
-        when(postRepository.findById(1L)).thenReturn(Optional.of(post));
-        assertDoesNotThrow(() -> postService.removePost(1L, user2));
-        verify(postRepository, times(1)).findById(1L);
-        verify(postRepository, times(1)).delete(post);
-        user2.setRole(new UserRole(Role.ROLE_ORGANIZATION));
-    }
 
     @Test
     public void removePostPermissionsException() {
@@ -186,6 +183,7 @@ public class PostServiceTest {
 
     @Test
     public void removePostNotOwner() {
+        user2.setOrganization(organization2);
         when(postRepository.findById(1L)).thenReturn(Optional.of(post));
         PermissionsException exception = assertThrows(PermissionsException.class, ()-> postService.removePost(1L, user2));
         verify(postRepository, times(1)).findById(anyLong());

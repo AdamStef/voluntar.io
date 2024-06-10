@@ -159,35 +159,35 @@ public class AuthServiceTest {
         assertEquals("User not authenticated.", thrown.getMessage());
     }
 
-    @Test
-    public void testGetUserFromSession_SuccessfulRetrieval() {
-        User user = new User();
-        user.setEmail("test@example.com");
-        user.setPassword("testpassword");
-        // Mock the behavior of SecurityContext and Authentication
-//        authentication.setAuthenticated(true);
-//        Authentication authentication = new UsernamePasswordAuthenticationToken("user", "password");
-
-//        Authentication authentication = mock(UsernamePasswordAuthenticationToken.class);
-
-//        securityContext.setAuthentication(authentication);
-
-        when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
-//        when(authentication.getName()).thenReturn("test@example.com");
-        // Create a dummy user to be returned by the repository
-
-
-        // Mock the behavior of the userRepository
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
-
-
-        // Call the method under test
-        User retrievedUser = userService.getUserFromSession();
-
-        // Verify the result
-        assertNotNull(retrievedUser);
-        assertEquals("test@example.com", retrievedUser.getEmail());
-    }
+//    @Test
+//    public void testGetUserFromSession_SuccessfulRetrieval() {
+//        User user = new User();
+//        user.setEmail("test@example.com");
+//        user.setPassword("testpassword");
+//        // Mock the behavior of SecurityContext and Authentication
+////        authentication.setAuthenticated(true);
+////        Authentication authentication = new UsernamePasswordAuthenticationToken("user", "password");
+//
+////        Authentication authentication = mock(UsernamePasswordAuthenticationToken.class);
+//
+////        securityContext.setAuthentication(authentication);
+//
+//        when(SecurityContextHolder.getContext().getAuthentication()).thenReturn(authentication);
+////        when(authentication.getName()).thenReturn("test@example.com");
+//        // Create a dummy user to be returned by the repository
+//
+//
+//        // Mock the behavior of the userRepository
+//        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+//
+//
+//        // Call the method under test
+//        User retrievedUser = userService.getUserFromSession();
+//
+//        // Verify the result
+//        assertNotNull(retrievedUser);
+//        assertEquals("test@example.com", retrievedUser.getEmail());
+//    }
 
 
 

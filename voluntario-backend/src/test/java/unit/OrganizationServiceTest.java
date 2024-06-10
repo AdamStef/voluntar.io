@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.sumatywny.voluntario.dtos.oragnization.OrganizationRequestDTO;
+import pl.sumatywny.voluntario.dtos.oragnization.OrganizationResponseDTO;
 import pl.sumatywny.voluntario.enums.Gender;
 import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.model.user.Organization;
@@ -21,10 +22,7 @@ import pl.sumatywny.voluntario.repository.OrganizationRepository;
 import pl.sumatywny.voluntario.service.impl.OrganizationService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -154,6 +152,52 @@ public class OrganizationServiceTest {
         assertEquals("Organization 1 verified successfully", organizationService.verifyOrganization(1L));
         verify(organizationRepository,times(2)).findById(any());
         verify(organizationRepository,times(1)).save(any());
+    }
+
+    @Test
+    public void testGetUnverifiedOrganizations() {
+        organization.setVerified(false);
+        List<Organization> unverifiedOrganizations = List.of(organization);
+        when(organizationRepository.findByVerifiedFalse()).thenReturn(unverifiedOrganizations);
+
+        List<OrganizationResponseDTO> result = organizationService.getUnverifiedOrganizations();
+
+        assertEquals(1, result.size());
+        assertEquals(new OrganizationResponseDTO(organization), result.get(0));
+    }
+
+    @Test
+    public void testUpdateOrganizationData() {
+        Long organizationId = 1L;
+        String newName = "New Name";
+        String newWebsite = "www.example.com";
+
+        var org = new Organization(1L, user, newName, "opis",
+                "00001111", "Piotrkowska 111 Lodz", newWebsite, false, LocalDateTime.now(), LocalDateTime.now().minusDays(1));
+
+        when(organizationRepository.findById(organizationId)).thenReturn(Optional.of(organization));
+        when(organizationRepository.save(any())).thenReturn(org);
+
+        OrganizationResponseDTO updatedOrganizationResponse = organizationService.updateOrganizationData(organizationId, newName, newWebsite);
+
+        assertNotNull(updatedOrganizationResponse);
+        assertEquals(newName, updatedOrganizationResponse.getName());
+        assertEquals(newWebsite, updatedOrganizationResponse.getWebsite());
+        verify(organizationRepository, times(1)).findById(organizationId);
+        verify(organizationRepository, times(1)).save(organization);
+    }
+
+    @Test
+    public void testUpdateOrganizationData_OrganizationNotFound() {
+        Long organizationId = 1L;
+        String newName = "New Name";
+        String newWebsite = "www.example.com";
+
+        when(organizationRepository.findById(organizationId)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> organizationService.updateOrganizationData(organizationId, newName, newWebsite));
+        verify(organizationRepository, times(1)).findById(organizationId);
+        verify(organizationRepository, never()).save(any());
     }
 
 }

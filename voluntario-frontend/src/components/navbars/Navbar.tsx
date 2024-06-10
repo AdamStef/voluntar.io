@@ -17,6 +17,10 @@ const volunteerNavItems: NavbarItemType[] = [
     path: '/home',
   },
   {
+    name: 'Profil',
+    path: '/profile',
+  },
+  {
     name: 'Lista wydarzeń',
     path: '/events',
   },
@@ -35,10 +39,10 @@ const organizerNavItems: NavbarItemType[] = [
     name: 'Strona główna',
     path: '/home',
   },
-  {
-    name: 'Panel',
-    path: '/organizer',
-  },
+  // {
+  //   name: 'Panel',
+  //   path: '/organizer',
+  // },
   // {
   //   name: 'Dodaj wydarzenie',
   //   path: '/addevent',
@@ -46,6 +50,10 @@ const organizerNavItems: NavbarItemType[] = [
   {
     name: 'Zrealizuj kupon',
     path: '/realize-coupon',
+  },
+  {
+    name: 'Ustawienia',
+    path: '/profile-organizer',
   },
   {
     name: 'Oferty',
@@ -66,14 +74,18 @@ const adminNavItems: NavbarItemType[] = [
     name: 'Strona główna',
     path: '/home',
   },
+  // {
+  //   name: 'Skargi',
+  //   path: '/complaints',
+  // },
   {
-    name: 'Skargi',
-    path: '/complaints',
+    name: 'Weryfikacja',
+    path: '/verify',
   },
-  {
-    name: 'Zarządzanie sklepem',
-    path: '/shop',
-  },
+  // {
+  //   name: 'Zarządzanie sklepem',
+  //   path: '/shop',
+  // },
 ];
 
 // const navButtons: NavButtonType[] = [
@@ -180,7 +192,7 @@ const Navbar: React.FC = () => {
           </h1>
         </div>
       </Link>
-      <div className="mr-8 hidden items-center md:flex lg:mr-24">
+      <div className="mr-8 hidden items-center lg:mr-24 lg:flex">
         {/* <ul className="mr-8 flex justify-between gap-8 text-lg text-secondary">
           {navItems.map((item) => (
             <NavbarItem key={item.name} name={item.name} path={item.path} />
@@ -237,7 +249,7 @@ const Navbar: React.FC = () => {
         {/* <Button onClick={handleLogout}>Wyloguj się</Button> */}
       </div>
 
-      <div className="mr-4 block md:hidden">
+      <div className="mr-4 block lg:hidden">
         <Hamburger toggled={showNavbar} toggle={handleShowNavbar} />
       </div>
       <div

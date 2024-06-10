@@ -18,6 +18,8 @@ import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.AuthService;
 import pl.sumatywny.voluntario.service.impl.OrganizationService;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
@@ -38,6 +40,10 @@ public class AuthController {
             HttpServletRequest request,
             HttpServletResponse response) {
         var userOrg = userService.getUserByEmail(authDTO.getEmail());
+        if (userService.isUserBanned(authDTO.getEmail())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("This account has been banned");
+        }
+
         if (userOrg.getRole().getRole()== Role.ROLE_ORGANIZATION) {
             if (!organizationService.getUserOrganization(userOrg.getId()).isVerified()) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("The organization has not yet been verified by an administrator");
@@ -67,4 +73,34 @@ public class AuthController {
 
         return ResponseEntity.ok().body(UserResponseDTO.mapFromUser(user));
     }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> request) {
+        String newPassword = request.get("newPassword");
+
+        User user = authService.getUserFromSession();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Użytkownik niezalogowany.");
+        }
+
+        userService.changePassword(user, newPassword);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/change-data")
+    public ResponseEntity<?> changeData(@RequestBody Map<String, String> request) {
+        String firstName = request.get("firstName");
+        String lastName = request.get("lastName");
+        String email = request.get("email");
+        String phoneNumber = request.get("phoneNumber");
+
+        User user = authService.getUserFromSession();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Użytkownik niezalogowany");
+        }
+
+        userService.changeData(user, firstName, lastName, email, phoneNumber);
+        return ResponseEntity.ok().build();
+    }
+
 }

@@ -1,5 +1,6 @@
 package pl.sumatywny.voluntario.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 

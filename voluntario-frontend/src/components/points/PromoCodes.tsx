@@ -22,9 +22,8 @@ export const PromoCodes = () => {
           <TableHead>Kod</TableHead>
           <TableHead>Oferta</TableHead>
           <TableHead>Rabat</TableHead>
-          <TableHead>Max. użycia</TableHead>
           <TableHead>Data ważności</TableHead>
-          <TableHead></TableHead>
+          {/* <TableHead></TableHead> */}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -38,7 +37,6 @@ export const PromoCodes = () => {
               {!promoCode.discountValue &&
                 promoCode.discountPercentage?.toString() + '%'}
             </TableCell>
-            <TableCell>{promoCode.maxUsages}</TableCell>
             <TableCell>
               {promoCode.expirationDate.toLocaleDateString()}
             </TableCell>

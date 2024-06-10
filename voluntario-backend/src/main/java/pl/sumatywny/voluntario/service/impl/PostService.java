@@ -3,6 +3,7 @@ package pl.sumatywny.voluntario.service.impl;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.dtos.post.PostRequestDTO;
 import pl.sumatywny.voluntario.enums.Role;
 import pl.sumatywny.voluntario.exception.PermissionsException;
@@ -59,18 +60,27 @@ public class PostService {
         return posts;
     }
 
+    @Transactional
     public void removePost(Long postID, User user) {
         if (user.getRole().getRole() == Role.ROLE_VOLUNTEER) {
             throw new PermissionsException("Volunteers cannot remove events.");
         }
 
         Post post = postRepository.findById(postID).orElseThrow(() -> new NoSuchElementException("Post not found."));
-        if (!Objects.equals(user.getId(), post.getOrganization().getUser().getId()) && user.getRole().getRole() != Role.ROLE_ADMIN) {
-            System.out.println("nie masz uprawnien");
+
+        if (!Objects.equals(user.getOrganization().getId(), post.getOrganization().getId())) {
             throw new PermissionsException("You cannot remove this post.");
         }
 
-        postRepository.delete(post);
+//        var event = post.getEvent();
+//        event.getPosts().remove(post);
+
+        try {
+//            eventRepository.save(event);
+            postRepository.deleteById(post.getId());
+        } catch (Exception e) {
+            throw new RuntimeException("Error while removing post.");
+        }
     }
 
     public Post editPost(Long postID, PostRequestDTO postRequestDTO, User user) {

@@ -69,6 +69,7 @@ public class LeaderboardService {
             score.setUser(user);
             score.setTotalPoints(0);
             score.setOverallRating(0.0);
+            score.setPurchasePoints(0);
         }
 
 //        var completedEventsSize = user.getParticipations().stream()
@@ -76,6 +77,7 @@ public class LeaderboardService {
 //                .count();
 
         score.setTotalPoints(score.getTotalPoints() + evaluation.getRating());
+        score.setPurchasePoints(score.getPurchasePoints() + evaluation.getRating());
         score.setOverallRating(score.getTotalPoints() / 5.0);
         score.setUser(user);
         scoreRepository.save(score);

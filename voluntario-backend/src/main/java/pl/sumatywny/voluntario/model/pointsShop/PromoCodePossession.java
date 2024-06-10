@@ -1,5 +1,6 @@
 package pl.sumatywny.voluntario.model.pointsShop;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import pl.sumatywny.voluntario.model.pointsShop.promoCodes.PromoCode;
@@ -21,6 +22,7 @@ public class PromoCodePossession {
     @OneToOne
     private PromoCode promoCode;
 
+    @JsonIgnore
     @NonNull
     @ManyToOne
     private User volunteer;

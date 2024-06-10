@@ -1,12 +1,15 @@
 package pl.sumatywny.voluntario.model.pointsShop.promoCodes;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.springframework.lang.NonNull;
+import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.model.pointsShop.Offer;
+import pl.sumatywny.voluntario.model.pointsShop.PromoCodePossession;
 
 import java.time.LocalDate;
 
@@ -30,6 +33,10 @@ public abstract class PromoCode {
     @NonNull
     private Offer offer;
 
+    @OneToOne(mappedBy = "promoCode", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private PromoCodePossession promoCodePossession;
+
     @NonNull
     private LocalDate expirationDate;
 
@@ -42,11 +49,13 @@ public abstract class PromoCode {
     @NonNull
     private Boolean isAssignedToUser;
 
-    @PrePersist
+//    @NonNull
+//    public Boolean isUsed = false;
+
     @PostLoad
     private void fun() {
         this.isNotExpired = !LocalDate.now().isAfter(this.expirationDate);
-        if(this.canBeUsed)
-            this.canBeUsed = this.isNotExpired && this.isAssignedToUser;
+        if(!isNotExpired)
+            this.canBeUsed = false;
     }
 }

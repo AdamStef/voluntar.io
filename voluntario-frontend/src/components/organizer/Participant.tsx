@@ -1,4 +1,5 @@
 import ManAvatar from '@/assets/man_avatar.png';
+import WomanAvatar from '@/assets/woman_avatar.png';
 import { Button } from '@/components/ui/button.tsx';
 import { removeParticipantFromEvent } from '@/utils/api/api.ts';
 import {
@@ -22,6 +23,7 @@ export const Participant: React.FC<ParticipantProps> = ({
   event,
 }) => {
   const queryClient = useQueryClient();
+  const avatarSrc = participant.gender == 'MALE' ? ManAvatar : WomanAvatar;
 
   const { mutate } = useMutation({
     mutationFn: removeParticipantFromEvent,
@@ -49,7 +51,7 @@ export const Participant: React.FC<ParticipantProps> = ({
         <div className="flex gap-2 md:flex-col lg:flex-row">
           <img
             className="aspect-square h-16 w-16 rounded-sm border bg-white"
-            src={ManAvatar}
+            src={avatarSrc}
             alt="Avatar"
           />
           <div className="flex flex-col">

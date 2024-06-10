@@ -21,6 +21,7 @@ public class UserResponseDTO {
     private String lastName;
     private String phoneNumber;
     private Gender gender;
+    private boolean isBanned;
     private OrganizationResponseDTO organization;
 
     public static UserResponseDTO mapFromUser(User user) {
@@ -33,6 +34,7 @@ public class UserResponseDTO {
                 .lastName(user.getLastName())
                 .phoneNumber(user.getPhoneNumber())
                 .gender(user.getGender())
+                .isBanned(user.getIsBanned())
                 .build();
 
         if (user.getOrganization() != null) {

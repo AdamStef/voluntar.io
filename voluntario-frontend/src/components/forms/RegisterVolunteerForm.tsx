@@ -32,7 +32,7 @@ const validationSchema = z
     gender: z.enum(['MALE', 'FEMALE']),
   })
   .refine((data) => data.password === data.passwordConfirmation, {
-    message: 'Passwords do not match',
+    message: 'Hasła nie pokrywają się!',
     path: ['passwordConfirmation'],
   });
 
@@ -146,7 +146,7 @@ const RegisterVolunteerForm: React.FC<Props> = ({ className }) => {
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Hasło</FormLabel>
               <FormControl>
                 <Input placeholder="Podaj hasło" type="password" {...field} />
               </FormControl>
@@ -237,7 +237,7 @@ const RegisterVolunteerForm: React.FC<Props> = ({ className }) => {
         />
         <Button className="w-full" type="submit">
           {isSubmitting && <Spinner className="mr-1 text-white" />}
-          Register
+          Zarejestruj się
         </Button>
         {errors.root?.serverError && (
           <p className="text-center text-sm text-destructive">

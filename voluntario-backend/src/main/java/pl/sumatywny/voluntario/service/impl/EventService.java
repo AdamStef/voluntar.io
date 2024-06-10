@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sumatywny.voluntario.dtos.event.EventRequestDTO;
 import pl.sumatywny.voluntario.dtos.event.EventResponseDTO;
+import pl.sumatywny.voluntario.dtos.oragnization.OrganizationResponseDTO;
 import pl.sumatywny.voluntario.dtos.user.ParticipatingUserDTO;
 import pl.sumatywny.voluntario.dtos.user.UserEvaluationDTO;
 import pl.sumatywny.voluntario.enums.EventStatus;
@@ -280,7 +281,14 @@ public class EventService {
                 .id(event.getId())
                 .name(event.getName())
                 .description(event.getDescription())
-                .organization(OrganizationMapper.mapToDTO(event.getOrganization()))
+                .organization(OrganizationResponseDTO.builder()
+                        .id(event.getOrganization().getId())
+                        .name(event.getOrganization().getName())
+                        .description(event.getOrganization().getDescription())
+                        .address(event.getOrganization().getAddress())
+                        .krs(event.getOrganization().getKrs())
+                        .website(event.getOrganization().getWebsite())
+                        .build())
                 .participants(
                         participants != null ?
                                 participants.stream().map(UserParticipationMapper::mapToDTO).toList()

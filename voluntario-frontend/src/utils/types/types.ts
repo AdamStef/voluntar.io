@@ -11,8 +11,9 @@ export type UserType = {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  gender: 'male' | 'female';
+  gender: 'MALE' | 'FEMALE';
   organization?: OrganizationType;
+  banned: boolean;
 };
 
 export type NavbarItemType = {
@@ -54,6 +55,7 @@ export interface OrganizationType {
   krs: string;
   address: string;
   website: string;
+  owner: UserType;
 }
 
 export type ParticipantType = {
@@ -62,7 +64,7 @@ export type ParticipantType = {
   email: string;
   name: string;
   phoneNumber: string;
-  gender: 'male' | 'female';
+  gender: 'MALE' | 'FEMALE';
 };
 
 export enum ComplaintStatusType {
@@ -133,6 +135,7 @@ export type EventPostType = {
 };
 
 export type ScoreType = {
+  score: number;
   userId: number;
   fullName: string;
   points: number;
@@ -184,19 +187,35 @@ export type OfferType = {
   id: number;
   name: string;
   description: string;
-  sponsor: SponsorType;
+  // sponsor: SponsorType;
+  organization: OrganizationType;
+  promoCodes: PromoCodeType[];
   endDate: Date;
   pointsCost: number;
   isActive: boolean;
+  availablePromoCodes: number;
 };
 
 export type PromoCodeType = {
   id: number;
   code: string;
   offer: OfferType;
-  promoCodeType: 'percentage' | 'value';
+  // promoCodeType: 'percentage' | 'value';
   discountPercentage?: number;
   discountValue?: number;
-  maxUsages: number;
+  // maxUsages: number;
+  canBeUsed: boolean;
   expirationDate: Date;
+};
+
+export type PromoCodePossessionType = {
+  id: number;
+  promoCode: PromoCodeType;
+  user: UserType;
+};
+
+export type BackendErrorResponse = {
+  message: string;
+  httpStatus: string;
+  timestamp: string;
 };

@@ -11,52 +11,56 @@ import { Progress } from '../ui/progress';
 type EventMiniProps = {
   event: EventType;
   className?: string;
+  isPopup?: boolean;
 };
 
-export const EventMini: React.FC<EventMiniProps> = ({ event, className }) => {
+export const EventMini: React.FC<EventMiniProps> = ({
+  event,
+  className,
+  isPopup = false,
+}) => {
   const numberOfParticipants = event.participants.length ?? 0;
 
   return (
     <div
       className={cn(
-        'flex flex-col gap-2 rounded-sm bg-secondary p-4 text-secondary-foreground',
+        'flex flex-col gap-1 rounded-sm bg-secondary text-secondary-foreground',
+        isPopup ? 'p-2 text-xs' : 'p-4 text-sm',
         className,
       )}
     >
-      <H3 className="text-lg font-bold">{event.name}</H3>
-
-      {/* Date */}
+      <H3 className={cn(isPopup ? 'text-sm' : 'text-lg font-bold')}>
+        {event.name}
+      </H3>{' '}
       <div className="flex items-center">
         <span className="mr-1">
-          <Calendar className="h-4 w-4" />
+          <Calendar className={cn(isPopup ? 'h-3 w-3' : 'h-4 w-4')} />{' '}
         </span>
-        <p className="text-sm">
+        <p className={cn(isPopup ? 'text-xs' : 'text-sm')}>
           {event.startDate.toLocaleDateString()}
           {event.startDate.getDate() !== event.endDate.getDate() && (
             <span> - {event.endDate.toLocaleDateString()}</span>
           )}
         </p>
       </div>
-
-      {/* Location */}
       <div className="flex items-center">
         <span className="mr-1">
-          <MapPin className="h-4 w-4" />
+          <MapPin className={cn(isPopup ? 'h-3 w-3' : 'h-4 w-4')} />{' '}
         </span>
-        <p className="text-sm">{getLocationString(event.location)}</p>
+        <p className={cn(isPopup ? 'text-xs' : 'text-sm')}>
+          {getLocationString(event.location)}
+        </p>
       </div>
-
       <div className="flex flex-col">
-        <p className="text-sm">
+        <p className={cn(isPopup ? 'text-xs' : 'text-sm')}>
           Liczba uczestników: {numberOfParticipants}/
           {event.numberOfVolunteersNeeded}
         </p>
         <Progress
-          className=" bg-accent"
+          className="bg-accent"
           value={(numberOfParticipants / event.numberOfVolunteersNeeded) * 100}
         />
       </div>
-
       <Button asChild>
         <Link
           to={`/events/${event.id}`}

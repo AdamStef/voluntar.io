@@ -12,15 +12,14 @@ public class PromoCodeMapper {
         PromoCode promoCode;
         if (promoCodeDTO.getPromoCodeType().equals("percentage")) {
             promoCode = new PromoCodePercentage(promoCodeDTO.getDiscount());
-            promoCode.setCode(RandomStringUtils.randomAlphabetic(10));
-            promoCode.setExpirationDate(promoCodeDTO.getExpirationDate());
         } else if (promoCodeDTO.getPromoCodeType().equals("value")) {
             promoCode = new PromoCodeValue(promoCodeDTO.getDiscount());
-            promoCode.setCode(RandomStringUtils.randomAlphabetic(10));
-            promoCode.setExpirationDate(promoCodeDTO.getExpirationDate());
         } else {
             throw new RuntimeException("Invalid promo code type");
         }
+        promoCode.setCode(RandomStringUtils.randomAlphabetic(10));
+        promoCode.setExpirationDate(promoCodeDTO.getExpirationDate());
+//        promoCode.setIsUsed(false);
         return promoCode;
     }
 }

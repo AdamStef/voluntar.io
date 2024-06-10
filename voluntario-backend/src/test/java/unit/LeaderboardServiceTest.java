@@ -13,17 +13,23 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import pl.sumatywny.voluntario.dtos.user.ScoreDTO;
+import pl.sumatywny.voluntario.dtos.user.UserEvaluationDTO;
+import pl.sumatywny.voluntario.enums.EventStatus;
 import pl.sumatywny.voluntario.enums.Gender;
 import pl.sumatywny.voluntario.enums.Role;
-import pl.sumatywny.voluntario.model.user.Score;
-import pl.sumatywny.voluntario.model.user.User;
-import pl.sumatywny.voluntario.model.user.UserRole;
+import pl.sumatywny.voluntario.model.event.Event;
+import pl.sumatywny.voluntario.model.event.Location;
+import pl.sumatywny.voluntario.model.user.*;
 import pl.sumatywny.voluntario.repository.ScoreRepository;
 import pl.sumatywny.voluntario.repository.UserParticipationRepository;
+import pl.sumatywny.voluntario.repository.UserRepository;
+import pl.sumatywny.voluntario.service.UserService;
 import pl.sumatywny.voluntario.service.impl.LeaderboardService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -39,8 +45,14 @@ public class LeaderboardServiceTest {
     @Mock
     private UserParticipationRepository userParticipationRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
     @InjectMocks
     private LeaderboardService leaderboardService;
+
+    @Mock
+    private UserService userService;
 
     private final User user = new User(1L, "test@test.com", "testpassword", new UserRole(Role.ROLE_ORGANIZATION),
             "Jan", "Kowalski", "555111222", new ArrayList<>(), new Score(), Gender.MALE, null,
@@ -50,6 +62,19 @@ public class LeaderboardServiceTest {
             "Marian", "Kowalczyk", "789456123", new ArrayList<>(), new Score(), Gender.MALE, null,
             true, false, false);
 
+    private final Organization organization = new Organization(1L, user, "Wolontariaty", "pomagamy", "00000000",
+            "Lodz, piotrkowska", "help.org.pl", true,
+            LocalDateTime.of(2024, 5, 30, 12, 0, 0),
+            LocalDateTime.of(2024, 5, 31, 12, 0, 0));
+    private final Location location = new Location(1L, "DPS", "Lodz", "93-000", "Kwiatowa",
+            "1", "2", 14.01, 12.00, "wejscie od Lisciastej");
+
+    private final Event event = new Event(1L, "Pomoc starszym", "pomoc w DPSie", organization,
+            10, new ArrayList<>(),
+            LocalDateTime.now().plusDays(2),
+            LocalDateTime.now().plusDays(3),
+            new ArrayList<>(), location, EventStatus.NOT_COMPLETED);
+
     private final Score score = new Score();
     private final Score score2 = new Score();
 
@@ -57,6 +82,8 @@ public class LeaderboardServiceTest {
 
 
     private final List<Score> scoreList = List.of(score, score2);
+
+    private UserEvaluationDTO evaluation = new UserEvaluationDTO(1L, 5, "super");
 
     @Test
     public void getScores() {
@@ -91,5 +118,55 @@ public class LeaderboardServiceTest {
     }
 
     @Test
-    public void
+    public void addScoreNewScore() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(scoreRepository.findByUserId(1L)).thenReturn(Optional.empty());
+
+        leaderboardService.addScore(evaluation);
+
+        verify(scoreRepository, times(1)).save(any(Score.class));
+    }
+
+    @Test
+    public void testAddScoreExistingScore() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(scoreRepository.findByUserId(1L)).thenReturn(Optional.of(score));
+
+        leaderboardService.addScore(evaluation);
+
+//        assertEquals(10, score.getTotalPoints());
+//        assertEquals(56, score.getOverallRating());
+
+        verify(scoreRepository, times(1)).save(score);
+    }
+
+    @Test
+    public void testGetUserScore_UserHasNoScore() {
+        when(userService.getUserById(1L)).thenReturn(user);
+        user.setScore(null);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            leaderboardService.getUserScore(1L);
+        });
+
+        assertEquals("User has no score", exception.getMessage());
+    }
+
+    @Test
+    public void testGetUserScore_UserHasScore() {
+        score.setOverallRating(5);
+        score.setTotalPoints(5);
+        user.setScore(score);
+
+        when(userService.getUserById(1L)).thenReturn(user);
+        event.setStatus(EventStatus.COMPLETED);
+        user.setParticipations(List.of(new UserParticipation(1L, user, event, 5, "super")));
+
+        ScoreDTO result = leaderboardService.getUserScore(1L);
+
+        assertEquals(user.getFirstName() + " " + user.getLastName(), result.getFullName());
+        assertEquals(score.getTotalPoints(), result.getPoints());
+        assertEquals(score.getOverallRating(), result.getRating(), 0.00001);
+    }
+
+
 }

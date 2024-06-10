@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
-  getEventParticipants,
+  // getEventParticipants,s
   getOrganizerEvents,
   postComplaint,
 } from '@/utils/api/api.ts';
@@ -9,7 +9,7 @@ import Select from 'react-select';
 import { format } from 'date-fns';
 import { ChangeEvent, useState } from 'react';
 import { Button } from '@/components/ui/button.tsx';
-import { ComplaintPostType } from '@/utils/types/types.ts';
+import { ComplaintPostType, ParticipantType } from '@/utils/types/types.ts';
 import { useNavigate } from 'react-router-dom';
 import { Panel } from '@/components/ui/Panel';
 import { Label } from '@/components/ui/label';
@@ -29,16 +29,18 @@ export const AddComplainPage = () => {
     null,
   );
 
-  const { data: participants } = useQuery({
-    queryKey: ['organizer', 'events', selectedEvent?.value],
-    queryFn: () => {
-      if (!selectedEvent?.value) {
-        return Promise.reject(new Error('Event not selected'));
-      }
-      return getEventParticipants(selectedEvent.value);
-    },
-    enabled: !!selectedEvent?.value, // Only run this query if an organizer is selected
-  });
+  // const { data: participants } = useQuery({
+  //   queryKey: ['organizer', 'events', selectedEvent?.value],
+  //   queryFn: () => {
+  //     if (!selectedEvent?.value) {
+  //       return Promise.reject(new Error('Event not selected'));
+  //     }
+  //     return getEventParticipants(selectedEvent.value);
+  //   },
+  //   enabled: !!selectedEvent?.value, // Only run this query if an organizer is selected
+  // });
+
+  const participants = [] as ParticipantType[];
 
   const {
     data: events,

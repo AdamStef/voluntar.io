@@ -59,7 +59,7 @@ export const Event: React.FC<EventProps> = ({ event, className }) => {
       </div>
 
       {/* <div className="h-24 w-24 bg-primary">map</div> */}
-      <Button asChild className="basis-1/5">
+      <Button id="see-more-btn" asChild className="basis-1/5">
         <Link to={`/events/${event.id}`}>Zobacz więcej</Link>
       </Button>
     </div>

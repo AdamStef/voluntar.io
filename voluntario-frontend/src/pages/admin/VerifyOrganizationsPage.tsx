@@ -30,7 +30,7 @@ export const VerifyOrganizationsPage = () => {
         <p className="mt-2 text-xl font-bold">Organizacje do zweryfikowania:</p>
         {organizations &&
           organizations.map((organization: OrganizationType) => (
-            <div>
+            <div id="verify-org-list">
               <OrganizationToVerify
                 key={organization.id}
                 organization={organization}

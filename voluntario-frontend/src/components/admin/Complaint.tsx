@@ -20,7 +20,8 @@ type ComplaintProps = {
 
 export const Complaint: React.FC<ComplaintProps> = ({ complaint }) => {
   const queryClient = useQueryClient();
-  const avatarSrc = complaint.reported.gender == 'MALE' ? ManAvatar : WomanAvatar;
+  const avatarSrc =
+    complaint.reported.gender == 'MALE' ? ManAvatar : WomanAvatar;
   const { data: organization } = useQuery({
     queryKey: ['complaints', 'organizer', complaint.reporter.id],
     queryFn: () => getUserOrganization(complaint.reporter.id),

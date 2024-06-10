@@ -14,7 +14,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   name,
   phoneNumber,
   email,
-  gender
+  gender,
 }) => {
   const avatarSrc = gender == 'MALE' ? ManAvatar : WomanAvatar;
 

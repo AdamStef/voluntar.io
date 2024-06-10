@@ -105,7 +105,9 @@ export const Post = ({ post }: PostProps) => {
           </div>
         </>
       ) : (
-        <p className="mt-5 leading-tight">{post.content}</p>
+        <p id="post-content" className="mt-5 leading-tight">
+          {post.content}
+        </p>
       )}
     </Panel>
   );

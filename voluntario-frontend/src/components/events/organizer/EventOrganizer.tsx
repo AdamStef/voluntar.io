@@ -106,7 +106,7 @@ export const EventOrganizer: React.FC<EventProps> = ({ event, className }) => {
 
       {/* <div className="h-24 w-24 bg-primary">map</div> */}
       <div className="flex basis-1/5 flex-col gap-2">
-        <Button asChild className="">
+        <Button id="see-more-org" asChild className="">
           <Link to={`/events/${event.id}`}>Zobacz więcej</Link>
         </Button>
         {/* {`${getEnumValue(EventStatus, event.status)} ${isEventFinished(getEnumValue(EventStatus, event.status))}`} */}

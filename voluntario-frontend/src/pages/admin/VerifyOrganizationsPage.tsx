@@ -31,6 +31,7 @@ export const VerifyOrganizationsPage = () => {
         {organizations &&
           organizations.map((organization: OrganizationType) => (
             <div>
+            <div id="verify-org-list">
               <OrganizationToVerify
                 key={organization.id}
                 organization={organization}

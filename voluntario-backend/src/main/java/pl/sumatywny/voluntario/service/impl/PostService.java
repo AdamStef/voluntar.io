@@ -62,11 +62,12 @@ public class PostService {
 
     @Transactional
     public void removePost(Long postID, User user) {
-        if (user.getRole().getRole() != Role.ROLE_ORGANIZATION) {
-            throw new PermissionsException("Only organizer can remove posts.");
+        if (user.getRole().getRole() == Role.ROLE_VOLUNTEER) {
+            throw new PermissionsException("Volunteers cannot remove events.");
         }
 
         Post post = postRepository.findById(postID).orElseThrow(() -> new NoSuchElementException("Post not found."));
+
         if (!Objects.equals(user.getOrganization().getId(), post.getOrganization().getId())) {
             throw new PermissionsException("You cannot remove this post.");
         }

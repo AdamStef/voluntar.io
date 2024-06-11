@@ -1,8 +1,10 @@
 package pl.sumatywny.voluntario.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class LocationDTO {
     private String name;
     private String city;

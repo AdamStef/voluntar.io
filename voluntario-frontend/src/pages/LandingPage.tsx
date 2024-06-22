@@ -1,3 +1,6 @@
+import helpingHands from "../assets/lp_helping_hands.png";
+import teensWithHeart from "../assets/lp_teens_with_heart.png";
+
 export const LandingPage = () => {
   return (
     <div className="container mt-4 flex flex-col items-center justify-center gap-4">
@@ -9,14 +12,14 @@ export const LandingPage = () => {
         </h1>
         <img
           className="w-64 xl:w-96"
-          src="src/assets/lp_teens_with_heart.png"
+          src={teensWithHeart}
           alt="Helping Teens"
         />
       </div>
       <div className="flex flex-col items-center gap-4 sm:flex-row">
         <img
           className="w-64 xl:w-96"
-          src="src/assets/lp_helping_hands.png"
+          src={helpingHands}
           alt="Helping Hands"
         />
         <p className="text-center text-2xl font-bold md:text-4xl">

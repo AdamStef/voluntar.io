@@ -33,7 +33,37 @@ services:
   #     - PORT=8080
   #   networks:
   #     - redisnet
-  
+
+  frontend:
+    build:
+      context: ./voluntario-frontend
+    container_name: frontend
+    ports:
+      - "5173:80"
+    networks:
+      - frontend-netork
+
+  backend:
+    build:
+      context: ./voluntario-backend
+    container_name: backend
+    ports:
+      - "8080:8080"
+    networks:
+      - redis-network
+      - db-network
+    depends_on:
+      - db
+      - redis-session
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/voluntarioDB
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATA_REDIS_URL=redis://redis-session:6379
+      - SPRING_DATA_REDIS_HOST=redis-session
+      - SPRING_DATA_REDIS_PASSWORD=session
+      - SPRING_DATA_REDIS_PORT=6379
+
   db:
     image: postgres:12
     container_name: database_postgres
@@ -41,23 +71,25 @@ services:
       POSTGRES_DB: voluntarioDB
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    networks:
+      - db-network
     ports:
       - "5432:5432"
     volumes:
       - ./pgdata:/var/lib/postgresql/data
   
-  redis-stack:
+  redis-session:
     image: redis/redis-stack:latest
     volumes:
       - redis-stack-data:/bitnami/redis/data
-    container_name: session_redis
+    container_name: redis-session
     networks:
-      - redisnet
+      - redis-network
     ports:
       - "8001:8001"
       - "6379:6379"
     environment:
-      REDIS_HOST: localhost
+      REDIS_HOST: redis_session
       REDIS_PASSWORD: session
     healthcheck:
       test: [ "CMD", "redis-cli", "-p", "6379", "ping" ]
@@ -76,4 +108,9 @@ volumes:
   #   driver: local
 
 networks:
-  redisnet: { }
+  redis-network:
+    driver: bridge
+  db-network:
+    driver: bridge
+  frontend-netork:
+    driver: bridge

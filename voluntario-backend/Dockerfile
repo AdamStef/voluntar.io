@@ -1,37 +1,19 @@
+# 
+# Build stage
+# 
+FROM jelastic/maven:3.9.5-openjdk-21 as build
+ENV HOME=/usr/app
+RUN mkdir -p $HOME
+WORKDIR $HOME
+ADD . $HOME
+RUN --mount=type=cache,target=/root/.m2 mvn clean package -Dmaven.test.skip
+# RUN --mount=type=cache,target=/root/.m2 ./mvnw -f $HOME/pom.xml clean package -Dmaven.test.skip
+
+#
+# Package stage
+#
 FROM jelastic/maven:3.9.5-openjdk-21
+ARG JAR_FILE=/usr/app/target/*.jar
+COPY --from=build $JAR_FILE /app/runner.jar
 EXPOSE 8080
-ARG JAR_FILE=target/*.jar
-ADD ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
-
-
-
-
-# # Use the official Maven image as the base image
-# #FROM maven:3.9.5-openjdk-21 AS build
-# FROM jelastic/maven:3.9.5-openjdk-21 AS build
-
-# # Set the working directory
-# WORKDIR /app
-
-# # Copy the pom.xml and any other necessary configuration files
-# COPY ./pom.xml /app
-# COPY ./src /app/src
-
-# # Build the application
-# RUN mvn clean package -Dmaven.test.skip=true
-
-# # Create a new image for running the application
-# FROM openjdk:21-jdk
-
-# # Set the working directory
-# WORKDIR /app
-
-# # Copy the built JAR file from the previous stage
-# COPY --from=build /app/target/*.jar app.jar
-
-# # Expose the port on which the Spring Boot application will run
-# EXPOSE 8080
-
-# # Command to run the application
-# CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT java -jar /app/runner.jar
